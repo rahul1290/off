@@ -27,6 +27,9 @@ $route['emp/hr/Salary-Slip'] = 'Hr_ctrl/salary_slip/';
 $route['emp/hr/Holiday-List'] = 'Hr_ctrl/holiday_list/';
 
 /////master//////////
+$route['master/USER-ROLE'] = 'master/Role_ctrl/index';
+
+
 $route['master/SHIFT'] = 'master/Shift_ctrl/index';
 $route['master/nhfh/create'] = 'master/Nh_fh_ctrl/nhfh_create';
 $route['master/nhfh/update'] = 'master/Nh_fh_ctrl/nhfh_update';
@@ -70,6 +73,7 @@ $route['master/location/delete'] = 'master/Location_ctrl/location_delete';
 $route['master/employee'] = 'master/Employee_ctrl/index';
 $route['master/employee/create'] = 'master/Employee_ctrl/create';
 $route['master/employee/update/(:any)'] = 'master/Employee_ctrl/update/$1';
+$route['master/employee/privileges/(:any)'] = 'master/Employee_ctrl/privileges/$1';
 $route['master/employee/(:any)'] = 'master/Employee_ctrl/employee_detail/$1';
 
 $route['translate_uri_dashes'] = FALSE;

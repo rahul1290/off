@@ -198,6 +198,29 @@ $(document).ready(function(){
 			}
 		});	
 	}
+	
+	
+	$(document).on('change','#department',function(){
+		var dept_id = $(this).val();
+		$.ajax({
+			type: 'POST',
+			url: baseUrl+'Emp_ctrl/get_employee',
+			data: {
+				'dept_id' : dept_id
+			},
+			dataType: 'json',
+			beforeSend: function() {},
+			success: function(response){
+				if(response.status == 200){
+					var x = '<option value="0">Select Employee</option>';
+					$.each(response.data,function(key,value){
+						x = x + '<option value="'+ value.ecode +'">'+ value.name +'</option>';
+					});
+					$('#employee').html(x);
+				}
+			}
+		});
+	});
 });
 </script>
 </body>

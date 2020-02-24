@@ -82,7 +82,8 @@
 					</div>
 					<div class="form-group col-md-2">
 						<label for="employee_code"><span class="text-danger pr-1">*</span>Joining Date</label>
-						<input type="date" class="form-control" id="jdate" name="jdate" value="<?php echo set_value('jdate'); ?>">
+						
+						<input type="text" class="form-control datepicker" id="jdate" name="jdate" value="<?php echo set_value('jdate'); ?>">
 						<?php echo form_error('jdate'); ?>
 					</div>
 					
@@ -110,6 +111,16 @@
 					
 					<span class="col-md-12"><b>Reporting To</b></span>
 						<div class="form-group col-md-2">
+							<select class="form-control" name="repto_department" id="repto_department">	
+								<option value="0">Select Department</option>
+								<?php foreach($departments as $department){ ?>
+									<option value="<?php echo $department['id']; ?>" <?php if($department['id'] == set_value('repto_department')){ echo "selected"; } ?>><?php echo $department['dept_name']; ?>( <?php echo $department['dept_code']; ?> )</option>
+								<?php } ?>							
+							</select>
+							<?php echo form_error('repto_department'); ?>
+						</div>
+						
+						<div class="form-group col-md-2">
 							<select class="form-control" name="repto_designation" id="repto_designation">	
 								<option value="0">Select Designation</option>
 							<?php foreach($designations as $designation){ ?>
@@ -133,7 +144,7 @@
 					</div>
 					<div class="form-group col-md-2">
 						<label for="employee_dob">DOB</label>
-						<input type="date" name="employee_dob" class="form-control" value="<?php echo set_value('employee_dob'); ?>">
+						<input type="text" name="employee_dob" class="form-control datepicker" value="<?php echo set_value('employee_dob'); ?>">
 					</div>
 					<div class="form-group col-md-3">
 						<label for="personal_mail">Personal Mail-ID</label>
@@ -164,7 +175,7 @@
 					</div>
 					<div class="form-group col-md-6">
 						<label for="father_dob">Father's DOB</label>
-						<input type="date" id="father_dob" name="father_dob" class="form-control" value="<?php echo set_value('father_dob'); ?>">
+						<input type="text" id="father_dob" name="father_dob" class="form-control datepicker" value="<?php echo set_value('father_dob'); ?>">
 					</div>
 					<div class="form-group col-md-6">
 						<label for="mother_name">Mother Name</label>
@@ -172,7 +183,7 @@
 					</div>
 					<div class="form-group col-md-6">
 						<label for="mother_dob">Mother's DOB</label>
-						<input type="date" id="mother_dob" name="mother_dob" class="form-control" value="<?php echo set_value('mother_dob'); ?>">
+						<input type="text" id="mother_dob" name="mother_dob" class="form-control datepicker" value="<?php echo set_value('mother_dob'); ?>">
 					</div>
 					<div class="form-group col-md-12">
 						<label>Marital Status</label>
@@ -189,7 +200,7 @@
 						</div>
 						<div class="form-group col-md-4">
 							<label>Anniversary</label>
-							<input type="date" name="anniversary" class="form-control" id="anniversary">
+							<input type="text" name="anniversary" class="form-control datepicker" id="anniversary" value="<?php echo set_value('anniversary');?>">
 						</div>
 						<div class="form-group col-md-4">
 							<label>childrens</label>
@@ -217,7 +228,7 @@
 						</div>
 						<div class="form-group col-md-4">
 							<label>DOB</label>
-							<input type="date" name="fcdob" class="form-control" value="<?php echo set_value('fcdob'); ?>">
+							<input type="text" name="fcdob" class="form-control datepicker" value="<?php echo set_value('fcdob'); ?>">
 						</div>
 					</div>
 					<div class="row col-md-12" id="scchild_detail" style="display:<?php if(set_value('childrens') > 1 && (set_value('marital') == 'YES')) { echo "contents"; } else { echo "none"; }?>">
@@ -231,7 +242,8 @@
 							</select>
 						</div>
 						<div class="form-group col-md-4">
-							<input type="date" name="scdob" class="form-control" value="<?php echo set_value('scdob'); ?>">
+							<input type="text" name="scdob" class="form-control datepicker" value="<?php echo set_value('scdob'); ?>">
+							
 						</div>
 					</div>
 					<div class="row col-md-12" id="tcchild_detail" style="display:<?php if(set_value('childrens') > 2 && (set_value('marital') == 'YES')) { echo "contents"; } else { echo "none"; }?>;">
@@ -245,7 +257,7 @@
 							</select>
 						</div>
 						<div class="form-group col-md-4">
-							<input type="date" name="tcdob" class="form-control" value="<?php echo set_value('tcdob'); ?>">
+							<input type="text" name="tcdob" class="form-control datepicker" value="<?php echo set_value('tcdob'); ?>">
 						</div>
 					</div>
 					
@@ -284,6 +296,33 @@ $(document).ready(function(){
 			$('#family_detail').css('display','contents');
 		} else {
 			$('#family_detail').css('display','none');
+		}
+	});
+	
+	$(document).on('blur','#ecode',function(){
+		var ecode = $(this).val();
+		if(ecode != ''){ 
+			$.ajax({
+				type: 'POST',
+				url: baseUrl+'master/Employee_ctrl/is_unique_ecode',
+				data: { 
+					'ecode' : ecode,
+				},
+				dataType: 'json',
+				beforeSend: function() {},
+				success: function(response){
+					console.log(response);
+					if(response.status == 200){
+						console.log('ecode is unique');
+						$('#ecode').addClass('success');
+						$('#ecode').removeClass('error');
+					} else {
+						$('#ecode').focus();
+						$('#ecode').addClass('error');
+						$('#ecode').removeClass('success');
+					}
+				}
+			});
 		}
 	});
 	

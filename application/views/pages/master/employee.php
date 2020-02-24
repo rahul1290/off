@@ -57,7 +57,8 @@
 										<td><?php echo $employee['grade_name']; ?></td>
 										<td><?php echo $employee['jdate']; ?></td>
 										<th><a title="View Employee" class="employee_view" data-emp_code="<?php echo $employee['ecode']; ?>" href="javascript:void(0);"><i class="fa fa-eye"></i></a>
-											<a title="Edit Employee" href="javascript:void(0);"<i class="fas fa-pencil-alt"></i></a>
+											<a target="_blank" title="Edit Employee" href="<?php echo base_url('master/employee/update/').$employee['ecode']; ?>"><i class="fas fa-pencil-alt"></i></a>
+											<a target="_blank" href="<?php echo base_url('master/employee/privileges/').$employee['ecode'];?>">Privileges</a>
 										</th>
 									</tr>
 							<?php $c++; } ?>

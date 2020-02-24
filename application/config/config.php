@@ -31,6 +31,7 @@ $config['it_policies'] = 'assets/policies/it/';
 $config['hr_policies'] = 'assets/policies/hr/';
 $config['NEWZ36'] = 'NEWZ36.dbo.';
 $config['Savior'] = 'Savior.dbo.';
+$config['project_title'] = 'IBC24';
 ////////////////////////////*************************************/////////////////////
 /*
 |--------------------------------------------------------------------------

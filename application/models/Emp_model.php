@@ -19,6 +19,16 @@ class Emp_model extends CI_Model {
 		}
 	}
 	
+	function get_employee($ecode,$dept_id = null){
+		$this->db->select('u.ecode,u.id,u.name,u.password,u.department_id');
+		$this->db->join('users u','u.ecode = ur.r_ecode');
+		if($dept_id != null){
+			$this->db->where('u.department_id',$dept_id);
+		}
+		$result = $this->db->get_where('user_rules ur',array('ur.ecode'=>$ecode,'ur.status'=>1))->result_array();
+		return $result;
+	}
+	
 	function attendance($data){
 		$db2 = $this->load->database('sqlsrv', TRUE);
 		
@@ -55,7 +65,8 @@ class Emp_model extends CI_Model {
 							END) as HOURSWORKED");
 		//$this->db->join($this->config->item('NEWZ36').'LoginKRA l','l.PAYCODE = tblr.PAYCODE');
 		$db2->where(array('tblr.DateOFFICE >='=>$data['from_date'],'tblr.DateOFFICE <'=>$data['to_date']));
-		return $result = $db2->get_where($this->config->item('Savior').'tblTimeRegister tblr',array('tblr.PAYCODE'=>$data['paycode']))->result_array();
+		$result = $db2->get_where($this->config->item('Savior').'tblTimeRegister tblr',array('tblr.PAYCODE'=>$data['paycode']))->result_array();
+		return $result;
 	}
 	
 	function day_attendance($nhfhdate,$emp_paycode){

@@ -17,6 +17,7 @@ class Emp_ctrl extends CI_Controller {
 	}
 
 	function index(){
+		
 		$this->db2 = $this->load->database('sqlsrv', TRUE);
 		
 
@@ -56,11 +57,17 @@ class Emp_ctrl extends CI_Controller {
 				echo json_encode(array('status'=>500));
 			}
 		} else {
-			$data['departments'] = $this->Department_model->get_department();
-			$data['users'] = $this->Emp_model->employee($this->session->userdata('ecode'));
+			
+			//$data['departments'] = $this->Department_model->get_department();
+			//$data['users'] = $this->Emp_model->employee($this->session->userdata('ecode'));
+			$data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
+			$data['users'] = $this->Emp_model->get_employee($this->session->userdata('ecode'));
+			$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+			
+			//print_r($data['links']); die;
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
-			$data['aside'] = $this->load->view('include/aside','',true);
+			$data['aside'] = $this->load->view('include/aside',$data,true);
 			//$data['open'] = 'true';
 			$data['notepad'] = $this->load->view('include/shift_timing','',true);
 			$data['body'] = $this->load->view('pages/es/attendance_record',$data,true);
@@ -69,6 +76,16 @@ class Emp_ctrl extends CI_Controller {
 			$data['head'] = $this->load->view('common/head',$data,true);
 			$data['footer'] = $this->load->view('common/footer',$data,true);
 			$this->load->view('layout_master',$data);
+		}
+	}
+	
+	///ajax call on attendance page //
+	function get_employee(){
+		$users = $this->Emp_model->get_employee($this->session->userdata('ecode'),$this->input->post('dept_id'));
+		if(count($users)>0){
+			echo json_encode(array('data'=>$users,'status'=>200));
+		} else {
+			echo json_encode(array('status'=>500));
 		}
 	}
 	

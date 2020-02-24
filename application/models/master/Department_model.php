@@ -48,4 +48,13 @@ class Department_model extends CI_Model {
 		$result = $this->db->get_where('users',array('department_id'=>$dept,'status'=>1))->result_array();
 		return $result;
 	}
+	
+	
+	function get_employee_department($ecode){
+		$this->db->select('dm.*');
+		$this->db->join('department_master dm','dm.id = ud.dep_id');
+		$result = $this->db->get_where('user_department ud',array('ud.ecode'=>$ecode,'ud.status'=>1))->result_array();
+		
+		return $result;
+	}
 }

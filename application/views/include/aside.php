@@ -1,3 +1,10 @@
+<?php $display = array();
+
+if(isset($links)){
+foreach($links as $link){
+	array_push($display,$link['link_name']);
+}} ?>
+
 <aside class="main-sidebar sidebar-dark-warning elevation-4">
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
@@ -21,22 +28,22 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
           <li class="nav-item has-treeview 
 			<?php if($this->uri->segment('1') == 'es'){ echo "menu-open"; } else { echo "menu-close"; } ?>
-		  ">
-            <a href="#" class="nav-link
-			<?php if($this->uri->segment('1') == 'es'){ echo "active"; } ?>
-			">
-              <i class="nav-icon fas fa-user-alt"></i>
-              <p>
-                EMPLOYEE SECTION
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
+		  " style="display: <?php if(isset($links)){ if(in_array('EMPLOYEE SECTION',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+				<a href="#" class="nav-link
+				<?php if($this->uri->segment('1') == 'es'){ echo "active"; } ?>
+				">
+				  <i class="nav-icon fas fa-user-alt"></i>
+				  <p>
+					EMPLOYEE SECTION
+					<i class="right fas fa-angle-left"></i>
+				  </p>
+				</a>
+            
             <ul class="nav nav-treeview">
-			  <li class="nav-item">
+			
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('ATTENDANCE REPORT',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('es/Attendance-Record');?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'Attendance-Record'){ echo "active"; } ?>
 				">
@@ -44,7 +51,8 @@
                   <p>ATTENDANCE REPORT</p>
                 </a>
               </li>
-              <li class="nav-item">
+			  
+              <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('LEAVE REQUEST',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('es/leave-request');?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'leave-request'){ echo "active"; } ?>
 				">
@@ -52,7 +60,8 @@
                   <p>LEAVE REQUEST</p>
                 </a>
               </li>
-              <li class="nav-item">
+			  
+              <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('HALF DAY LEAVE FORM',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('es/hf-leave-request'); ?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'hf-leave-request'){ echo "active"; } ?>
 				">
@@ -60,7 +69,8 @@
                   <p>HALF DAY LEAVE FORM</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('OFF DAY DUTY FORM',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('es/off-day-duty-form'); ?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'off-day-duty-form'){ echo "active"; } ?>
 				">
@@ -68,7 +78,8 @@
                   <p>OFF DAY DUTY FORM</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('NH/FH DAY DUTY FORM',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('es/nh-fh-day-duty-form'); ?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'nh-fh-day-duty-form'){ echo "active"; } ?>
 				">
@@ -76,7 +87,8 @@
                   <p>NH/FH DAY DUTY FORM</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('TOUR REQUEST FORM',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('es/Tour-Request-Form'); ?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'Tour-Request-Form'){ echo "active"; } ?>
 				">
@@ -84,7 +96,8 @@
                   <p>TOUR REQUEST FORM</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('ALL REPORT',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('es/All-Report'); ?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'All-Report'){ echo "active"; } ?>
 				">
@@ -92,7 +105,8 @@
                   <p>ALL REPORT</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('NH/FH AVAIL FORM',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('emp/es/NH-FH-Avail-Form');?>" class="nav-link
 					<?php if($this->uri->segment('3') == 'NH-FH-Avail-Form'){ echo "active"; } ?>
 				">
@@ -100,7 +114,8 @@
                   <p>NH/FH AVAIL FORM</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('PL SUMMARY REPORT',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('emp/es/PL-Summary-Report'); ?>" class="nav-link
 					<?php if($this->uri->segment('3') == 'PL-Summary-Report'){ echo "active"; } ?>
 				">
@@ -114,8 +129,8 @@
 		  
 		  <li class="nav-item has-treeview
 			<?php if($this->uri->segment('2') == 'hr'){ echo "menu-open"; } else { echo "menu-close"; }?>
-		  ">
-            <a href="#" class="nav-link
+		  " style="display: <?php if(isset($links)){ if(in_array('HR MANAGEMENT',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+			<a href="#" class="nav-link
 				<?php if($this->uri->segment('2') == 'hr'){ echo "active"; } ?>
 			">
 			  <i class="fas fa-bezier-curve"></i>
@@ -124,8 +139,9 @@
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
+		  
             <ul class="nav nav-treeview">
-			  <li class="nav-item">
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('ROSTER',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('ibc/hr/roster');?>" class="nav-link
 					<?php if($this->uri->segment('3') == 'roster'){ echo "active"; } ?>
 				">
@@ -133,7 +149,8 @@
                   <p>&nbsp;ROSTER</p>
                 </a>
               </li>
-              <li class="nav-item">
+			  
+              <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('HR POLICIES',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('ibc/hr/HR-Policies');?>" class="nav-link
 					<?php if($this->uri->segment('3') == 'HR-Policies'){ echo "active"; } ?>
 				">
@@ -141,7 +158,8 @@
                   <p>&nbsp;HR POLICIES</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('EMPLOYEE INFORMATION',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('emp/hr/Emp-Info'); ?>" class="nav-link
 					<?php if($this->uri->segment('3') == 'Emp-Info'){ echo "active"; } ?>
 				">
@@ -149,7 +167,8 @@
                   <p>&nbsp;EMPLOYEE INFORMATION</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('SALARY SLIP',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('emp/hr/Salary-Slip'); ?>" class="nav-link
 					<?php if($this->uri->segment('3') == 'Salary-Slip'){ echo "active"; } ?>
 				">
@@ -157,7 +176,8 @@
                   <p>&nbsp;SALARY SLIP</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('HOLIDAY LIST',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('emp/hr/Holiday-List'); ?>" class="nav-link
 					<?php if($this->uri->segment('3') == 'Holiday-List'){ echo "active"; } ?>
 				">
@@ -165,7 +185,8 @@
                   <p>&nbsp;HOLIDAY LIST</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('TOUR REPORT FORMAT',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="#" class="nav-link">
 				  <i class="fas fa fa-file-excel" aria-hidden="true"></i>
                   <p>&nbsp;TOUR REPORT FORMAT</p>
@@ -178,7 +199,7 @@
 		 
 		 <li class="nav-item has-treeview
 			<?php if($this->uri->segment('1') == 'master'){ echo "menu-open"; } else { echo "menu-close"; }?>
-		  ">
+		  " style="display: <?php if(isset($links)){ if(in_array('MASTER',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
             <a href="#" class="nav-link
 				<?php if($this->uri->segment('1') == 'master'){ echo "active"; } ?>
 			">
@@ -188,8 +209,9 @@
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
+			
             <ul class="nav nav-treeview">
-              <li class="nav-item">
+              <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('Department Master',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('master/department');?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'department'){ echo "active"; } ?>
 				">
@@ -197,7 +219,8 @@
                   <p>&nbsp;Department Master</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('Designation Master',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('master/designation');?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'designation'){ echo "active"; } ?>
 				">
@@ -205,7 +228,8 @@
                   <p>&nbsp;Designation Master</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('Empcode Master',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('master/empcode');?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'empcode'){ echo "active"; } ?>
 				">
@@ -213,7 +237,8 @@
                   <p>&nbsp;Empcode Master</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('Grade Master',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('master/grade');?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'grade'){ echo "active"; } ?>
 				">
@@ -221,7 +246,8 @@
                   <p>&nbsp;Grade Master</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('Employee Master',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('master/employee');?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'employee'){ echo "active"; } ?>
 				">
@@ -229,7 +255,8 @@
                   <p>&nbsp;Employee Master</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			 
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('Location Master',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('master/location');?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'location'){ echo "active"; } ?>
 				">
@@ -237,7 +264,8 @@
                   <p>&nbsp;Location Master</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('NH/FH Master',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('master/NH-FH');?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'NH-FH'){ echo "active"; } ?>
 				">
@@ -245,12 +273,22 @@
                   <p>&nbsp;NH/FH Master</p>
                 </a>
               </li>
-			  <li class="nav-item">
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('SHIFT Master',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('master/SHIFT');?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'SHIFT'){ echo "active"; } ?>
 				">
 				  <i class="far fa-file-pdf"></i>
                   <p>&nbsp;SHIFT Master</p>
+                </a>
+              </li>
+			  
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('User Role',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+                <a href="<?php echo base_url('master/USER-ROLE');?>" class="nav-link
+					<?php if($this->uri->segment('2') == 'USER-ROLE'){ echo "active"; } ?>
+				">
+				  <i class="far fa-file-pdf"></i>
+                  <p>&nbsp;User Role</p>
                 </a>
               </li>
 			</ul>
