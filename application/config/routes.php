@@ -18,6 +18,12 @@ $route['emp/es/PL-Summary-Report'] = 'Emp_ctrl/pl_summary_report/';
 $route['emp/es/Attendance-Record'] = 'Emp_ctrl/attendance_record/';
 $route['es/Attendance-Record'] = 'Emp_ctrl/attendance/';
 
+///hod////////////////
+$route['hod/hf_leave_request'] = 'hod/Hod_ctrl/hf_leave_request/';
+$route['hod/hf_leave_request/(:any)'] = 'hod/Hod_ctrl/hf_leave_request/$1';
+$route['hod/hf_leave_request_update'] = 'hod/Hod_ctrl/hf_leave_request_update';
+
+
 ////HR////////////////
 $route['ibc/hr/roster'] = 'Hr_ctrl/roster/';
 $route['ibc/hr/HR-Policies'] = 'Hr_ctrl/hr_policies/';

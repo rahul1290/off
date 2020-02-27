@@ -48,8 +48,15 @@ class Employee_model extends CI_Model {
 		$this->db->where('ecode',$data['ecode']);
 		$this->db->update('users',$data);
 		
-		$this->db->where('ecode',$data['ecode']);
-		$this->db->update('user_info',$info);
+		$this->db->select('*');
+		$result = $this->db->get_where('user_info',array('ecode'=>$data['ecode']))->result_array();
+		if(count($result)){
+			$this->db->where('ecode',$data['ecode']);
+			$this->db->update('user_info',$info);
+		} else {
+			$info['ecode'] = $data['ecode'];
+			$this->db->insert('user_info',$info);
+		}
 		
 		return true;
 	}
@@ -67,9 +74,28 @@ class Employee_model extends CI_Model {
 		return $result = $this->db->get_where('user_rules',array('ecode'=>$ecode,'status'=>1))->result_array();
 	}
 	
+	function user_link($ecode){
+		$this->db->select('*');
+		$result = $this->db->get_where('user_links',array('ecode'=>$ecode,'status'=>1))->result_array();
+		return $result;
+	}
+	
 	function is_unique_ecode($ecode){
 		$this->db->select('*');
 		$result = $this->db->get_where('users',array('ecode'=>$ecode,'status'=>1))->result_array();
+		return $result;
+	}
+	
+	function links(){
+		// $result = $this->db->query("select root.link_name as root_name, child1.link_name as child1_name, child2.link_name as child2_name
+		// from `system-links` as root
+		// left outer join `system-links` as child1 on child1.parent_id = root.id
+		// left outer join `system-links` as child2 on child2.parent_id = child1.id
+		// where root.parent_id = 0
+		// order by root_name, child1_name, child2_name")->result_array();
+		$this->db->select('*');
+		$this->db->order_by('id','asc');
+		$result = $this->db->get_where('system-links',array('status'=>1))->result_array();
 		return $result;
 	}
 } 

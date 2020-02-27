@@ -8,6 +8,11 @@ $supervised_emp = array();
 foreach($supervised as $supervise){
 	array_push($supervised_emp,$supervise['r_ecode']);
 }
+
+$ulink = array();
+foreach($user_links as $user_link){
+	array_push($ulink,$user_link['link_id']);
+}
 ?>
 <div class="content-wrapper">	
 	<div class="content-header bg-light mb-3">
@@ -73,6 +78,44 @@ foreach($supervised as $supervise){
 								echo "</ul>";
 							}
 							?>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<td>Links</td>
+						<td>
+							<ul style="list-style-type: none;max-height: 500px;OVERFLOW: scroll;">
+								<?php 
+								foreach($links as $l){
+									$p = 1;
+									if($l['parent_id'] == 0){
+										if(in_array($l['id'],$ulink)){
+											echo '<li><input name="ulink[]" value="'.$l['id'].'" type="checkbox" checked onclick="f1.submit();">'.$l['link_name'];
+										} else {
+											echo '<li><input name="ulink[]" value="'.$l['id'].'" type="checkbox" onclick="f1.submit();">'.$l['link_name'];
+										}
+										$c = 0;
+										foreach($links as $l1){
+											$p = 0;
+											if($l['id'] == $l1['parent_id']){
+												if($c == 0){ 
+													echo '<ul style="list-style-type: none;">';
+												}
+												$c = $c + 1;
+												if(in_array($l1['id'],$ulink)){ 
+													echo '<li><input name="ulink[]" value="'.$l1['id'].'" type="checkbox" checked onclick="f1.submit();">'.$l1['link_name'].'</li>';
+												} else {
+													echo '<li><input name="ulink[]" value="'.$l1['id'].'" type="checkbox" onclick="f1.submit();">'.$l1['link_name'].'</li>';
+												}
+											}
+										}
+										if($c){
+											echo '</ul></li>';
+										}
+									} else {
+										continue;
+									}
+								} ?>
 							</ul>
 						</td>
 					</tr>

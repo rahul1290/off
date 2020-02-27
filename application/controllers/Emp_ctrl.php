@@ -19,12 +19,12 @@ class Emp_ctrl extends CI_Controller {
 	function index(){
 		
 		$this->db2 = $this->load->database('sqlsrv', TRUE);
-		
 
 		$data = array();
+		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside','',true);
+		$data['aside'] = $this->load->view('include/aside',$data,true);
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
 		$data['body'] = $this->load->view('pages/emp_dashboard',$data,true);
 		//===============common===============//
@@ -91,9 +91,10 @@ class Emp_ctrl extends CI_Controller {
 	
 	function leave_request(){
 		$data = array();
+		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside','',true);
+		$data['aside'] = $this->load->view('include/aside',$data,true);
 		//$data['open'] = 'true';
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
 		$data['body'] = $this->load->view('pages/es/leave_request',$data,true);
@@ -146,9 +147,10 @@ class Emp_ctrl extends CI_Controller {
 				}
 		} else {
 			$data = array();
+			$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
-			$data['aside'] = $this->load->view('include/aside','',true);
+			$data['aside'] = $this->load->view('include/aside',$data,true);
 			//$data['open'] = 'true';
 			$data['notepad'] = $this->load->view('include/shift_timing','',true);
 			
@@ -224,9 +226,10 @@ class Emp_ctrl extends CI_Controller {
 
 			} else {
 				$data = array();
+				$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 				$data['footer'] = $this->load->view('include/footer','',true);
 				$data['top_nav'] = $this->load->view('include/top_nav','',true);
-				$data['aside'] = $this->load->view('include/aside','',true);
+				$data['aside'] = $this->load->view('include/aside',$data,true);
 				//$data['open'] = 'true';
 				$data['notepad'] = $this->load->view('include/shift_timing','',true);
 				
@@ -340,9 +343,10 @@ class Emp_ctrl extends CI_Controller {
 			
  		} else {
 			$data = array();
+			$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
-			$data['aside'] = $this->load->view('include/aside','',true);
+			$data['aside'] = $this->load->view('include/aside',$data,true);
 			$data['nhfh_days'] = $this->Nh_fh_model->get_nhfh();
 			$data['nh_fh_requests'] = $this->Nh_fh_model->user_nhfh_requests($this->session->userdata('ecode'));
 			
@@ -359,9 +363,10 @@ class Emp_ctrl extends CI_Controller {
 	
 	function tour_request_form(){
 		$data = array();
+		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside','',true);
+		$data['aside'] = $this->load->view('include/aside',$data,true);
 		//$data['open'] = 'true';
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
 		$data['body'] = $this->load->view('pages/es/tour_request_form',$data,true);
@@ -374,6 +379,7 @@ class Emp_ctrl extends CI_Controller {
 	
 	function all_report($ecode=null){
 		$data = array();
+		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		if($ecode == null){
 			$ecode = $this->session->userdata('ecode');
 		}
@@ -403,7 +409,7 @@ class Emp_ctrl extends CI_Controller {
 		$data['title'] = 'IBC24 | es | All Report';
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside','',true);
+		$data['aside'] = $this->load->view('include/aside',$data,true);
 		//$data['open'] = 'true';
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
 		$data['body'] = $this->load->view('pages/es/all_report',$data,true);
@@ -414,9 +420,10 @@ class Emp_ctrl extends CI_Controller {
 	
 	function nh_fh_avail_form(){
 		$data = array();
+		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside','',true);
+		$data['aside'] = $this->load->view('include/aside',$data,true);
 		$data['notepad'] = $this->load->view('include/notepad','',true);
 		$data['body'] = $this->load->view('pages/emp_dashboard',$data,true);
 		//===============common===============//
@@ -428,10 +435,11 @@ class Emp_ctrl extends CI_Controller {
 	
 	function pl_summary_report(){
 		$data = array();
+		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
 		$data['aside'] = $this->load->view('include/aside','',true);
-		$data['notepad'] = $this->load->view('include/notepad','',true);
+		$data['notepad'] = $this->load->view('include/notepad',$data,true);
 		$data['body'] = $this->load->view('pages/emp_dashboard',$data,true);
 		//===============common===============//
 		$data['title'] = 'Home | Emp-Portal';
@@ -442,9 +450,10 @@ class Emp_ctrl extends CI_Controller {
 	
 	function attendance_record(){
 		$data = array();
+		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside','',true);
+		$data['aside'] = $this->load->view('include/aside',$data,true);
 		$data['notepad'] = $this->load->view('include/notepad','',true);
 		$data['body'] = $this->load->view('pages/emp_dashboard',$data,true);
 		//===============common===============//

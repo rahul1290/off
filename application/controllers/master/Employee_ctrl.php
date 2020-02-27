@@ -154,7 +154,7 @@ class Employee_ctrl extends CI_Controller {
 			$this->form_validation->set_rules('ecode', 'Employeecode', 'required|trim');
 			$this->form_validation->set_rules('pay_code', 'Paycode', 'required|trim');
 			$this->form_validation->set_rules('employee_name', 'Employee Name', 'required|trim|alpha_numeric_spaces|min_length[3]');
-			$this->form_validation->set_rules('password', 'Password', 'required|trim');
+			//$this->form_validation->set_rules('password', 'Password', 'required|trim');
 			$this->form_validation->set_rules('department', 'Department', 'required|is_natural_no_zero',array('is_natural_no_zero'=>'Please select Department.'));
 			$this->form_validation->set_rules('designation', 'Designation', 'required|is_natural_no_zero',array('is_natural_no_zero'=>'Please select Designation.'));
 			$this->form_validation->set_rules('location', 'Location', 'required|is_natural_no_zero',array('is_natural_no_zero'=>'Please select Location.'));
@@ -165,6 +165,24 @@ class Employee_ctrl extends CI_Controller {
 			
 			$this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
 			if ($this->form_validation->run() == FALSE){
+				$data = array();
+				$data['departments'] = $this->Department_model->get_department();
+				$data['designations'] = $this->Designation_model->get_designation();
+				$data['empcodes'] = $this->Empcode_model->get_empcode();
+				$data['grades'] = $this->Grade_model->get_grade();
+				$data['employees'] = $this->Employee_model->employees();
+				$data['locations'] = $this->Location_model->get_location();
+				$data['employee_detail'] = $this->Employee_model->employees($employee_id);
+				
+				$data['footer'] = $this->load->view('include/footer','',true);
+				$data['top_nav'] = $this->load->view('include/top_nav','',true);
+				$data['aside'] = $this->load->view('include/aside','',true);
+				$data['body'] = $this->load->view('pages/master/employee_update',$data,true);
+				//===============common===============//
+				$data['title'] = 'IBC24 | Employee Update';
+				$data['head'] = $this->load->view('common/head',$data,true);
+				$data['footer'] = $this->load->view('common/footer',$data,true);
+				$this->load->view('layout_master',$data);
 			} else {
 				$data['name'] = $this->input->post('employee_name');
 				$data['ecode'] = $this->input->post('ecode');
@@ -221,9 +239,8 @@ class Employee_ctrl extends CI_Controller {
 				$info['updated_at'] = date('Y-m-d H:i:s');
 				$info['updated_by'] = $this->session->userdata('ecode');
 				
-				
 				if($this->Employee_model->employee_update($data,$info)){
-					$this->session->set_flashdata('msg', 'Employee update successfully.');
+					$this->session->set_flashdata('msg', '<h3 class="bg-success text-center">Employee update successfully.</h3>');
 					$path = 'master/employee/update/'.$data['ecode']; 
 					redirect($path);
 				}
@@ -255,35 +272,53 @@ class Employee_ctrl extends CI_Controller {
 		if($_SERVER['REQUEST_METHOD'] === 'POST'){
 			
 			$departments = $this->input->post('departments');
-			
-			$dep_array = array();
-			$this->db->where(array('ecode'=>$ecode));
-			$this->db->delete('user_department');
-			
-			foreach($departments as $department){
-				$temp = array();
-				$temp['ecode'] = $ecode;
-				$temp['dep_id'] = $department;
-				$temp['created_at'] = date('Y-m-d H:i:s');
-				$temp['updated_at'] = date('Y-m-d H:i:s');
-				$temp['created_by'] = $this->session->userdata('ecode');
-				$temp['updated_by'] = $this->session->userdata('ecode');
-				$dep_array[] = $temp;
+			if(count($departments)){ 
+				$dep_array = array();
+				$this->db->where(array('ecode'=>$ecode));
+				$this->db->delete('user_department');
+				
+				foreach($departments as $department){
+					$temp = array();
+					$temp['ecode'] = $ecode;
+					$temp['dep_id'] = $department;
+					$temp['created_at'] = date('Y-m-d H:i:s');
+					$temp['updated_at'] = date('Y-m-d H:i:s');
+					$temp['created_by'] = $this->session->userdata('ecode');
+					$temp['updated_by'] = $this->session->userdata('ecode');
+					$dep_array[] = $temp;
+				}
+				$this->db->insert_batch('user_department',$dep_array); 
 			}
-			$this->db->insert_batch('user_department',$dep_array); 
 			
 			$ulist = $this->input->post('ulist');
-			$user_list = array();
-			$this->db->where('ecode',$ecode);
-			$this->db->delete('user_rules');
-			
-			foreach($ulist as $list){
-				$temp = array();
-				$temp['ecode'] = $ecode;
-				$temp['r_ecode'] = $list;
-				$user_list[] = $temp;
+			if(count($ulist)){ 
+				$user_list = array();
+				$this->db->where('ecode',$ecode);
+				$this->db->delete('user_rules');
+				
+				foreach($ulist as $list){
+					$temp = array();
+					$temp['ecode'] = $ecode;
+					$temp['r_ecode'] = $list;
+					$user_list[] = $temp;
+				}
+				$this->db->insert_batch('user_rules',$user_list);
 			}
-			$this->db->insert_batch('user_rules',$user_list); 
+
+			$ulink = $this->input->post('ulink');
+			if(count($ulink)){
+				$user_link = array();
+				$this->db->where('ecode',$ecode);
+				$this->db->delete('user_links');
+				
+				foreach($ulink as $link){
+					$temp = array();
+					$temp['ecode'] = $ecode;
+					$temp['link_id'] = $link;
+					$user_link[] = $temp;
+				}
+				$this->db->insert_batch('user_links',$user_link);
+			}		
 			
 			$path = base_url('master/employee/privileges/').$ecode;
 			redirect($path);
@@ -295,6 +330,7 @@ class Employee_ctrl extends CI_Controller {
 			$data['user_departments'] = $this->Department_model->get_employee_department($ecode);
 			$data['users'] = $this->Employee_model->departments_users($ecode);
 			$data['supervised'] = $this->Employee_model->supervised($ecode);
+			$data['user_links'] = $this->Employee_model->user_link($ecode);
 			$udep = array();
 			foreach($data['departments'] as $department) {
 				foreach($data['users'] as $users) {
@@ -304,7 +340,7 @@ class Employee_ctrl extends CI_Controller {
 				}
 			}
 			$data['ulists'] = $udep;
-			
+			$data['links'] = $this->Employee_model->links();
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
 			$data['aside'] = $this->load->view('include/aside','',true);

@@ -20,7 +20,8 @@
     <div class="content">
       <div class="container-fluid">
 		<div class="offset-md-1 col-md-10">
-            <form name="f1" method="POST" action="<?php echo base_url('master/employee/update/'.$employee_detail[0]['ecode']); ?>">
+			<?php echo $this->session->flashdata('msg');?>
+            <form name="f1" method="POST" action="<?php echo base_url('master/employee/update/'.$employee_detail[0]['Ecode']); ?>">
 				<div class="form-row mb-3" style="border: solid 1px #123456;">
 					<legend class="the-legend bg-dark pl-2">Official Details</legend>
 					<div class="form-group col-md-2">

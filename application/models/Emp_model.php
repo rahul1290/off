@@ -93,6 +93,7 @@ class Emp_model extends CI_Model {
 		return $result; 
 	}
 	
+	
 	/*
 	function emp(){
 		$this->db2 = $this->load->database('sqlsrv',TRUE);
