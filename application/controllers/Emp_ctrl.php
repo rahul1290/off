@@ -18,7 +18,7 @@ class Emp_ctrl extends CI_Controller {
 
 	function index(){
 		
-		$this->db2 = $this->load->database('sqlsrv', TRUE);
+		//$this->db2 = $this->load->database('sqlsrv', TRUE);
 
 		$data = array();
 		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
@@ -36,19 +36,18 @@ class Emp_ctrl extends CI_Controller {
 	
 	function attendance(){
 		$data = array();
-		
 		if($_SERVER['REQUEST_METHOD'] === 'POST'){
 			$data['department'] = $this->input->post('department');
 			$data['paycode'] = $this->input->post('employee');
 			$month = $this->input->post('month');
 			$year = $this->input->post('year');
+			//$pcode = explode('-',$data['paycode']);
+			//$data['paycode'] = 'SB'.ltrim($pcode[1], "0");
 			
-			$pcode = explode('-',$data['paycode']);
-			$data['paycode'] = 'SB'.ltrim($pcode[1], "0");
 			
+			$data['paycode'] = $this->my_library->get_paycode($data['paycode']);
 			$data['from_date'] = $year.'-'.$month.'-01';
 			$data['to_date'] = $year.'-'.Date("m", strtotime("2017-" . $month . "-01" . " +1 month")).'-01';
-			
 			
 			$result = $this->Emp_model->attendance($data);
 			if($result){
@@ -57,22 +56,19 @@ class Emp_ctrl extends CI_Controller {
 				echo json_encode(array('status'=>500));
 			}
 		} else {
-			
 			//$data['departments'] = $this->Department_model->get_department();
 			//$data['users'] = $this->Emp_model->employee($this->session->userdata('ecode'));
 			$data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
 			$data['users'] = $this->Emp_model->get_employee($this->session->userdata('ecode'));
 			$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 			
-			//print_r($data['links']); die;
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
 			$data['aside'] = $this->load->view('include/aside',$data,true);
-			//$data['open'] = 'true';
 			$data['notepad'] = $this->load->view('include/shift_timing','',true);
 			$data['body'] = $this->load->view('pages/es/attendance_record',$data,true);
 			//===============common===============//
-			$data['title'] = 'IBC-24 | Attendance Record';
+			$data['title'] = $this->config->item('project_title').' | Attendance Record';
 			$data['head'] = $this->load->view('common/head',$data,true);
 			$data['footer'] = $this->load->view('common/footer',$data,true);
 			$this->load->view('layout_master',$data);
@@ -135,10 +131,25 @@ class Emp_ctrl extends CI_Controller {
 					$date = $this->my_library->mydate($this->input->post('half_day_date'));
 					$data['date'] = $date;
 					$data['request_type'] = 'HALF';
-					$data['refrence_id'] = 'HF/'.date('Y').'/'.$this->my_library->department_code($this->session->userdata('ecode'));
+					$data['refrence_id'] = 'HF-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
 					$data['created_at'] = date('Y-m-d H:i:s');
 					
 					if($this->db->insert('users_leave_requests',$data)){ 
+						$id = $this->db->insert_id();
+						$this->db->where('id',$id);
+						$this->db->update('users_leave_requests',array('refrence_id'=>$data['refrence_id'].'-'.$id));
+						
+						// //send mail to reporting persone
+						// $mail['name'] = $this->session->userdata('username').$this->session->userdata('ecode');
+						// $mail['department'] = $this->my_library->department_code($this->session->userdata('ecode'));
+						// $mail['date'] = $this->my_library->sql_datepicker($date);
+						// $mail['footer'] = $this->load->view('include/footer','',true);
+						// $mail['head'] = $this->load->view('common/head',$mail,true);
+						// $mail['body'] = $this->load->view('mail_template/half_day',$mail,true);
+						// $mail['footer'] = $this->load->view('common/footer',$mail,true);
+						// $mail_body = $this->load->view('layout_master',$mail,true);
+						// $this->my_library->sentmail($mail_body,$this->my_library->reporting_to_mailid($this->session->userdata('ecode')));
+						
 						$this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your HALF day duty request send successfully.</h3>');
 					} else {
 						$this->session->set_flashdata('msg', '<h3 class="bg-info p-2 text-center">warning! Database issue, Please contact to IT team.</h3>');
@@ -151,10 +162,9 @@ class Emp_ctrl extends CI_Controller {
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
 			$data['aside'] = $this->load->view('include/aside',$data,true);
-			//$data['open'] = 'true';
 			$data['notepad'] = $this->load->view('include/shift_timing','',true);
 			
-			$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date,"%d/%m/%Y") as date');
+			$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date,"%d/%m/%Y") as date,date_format(hod_remark_date,"%d/%m/%Y %H:%i:%s") as hod_remark_date');
 			$this->db->order_by('date','DESC');
 			$this->db->limit(20);
 			$data['requests'] = $this->db->get_where('users_leave_requests',array('ecode'=>$this->session->userdata('ecode'),'request_type'=>'HALF','status'=>1))->result_array();
@@ -213,10 +223,14 @@ class Emp_ctrl extends CI_Controller {
 					$date = $this->my_library->mydate($this->input->post('off_day_date'));
 					$data['date'] = $date;
 					$data['request_type'] = 'OFF_DAY';
-					$data['refrence_id'] = rand('1','9999');
+					$data['refrence_id'] = 'OFFDAY-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
 					$data['created_at'] = date('Y-m-d H:i:s');
 					
 					if($this->db->insert('users_leave_requests',$data)){ 
+						$id = $this->db->insert_id();
+						$this->db->where('id',$id);
+						$this->db->update('users_leave_requests',array('refrence_id'=>$data['refrence_id'].'-'.$id));
+					
 						$this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your OFF day duty request send successfully.</h3>');
 					} else {
 						$this->session->set_flashdata('msg', '<h3 class="bg-info p-2 text-center">warning! Database issue, Please contact to IT team.</h3>');
@@ -330,10 +344,14 @@ class Emp_ctrl extends CI_Controller {
 				$date = $this->Nh_fh_model->get_nhfh($this->input->post('nhfh_date'));
 				$data['date'] = $date[0]['nhfh_date'];
 				$data['request_type'] = 'NH_FH';
-				$data['refrence_id'] = rand('1','9999');
+				$data['refrence_id'] = 'NH_HF-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
 				$data['created_at'] = date('Y-m-d H:i:s');
 				
 				if($this->Nh_fh_model->nh_fh_day_duty_form($data)){ 
+					$id = $this->db->insert_id();
+					$this->db->where('id',$id);
+					$this->db->update('users_leave_requests',array('refrence_id'=>$data['refrence_id'].'-'.$id));
+						
 					$this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your NH/FH Request send successfully.</h3>');
 				} else{
 					$this->session->set_flashdata('msg', '<h3 class="bg-info p-2 text-center">warning! Database issue, Please contact to IT team.</h3>');
@@ -424,10 +442,14 @@ class Emp_ctrl extends CI_Controller {
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
 		$data['aside'] = $this->load->view('include/aside',$data,true);
-		$data['notepad'] = $this->load->view('include/notepad','',true);
-		$data['body'] = $this->load->view('pages/emp_dashboard',$data,true);
+		$data['nhfh_days'] = $this->Nh_fh_model->get_nhfh();
+		$data['nh_fh_requests'] = $this->Nh_fh_model->user_nhfh_requests($this->session->userdata('ecode'));
+		
+		//$data['open'] = 'true';
+		$data['notepad'] = $this->load->view('include/shift_timing','',true);
+		$data['body'] = $this->load->view('pages/es/nh_fh_day_duty_form',$data,true);
 		//===============common===============//
-		$data['title'] = 'Home | Emp-Portal';
+		$data['title'] = 'Home | NH FH DAY DUTY FORM';
 		$data['head'] = $this->load->view('common/head',$data,true);
 		$data['footer'] = $this->load->view('common/footer',$data,true);
 		$this->load->view('layout_master',$data);

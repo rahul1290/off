@@ -86,27 +86,43 @@
 							<thead>	
 								<tr class="bg-dark">
 									<th>S.No.</th>
-									<th>REQUEST ID</th>
+									<th>REFERENCE No.</th>
 									<th>REQUEST SUBMIT DATE</th>
 									<th>NH/FH DATE</th>
 									<th>REASON</th>
-									<th>HOD APPROVAL STATUS</th>
-									<th>HR STATUS</th>
+									<th>HOD REMARK</th>
+									<th>HOD STATUS</th>
 									<th>HR REMARKS</th>
-									<th>ACTION</th>
+									<th>HR STATUS</th>
 								</tr>
 							</thead>
 							<tbody>
-								<?php $c=1; foreach($nh_fh_requests as $nh_fh_request){ ?>
+								<?php $c=1; foreach($nh_fh_requests as $request){ ?>
 									<td><?php echo $c++; ?></td>
-									<td><?php echo $nh_fh_request['refrence_id']; ?></td>
-									<td><?php echo $nh_fh_request['created_at']; ?></td>
-									<td><?php echo $nh_fh_request['date']; ?></td>
-									<td><?php echo strlen($nh_fh_request['requirment']) > 50 ? substr($nh_fh_request['requirment'],0,50)."...<a href='#'>read more</a>" : $nh_fh_request['requirment']; ?></td>
-									<td><?php echo $nh_fh_request['hod_status']; ?></td>
-									<td><?php echo $nh_fh_request['hr_status']; ?></td>
-									<td><?php echo $nh_fh_request['hr_remark']; ?></td>
-									<td><a href=""#">CANCEL</a></td>
+									<td><?php echo $request['refrence_id']; ?></td>
+									<td><?php echo $request['created_at']; ?></td>
+									<td><?php echo $request['date']; ?></td>
+									<td><?php echo strlen($request['requirment']) > 50 ? substr($request['requirment'],0,50)."...<a href='#'>read more</a>" : $request['requirment']; ?></td>
+									<td><?php echo $request['hod_remark']; ?></td>
+									<td class="
+											<?php if($request['hod_status'] == 'REJECTED'){ 
+													echo "bg-danger"; 
+											} else if($request['hod_status'] == 'PENDING'){
+													echo "bg-warning";
+											} else {
+												echo "bg-success";
+											}?>"
+										><?php echo $request['hod_status']; ?></td>
+									<td><?php echo $request['hr_remark']; ?></td>
+									<td class="
+											<?php if($request['hr_status'] == 'REJECTED'){ 
+													echo "bg-danger"; 
+											} else if($request['hr_status'] == 'PENDING'){
+													echo "bg-warning";
+											} else {
+												echo "bg-success";
+											}?>"
+										><?php echo $request['hr_status']; ?></td>
 								<?php } ?>
 							</tbody>
 						</table>

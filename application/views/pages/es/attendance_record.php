@@ -3,7 +3,7 @@
 		<div class="container-fluid">
 			<div class="row mb-2">
 				<div class="col-sm-6">
-					<h1 class="m-0 text-dark">ATTENDANCE</h1>
+					<h1 class="m-0 text-dark">ATTENDANCE REPORT</h1>
 				</div><!-- /.col -->
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
@@ -36,7 +36,7 @@
 						<option value="0">Select Department</option>
 						<?php 
 						foreach($departments as $department){ ?>
-							<option value="<?php echo $department['id'];?>" <?php if($users[0]['department_id'] == $department['id']) { echo "selected"; }?>><?php echo $department['dept_name'];?></option>
+							<option value="<?php echo $department['id'];?>" <?php if($department['id'] == $this->session->userdata('department_id')) { echo "selected"; }?>><?php echo $department['dept_name'];?></option>
 						<?php } ?>
 					  </select>
 					</div>
@@ -49,7 +49,7 @@
 						<option value="0">Select Employee</option>
 						<?php 
 							foreach($users as $user){ ?>
-								<option value="<?php echo $user['ecode']; ?>" <?php if(count($users) == 1) { echo "selected"; }?>><?php echo $user['name']; ?></option>
+								<option value="<?php echo $user['ecode']; ?>" <?php if($user['ecode'] == $this->session->userdata('ecode')) { echo "selected"; }?>><?php echo $user['name']; ?></option>
 						<?php } ?>
 					  </select>
 					</div>

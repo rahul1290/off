@@ -79,6 +79,7 @@
 							<thead>	
 								<tr class="bg-dark">
 									<th>S.No.</th>
+									<th>REFERENCE No.</th>
 									<th>REQUEST SUBMIT DATE</th>
 									<th>OFF DAY DUTY DATE</th>
 									<th>REASON</th>
@@ -86,21 +87,38 @@
 									<th>HOD STATUS</th>
 									<th>HR REMARKS</th>
 									<th>HR STATUS</th>
-									<th>ACTION</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php $c=1; foreach($requests as $request){ ?>
 									<tr class="text-center">
 										<td><?php echo $c++; ?>.</td>
+										<td><?php echo $request['refrence_id']; ?></td>
 										<td><?php echo $request['created_at']; ?></td>
 										<td><?php echo $request['date']; ?></td>
 										<td><?php echo strlen($request['requirment']) > 50 ? substr($request['requirment'],0,50)."...<a href='#'>read more</a>" : $request['requirment']; ?></td>
 										<td><?php echo $request['hod_remark']; ?></td>
-										<td><?php echo $request['hod_status']; ?></td>
+										
+										<td class="
+											<?php if($request['hod_status'] == 'REJECTED'){ 
+													echo "bg-danger"; 
+											} else if($request['hod_status'] == 'PENDING'){
+													echo "bg-warning";
+											} else {
+												echo "bg-success";
+											}?>"
+										><?php echo $request['hod_status']; ?></td>
+										
 										<td><?php echo $request['hr_remark']; ?></td>
-										<td><?php echo $request['hr_status']; ?></td>
-										<td><a href="#">CANCEL</a></td>
+										<td class="
+											<?php if($request['hr_status'] == 'REJECTED'){ 
+													echo "bg-danger"; 
+											} else if($request['hr_status'] == 'PENDING'){
+													echo "bg-warning";
+											} else {
+												echo "bg-success";
+											}?>"
+										><?php echo $request['hr_status']; ?></td>
 									</tr>
 								<?php } ?>
 							</tbody>

@@ -38,7 +38,7 @@
 					<tr>
 						<td><b>Date</b></td>
 						<td>
-							<input type="text" name="half_day_date" id="half_day_date" class="form-control datepicker" value="<?php echo set_value('half_day_date'); ?>" autocomplete="off">
+							<input type="text" name="half_day_date" id="half_day_date" class="form-control datepicker" value="<?php echo set_value('half_day_date'); ?>" autocomplete="off" maxdate="<?php echo date('Y-m-d'); ?>">
 							<?php echo form_error('half_day_date'); ?>
 							<span id="duty_detail"></span>
 						</td>
@@ -83,14 +83,13 @@
 									<th>HOD STATUS</th>
 									<th>HR REMARKS</th>
 									<th>HR STATUS</th>
-									<th>ACTION</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php $c=1; foreach($requests as $request){ ?>
 									<tr>	
 										<td><?php echo $c++; ?>.</td>
-										<td><?php echo $request['refrence_id']; ?>/<?php echo $request['id']; ?></td>
+										<td><?php echo $request['refrence_id']; ?></td>
 										<td><?php echo $request['created_at']; ?></td>
 										<td><?php echo $request['date']; ?></td>
 										<td><?php echo strlen($request['requirment']) > 50 ? ucfirst(substr($request['requirment'],0,50))."...<a href='#'>read more</a>" : ucfirst($request['requirment']); ?></td>
@@ -103,7 +102,7 @@
 											} else {
 												echo "bg-success";
 											}?>"
-										><?php echo $request['hod_status']; ?></td>
+										><?php echo $request['hod_status']; ?> <br/><?php echo $request['hod_remark_date']; ?></td>
 										<td><?php echo $request['hr_remark']; ?></td>
 										<td class="
 											<?php if($request['hr_status'] == 'REJECTED'){ 
@@ -114,11 +113,6 @@
 												echo "bg-success";
 											}?>"
 										><?php echo $request['hr_status']; ?></td>
-										<td>
-											<?php if($request['hod_status'] == 'PENDING' && $request['hr_status'] == 'PENDING'){ ?>
-												<a href="javascript:void(0);" class="cancel" data-request_id="<?php echo $request['id']; ?>">Cancel</a>
-											<?php } ?>
-										</td>
 									</tr>
 								<?php } ?>
 							</tbody>
@@ -153,6 +147,15 @@
 
 <script>
 var baseUrl = $('#baseUrl').val();
+
+$(function() {
+	$( ".datepicker" ).datepicker({
+	   //appendText:"(yy-mm-dd)",
+	   dateFormat:"dd/mm/yy",
+	   altField: "#datepicker-4",
+	   altFormat: "dd/mm/yy"
+	});
+});
 
 $(document).ready(function(){
 	$('#example').DataTable();

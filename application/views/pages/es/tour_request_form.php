@@ -18,50 +18,46 @@
 	</div>
 
     <!-- Main content -->
-    <div class="content">
+    <!--<div class="content">-->
       <div class="container-fluid">
 		<div class="offset-md-1 col-md-10 mb-3">
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
-                <h3 class="card-title">TOUR REQUEST FORM</h3>
+                <h3 class="card-title">TOUR REQUEST FORM1</h3>
               </div>
               <div class="card-body">
-                <table class="table table-bordered">
-					<tr>
-						<td><b>Request No</b></td>
-						<td><?php echo date('d/m/Y');?></td>
-					</tr>
-					<tr>
-						<td><b>I , Mr./ Ms./ Mrs.</b></td>
-						<td>
-							<span><?php echo ucfirst($this->session->userdata('username')); ?> [ <?php echo $this->session->userdata('ecode'); ?> ]</span>
-						</td>
-					</tr>
-					<tr>
-						<td><b>Date</b></td>
-						<td>
-							<select class="form-control" name="nhfh_date">
-								<option value="0">Select NH/FH Date</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td><b>Duty Detail</b></td>
-						<td>
-						</td>
-					</tr>
-					<tr>
-						<td><b>As Per The Requirment of</b></td>
-						<td>
-							<textarea class="form-control"></textarea>
-						</td>
-					</tr>
-				</table>
-				
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<tr>
+							<td>DATE OF APPLICATION</td>
+							<td><?php echo date('d/m/Y');?></td>
+						</tr>
+						<tr>
+							<td>GOING TO TOUR FROM</td>
+							<td>
+								<input type="text" id="from" name="from" class="form-control" autocomplete="off">
+								<label for="to">to</label>
+								<input type="text" id="to" name="to" class="form-control" autocomplete="off">
+							</td>
+						</tr>
+						<tr>
+							<td><b>Location Name</b></td>
+							<td>
+								<input type="text" class="form-control" name="location" placeholder="Enter location name">
+							</td>
+						</tr>
+						<tr>
+							<td><b>REASON FOR TOUR</b></td>
+							<td>
+								<textarea class="form-control"></textarea>
+							</td>
+						</tr>
+					</table>
+				</div>
               </div>
             </div>
 				<div class="text-center">
-					<input type="button" value="Send" class="btn btn-warning">
+					<input type="button" value="Submit" class="btn btn-warning">
 					<input type="button" value="Cancel" class="btn btn-secondary">
 				</div>
           </div>
@@ -106,7 +102,7 @@
 		  
 		
       </div><!-- /.container-fluid -->
-    </div>
+    <!--</div>-->
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
@@ -129,6 +125,43 @@
 var baseUrl = $('#baseUrl').val();
 
 $(document).ready(function(){
+	
+	$( function() {
+     var dateFormat = "mm/dd/yy",
+    //var dateFormat = "dd/mm/yy",
+      from = $( "#from" )
+        .datepicker({
+          defaultDate: "+1w",
+          changeMonth: true,
+		  // dateFormat:"dd/mm/yy",
+		  // altFormat: "dd/mm/yy",
+          numberOfMonths: 1
+        })
+        .on( "change", function() {
+          to.datepicker( "option", "minDate", getDate( this ) );
+        }),
+      to = $( "#to" ).datepicker({
+        defaultDate: "+1w",
+        changeMonth: true,
+	    // dateFormat:"dd/mm/yy",
+		// altFormat: "dd/mm/yy",
+        numberOfMonths: 1
+      })
+      .on( "change", function() {
+        from.datepicker( "option", "maxDate", getDate( this ) );
+      });
+ 
+    function getDate( element ) {
+      var date;
+      try {
+        date = $.datepicker.parseDate( dateFormat, element.value );
+      } catch( error ) {
+        date = null;
+      }
+ 
+      return date;
+    }
+  } );
 	
 });
 </script>

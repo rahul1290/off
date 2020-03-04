@@ -187,7 +187,7 @@ class Employee_ctrl extends CI_Controller {
 				$data['name'] = $this->input->post('employee_name');
 				$data['ecode'] = $this->input->post('ecode');
 				$data['paycode'] = $this->input->post('pay_code');
-				$data['password'] = base64_encode($this->input->post('password'));
+				//$data['password'] = base64_encode($this->input->post('password'));
 				$data['department_id'] = $this->input->post('department');
 				$data['designation_id'] = $this->input->post('designation');
 				$data['grade_id'] = $this->input->post('grade');

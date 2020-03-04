@@ -13,28 +13,50 @@ $route['es/off-day-duty-form'] = 'Emp_ctrl/off_day_duty_form/';
 $route['es/nh-fh-day-duty-form'] = 'Emp_ctrl/nh_fh_day_duty_form/';
 $route['es/Tour-Request-Form'] = 'Emp_ctrl/tour_request_form/';
 $route['es/All-Report'] = 'Emp_ctrl/all_report/';
-$route['emp/es/NH-FH-Avail-Form'] = 'Emp_ctrl/nh_fh_avail_form/';
+$route['es/NH-FH-Avail-Form'] = 'Emp_ctrl/nh_fh_avail_form/';
 $route['emp/es/PL-Summary-Report'] = 'Emp_ctrl/pl_summary_report/';
 $route['emp/es/Attendance-Record'] = 'Emp_ctrl/attendance_record/';
 $route['es/Attendance-Record'] = 'Emp_ctrl/attendance/';
 
+///OUTPUT
+$route['output/broadcast'] = 'output/Output_ctrl/index';
+
 ///hod////////////////
-$route['hod/hf_leave_request'] = 'hod/Hod_ctrl/hf_leave_request/';
-$route['hod/hf_leave_request/(:any)'] = 'hod/Hod_ctrl/hf_leave_request/$1';
-$route['hod/hf_leave_request_update'] = 'hod/Hod_ctrl/hf_leave_request_update';
+$route['hod/hf-leave-request'] = 'hod/Hod_ctrl/hf_leave_request/';
+$route['hod/hf-leave-request/(:any)'] = 'hod/Hod_ctrl/hf_leave_request/$1';
+$route['hod/hf-leave-request-update'] = 'hod/Hod_ctrl/hf_leave_request_update';
+
+$route['hod/off-day-duty-request'] = 'hod/Hod_ctrl/off_day_duty_request/';
+$route['hod/off-day-duty-request/(:any)'] = 'hod/Hod_ctrl/off_day_duty_request/$1';
+$route['hod/off-day-duty-update'] = 'hod/Hod_ctrl/off_day_duty_request_update';
+
+$route['hod/nh-fh-day-duty-request'] = 'hod/Hod_ctrl/nh_fh_day_duty_request/';
+$route['hod/nh-fh-day-duty-request/(:any)'] = 'hod/Hod_ctrl/nh_fh_day_duty_request/$1';
+$route['hod/nh-fh-day-duty-update'] = 'hod/Hod_ctrl/nh_fh_day_duty_request_update';
 
 
 ////HR////////////////
-$route['ibc/hr/roster'] = 'Hr_ctrl/roster/';
-$route['ibc/hr/HR-Policies'] = 'Hr_ctrl/hr_policies/';
-$route['ibc/IT-Policies'] = 'Hr_ctrl/it_policies/';
-$route['emp/hr/Emp-Info'] = 'Hr_ctrl/emp_info/';
+$route['hr/roster'] = 'Hr_ctrl/roster/';
+$route['hr/HR-Policies'] = 'Hr_ctrl/hr_policies/';
+$route['IT-Policies'] = 'Hr_ctrl/it_policies/';
+$route['hr/Emp-Info'] = 'Hr_ctrl/emp_info/';
 $route['emp/hr/Salary-Slip'] = 'Hr_ctrl/salary_slip/';
 $route['emp/hr/Holiday-List'] = 'Hr_ctrl/holiday_list/';
 
+$route['hr/hf-leave-request'] = 'Hr_ctrl/hf_leave_request';
+$route['hr/hf-leave-request/(:any)'] = 'Hr_ctrl/hf_leave_request/$1';
+$route['hr/hf-leave-request-update'] = 'Hr_ctrl/hf_leave_request_update';
+
+$route['hr/off-day-duty-request'] = 'Hr_ctrl/off_day_duty_request/';
+$route['hr/off-day-duty-request/(:any)'] = 'Hr_ctrl/off_day_duty_request/$1';
+$route['hr/off-day-duty-update'] = 'Hr_ctrl/off_day_duty_request_update';
+
+$route['hr/nh-fh-day-duty-request'] = 'Hr_ctrl/nh_fh_day_duty_request/';
+$route['hr/nh-fh-day-duty-request/(:any)'] = 'Hr_ctrl/nh_fh_day_duty_request/$1';
+$route['hr/nh-fh-day-duty-update'] = 'Hr_ctrl/nh_fh_day_duty_request_update';
+
 /////master//////////
 $route['master/USER-ROLE'] = 'master/Role_ctrl/index';
-
 
 $route['master/SHIFT'] = 'master/Shift_ctrl/index';
 $route['master/nhfh/create'] = 'master/Nh_fh_ctrl/nhfh_create';
@@ -81,5 +103,7 @@ $route['master/employee/create'] = 'master/Employee_ctrl/create';
 $route['master/employee/update/(:any)'] = 'master/Employee_ctrl/update/$1';
 $route['master/employee/privileges/(:any)'] = 'master/Employee_ctrl/privileges/$1';
 $route['master/employee/(:any)'] = 'master/Employee_ctrl/employee_detail/$1';
+
+$route['master/Cab-zone'] = 'master/Cab_ctrl/index';
 
 $route['translate_uri_dashes'] = FALSE;

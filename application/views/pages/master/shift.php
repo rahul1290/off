@@ -37,7 +37,7 @@
 					  <select class="form-control" name="department" id="department">
 							<option value="0">Select Department</option>
 						<?php foreach($departments as $department){ ?>
-							<option value="<?php echo $department['id']; ?>"><?php echo $department['dept_name'];?></option>
+							<option value="<?php echo $department['id']; ?>" <?php if($this->session->userdata('department_id') == $department['id']){ echo "selected"; }?>><?php echo $department['dept_name'];?></option>
 						<?php } ?>
 					  </select>
 					</div>
@@ -58,6 +58,9 @@
 					<div class="col-sm-10">
 					  <select name="employee" class="form-control" id="employee">
 							<option value="0">Select Employee</option>
+							<?php foreach($users as $user){?>
+								<option value="<?php echo $user['ecode']; ?>" <?php if($this->session->userdata('ecode') == $user['ecode']){ echo "selected"; }?>><?php echo $user['name']; ?></option>
+							<?php } ?>
 					  </select>
 					</div>
 				  </div>
@@ -102,15 +105,18 @@ var baseUrl = $('#baseUrl').val();
 $(document).ready(function(){
 	$('#example').DataTable();
 	
+	attendance();
+	get_all_employee();
 	
-	fetch_employees();
 	function fetch_employees(){
 		var dept = $('#department').val();
 		if(dept != 0){
 			$.ajax({
-				type: 'GET',
-				url: baseUrl+'master/department_ctrl/department_employees/'+ dept,
-				data: { },
+				type: 'POST',
+				url: baseUrl+'/Emp_ctrl/get_employee',
+				data: { 
+					'dept_id' : dept
+				},
 				dataType: 'json',
 				beforeSend: function() {},
 				success: function(response){
@@ -133,8 +139,8 @@ $(document).ready(function(){
 	}
 	
 	$(document).on('change','#department',function(){
-		fetch_employees();
-		get_all_employee();
+		 fetch_employees();
+		 get_all_employee();
 	});
 	
 	$(document).on('change','#month',function(){
@@ -143,7 +149,12 @@ $(document).ready(function(){
 	});
 	
 	$(document).on('change','#employee',function(){
-		var ecode = $(this).val();
+		attendance();
+	});
+	
+	
+	function attendance(){
+		var ecode = $('#employee').val();
 		if(ecode != '0'){
 		$.ajax({
 			type: 'POST',
@@ -273,6 +284,11 @@ $(document).ready(function(){
 													else
 														x = x +'<option value="TR">TR</option>';
 													
+													if(res[i-1] == "OFF")
+														x = x + '<option value="OFF" selected>OFF</option>';
+													else
+														x = x +'<option value="OFF">OFF</option>';
+													
 											x = x + '</select>'+ response.saviour[i-1].OUT2 +'</td>';
 										}
 									x = x + '</tr>'+
@@ -323,6 +339,7 @@ $(document).ready(function(){
 															'<option value="NH">NH</option>'+
 															'<option value="FH">FH</option>'+
 															'<option value="TR">TR</option>'+
+															'<option value="OFF">OFF</option>'+
 														'</select>'+
 														response.saviour[i-1].OUT2 +
 													'</td>';
@@ -338,8 +355,7 @@ $(document).ready(function(){
 			}
 		});
 		}
-	});
-	
+	}
 	
 	function get_all_employee(){
 		$.ajax({
@@ -385,6 +401,8 @@ $(document).ready(function(){
 												color = 'bg-warning';
 											else if(res[i-1] == 'TR')
 												color = 'bg-success';
+											else if(res[i-1] == 'OFF')
+												color = 'bg-danger';
 											x = x + '<td class="'+ color +'">'+res[i-1]+'</td>';
 										}
 									}
