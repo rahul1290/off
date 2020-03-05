@@ -62,6 +62,30 @@ class My_library {
 		}	
 	}
 	
+	function pl_calculator($ecode){
+	    $this->CI->db->select('*');
+	    $this->CI->db->order_by('created_at','desc');
+	    $this->CI->db->limit(1);
+	    $result = $this->CI->db->get_where('pl_management',array('type'=>'PL','ecode'=>$ecode))->result_array();
+	    return $result;
+	}
+	
+	function coff($ecode){
+	    $this->CI->db->select('pl.*,date_format(ulr.date,"%d/%m/%Y") as date');
+	    $this->CI->db->order_by('pl.created_at','desc');
+	    $this->CI->db->join('users_leave_requests ulr','ulr.refrence_id = pl.refrence_no AND ulr.status = 1');
+	    $result = $this->CI->db->get_where('pl_management pl',array('pl.type'=>'COFF','pl.credit<>'=>NULL,'pl.ecode'=>$ecode,'pl.status'=>1))->result_array();
+	    return $result;
+	}
+	
+	function nhfh($ecode){
+	    $this->CI->db->select('pl.*,date_format(ulr.date,"%d/%m/%Y") as date');
+	    $this->CI->db->order_by('pl.created_at','desc');
+	    $this->CI->db->join('users_leave_requests ulr','ulr.refrence_id = pl.refrence_no AND ulr.status = 1');
+	    $result = $this->CI->db->get_where('pl_management pl',array('pl.type'=>'NH_FH','pl.credit<>'=>NULL,'pl.ecode'=>$ecode,'pl.status'=>1))->result_array();
+	    return $result;
+	}
+	
 	function sentmail($mail_body,$sendto){
 		$tos = '';
 		foreach($sendto as $send){

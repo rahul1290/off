@@ -207,7 +207,7 @@ foreach($links as $link){
 					<?php if($this->uri->segment('2') == 'off-day-duty-request'){ echo "active"; } ?>
 				">
 				  <i class="fas fa-user"></i>
-                  <p>DAY DUTY REQUESTS</p>
+                  <p>OFF DAY DUTY REQUESTS</p>
                 </a>
               </li>
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('EMPLOYEE INFORMATION',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
