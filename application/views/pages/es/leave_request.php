@@ -71,13 +71,13 @@
 						<tr>
 							<td><b>WEEK OFF DAY</b></td>
 							<td>
-								<input type="radio" name="wod" class="wo ml-1">SUN
-								<input type="radio" name="wod" class="wo ml-1">MON
-								<input type="radio" name="wod" class="wo ml-1">TUE	
-								<input type="radio" name="wod" class="wo ml-1">WED
-								<input type="radio" name="wod" class="wo ml-1">THU
-								<input type="radio" name="wod" class="wo ml-1">FRI
-								<input type="radio" name="wod" class="wo ml-1">SAT
+								<input type="radio" name="wod" value="1" class="wo ml-1">SUN
+								<input type="radio" name="wod" value="2" class="wo ml-1">MON
+								<input type="radio" name="wod" value="3" class="wo ml-1">TUE	
+								<input type="radio" name="wod" value="4" class="wo ml-1">WED
+								<input type="radio" name="wod" value="5" class="wo ml-1">THU
+								<input type="radio" name="wod" value="6" class="wo ml-1">FRI
+								<input type="radio" name="wod" value="7" class="wo ml-1">SAT
 							</td>
 						</tr>
 					</table>
@@ -210,9 +210,13 @@ $(document).ready(function(){
 			type: 'POST',
 			url: baseUrl + 'Emp_ctrl/leave_request/',
 			data: { 
-				'from' : req_id,
-				'key' : 'hod_remark',
-				'value' : status,
+				'from_date' : from_date,
+				'to_date' : to_date,
+				'coff' : coff,
+				'nhfh' : nhfh,
+				'wod' : wod,
+				'reason' : $('#reason').val(),
+				'pl' : $('#pl_deduct').text()
 			},
 			dataType: 'json',
 			beforeSend: function() {},

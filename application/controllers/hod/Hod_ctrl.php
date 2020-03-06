@@ -35,14 +35,12 @@ class Hod_ctrl extends CI_Controller {
 	function hf_leave_request($ref_id = null){		
 		$data = array();
 		$data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
-		
 		$users = $this->Emp_model->get_employee($this->session->userdata('ecode'));			
 		$ulist = '';
 		foreach($users as $user) {
 			$ulist = $ulist.",'".$user['ecode']."'";
 		}
 		$ulist = ltrim($ulist,',');
-		
 		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
@@ -56,6 +54,7 @@ class Hod_ctrl extends CI_Controller {
 		$data['title'] = $this->config->item('project_title').' | HF Day Leave Requests';
 		$data['head'] = $this->load->view('common/head',$data,true);
 		$data['footer'] = $this->load->view('common/footer',$data,true);
+		
 		$this->load->view('layout_master',$data);
 	}
 

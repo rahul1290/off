@@ -99,7 +99,7 @@
 									<th>HOD STATUS</th>
 									<th>HR REMARK</th>
 									<th>HR STATUS</th>
-									<th>LAST UPDATE</th>
+									<th>LAST UPDATE BY</th>
 								</tr>
 							</thead>
 							<tbody>

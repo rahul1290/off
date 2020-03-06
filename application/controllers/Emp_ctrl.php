@@ -18,7 +18,7 @@ class Emp_ctrl extends CI_Controller {
 
 	function index(){
 		
-		//$this->db2 = $this->load->database('sqlsrv', TRUE);
+		$this->db2 = $this->load->database('sqlsrv', TRUE);
 
 		$data = array();
 		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
@@ -87,7 +87,37 @@ class Emp_ctrl extends CI_Controller {
 	
 	function leave_request(){
 	    if($_SERVER['REQUEST_METHOD'] == 'POST') {
-	        print_r($this->input->post());
+	        $from_date = $this->my_library->mydate($this->input->post('from_date'));
+	        $to_date = $this->my_library->mydate($this->input->post('to_date'));
+	        $data['request_type'] = 'LEAVE';
+	        $data['refrence_id'] = 'LEAVE-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
+	        $data['ecode'] = $this->session->userdata('ecode');
+	        $data['requirment'] = $this->input->post('reason');
+	        $data['date_from'] = $from_date;
+	        $data['date_to'] = $to_date;
+	        $date['created_at'] = date('Y-m-d H:i:s');
+	        $data['wod'] = $this->input->post('wod');
+	        $coff = $this->input->post('coff');
+	        
+	        $coff_ids = array();
+	        $this->db->select('id');
+	        $this->db->where_in('refrence_id',$coff);
+	        $result = $this->db->get('users_leave_requests')->result_array();
+	        foreach($result as $r){
+	            $coff_ids[].= $r['id'];
+	        }
+	        
+	        if($this->db->insert('users_leave_requests',$data)){
+	            $id = $this->db->insert_id();
+	            $this->db->where('id',$id);
+	            $this->db->update('users_leave_requests',array('refrence_id'=>$data['refrence_id'].'-'.$id));
+	            
+	            $this->db->where_in('id',$coff_ids);
+	            $this->db->update('users_leave_requests',array('request_id'=>$data['refrence_id'].'-'.$id));
+	            
+	        }
+	        
+	        
 	        
 	    } else {
     		$data = array();
@@ -120,15 +150,13 @@ class Emp_ctrl extends CI_Controller {
 					$data['footer'] = $this->load->view('include/footer','',true);
 					$data['top_nav'] = $this->load->view('include/top_nav','',true);
 					$data['aside'] = $this->load->view('include/aside','',true);
-					//$data['open'] = 'true';
 					$data['notepad'] = $this->load->view('include/shift_timing','',true);
 					
-					$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date,"%d/%m/%Y") as date');
+					$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date');
 					$data['requests'] = $this->db->get_where('users_leave_requests',array('ecode'=>$this->session->userdata('ecode'),'request_type'=>'HALF','status'=>1))->result_array();
-					
 					$data['body'] = $this->load->view('pages/es/hf_leave_request',$data,true);
 					//===============common===============//
-					$data['title'] = 'Home | HF Leave Request';
+					$data['title'] =  $this->config->item('project_title').' | HF Leave Request';
 					$data['head'] = $this->load->view('common/head',$data,true);
 					$data['footer'] = $this->load->view('common/footer',$data,true);
 					$this->load->view('layout_master',$data);
@@ -137,7 +165,8 @@ class Emp_ctrl extends CI_Controller {
 					$data['ecode'] = $this->session->userdata('ecode');
 					$data['requirment'] = $this->input->post('reason');
 					$date = $this->my_library->mydate($this->input->post('half_day_date'));
-					$data['date'] = $date;
+					$data['date_from'] = $date;
+					$data['date_to'] = $date;
 					$data['request_type'] = 'HALF';
 					$data['refrence_id'] = 'HF-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
 					$data['created_at'] = date('Y-m-d H:i:s');
@@ -172,9 +201,8 @@ class Emp_ctrl extends CI_Controller {
 			$data['aside'] = $this->load->view('include/aside',$data,true);
 			$data['notepad'] = $this->load->view('include/shift_timing','',true);
 			
-			$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date,"%d/%m/%Y") as date,date_format(hod_remark_date,"%d/%m/%Y %H:%i:%s") as hod_remark_date');
-			$this->db->order_by('date','DESC');
-			$this->db->limit(20);
+			$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date,date_format(hod_remark_date,"%d/%m/%Y %H:%i:%s") as hod_remark_date');
+			$this->db->order_by('date_from','DESC');
 			$data['requests'] = $this->db->get_where('users_leave_requests',array('ecode'=>$this->session->userdata('ecode'),'request_type'=>'HALF','status'=>1))->result_array();
 			
 			$data['body'] = $this->load->view('pages/es/hf_leave_request',$data,true);
@@ -312,7 +340,7 @@ class Emp_ctrl extends CI_Controller {
 		} 
 		else if($type == "HALF"){
 			$this->db->select('*');
-			$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'date'=>$date,'request_type'=>$type,'status'=>1))->result_array();
+			$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'date_from'=>$date,'request_type'=>$type,'status'=>1))->result_array();
 			
 			if(count($result)>0){
 				echo json_encode(array('msg'=>'You already requested for this date.','status'=>500));

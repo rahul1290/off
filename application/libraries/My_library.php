@@ -71,7 +71,7 @@ class My_library {
 	}
 	
 	function coff($ecode){
-	    $this->CI->db->select('pl.*,date_format(ulr.date,"%d/%m/%Y") as date');
+	    $this->CI->db->select('pl.*,date_format(ulr.date_from,"%d/%m/%Y") as date');
 	    $this->CI->db->order_by('pl.created_at','desc');
 	    $this->CI->db->join('users_leave_requests ulr','ulr.refrence_id = pl.refrence_no AND ulr.status = 1');
 	    $result = $this->CI->db->get_where('pl_management pl',array('pl.type'=>'COFF','pl.credit<>'=>NULL,'pl.ecode'=>$ecode,'pl.status'=>1))->result_array();
@@ -79,11 +79,23 @@ class My_library {
 	}
 	
 	function nhfh($ecode){
-	    $this->CI->db->select('pl.*,date_format(ulr.date,"%d/%m/%Y") as date');
+	    $this->CI->db->select('pl.*,date_format(ulr.date_from,"%d/%m/%Y") as date');
 	    $this->CI->db->order_by('pl.created_at','desc');
 	    $this->CI->db->join('users_leave_requests ulr','ulr.refrence_id = pl.refrence_no AND ulr.status = 1');
 	    $result = $this->CI->db->get_where('pl_management pl',array('pl.type'=>'NH_FH','pl.credit<>'=>NULL,'pl.ecode'=>$ecode,'pl.status'=>1))->result_array();
 	    return $result;
+	}
+	
+	function leave_requester_ecode($ref_id){
+	    $this->CI->db->select('ecode');
+	    $result = $this->CI->db->get_where('users_leave_requests',array('id'=>$ref_id))->result_array();
+	    return $result[0]['ecode'];
+	}
+	
+	function leave_request_refno($ref_id){
+	    $this->CI->db->select('refrence_id');
+	    $result = $this->CI->db->get_where('users_leave_requests',array('id'=>$ref_id))->result_array();
+	    return $result[0]['refrence_id'];
 	}
 	
 	function sentmail($mail_body,$sendto){
