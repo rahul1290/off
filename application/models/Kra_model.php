@@ -8,7 +8,10 @@ class Kra_model extends CI_Model {
         $this->db->trans_begin();
         
         $this->db->select('s_id');
-        $session = $this->db->get_where('session',array('is_active'=>'pre','status'=>1))->result_array();
+        $session = $this->db->get_where('session',array('is_active'=>'curr','status'=>1))->result_array();
+        
+        $this->db->select('s_id');
+        $prev_session = $this->db->get_where('session',array('is_active'=>'pre','status'=>1))->result_array();
         
         $this->db->select('*');
         $usedetail = $this->db->get_where('kra_user_detail',array('ecode'=>$ecode,'session_id'=>$session[0]['s_id']))->result_array();
@@ -17,21 +20,36 @@ class Kra_model extends CI_Model {
             $db2->select("*");
             $result = $db2->get_where($this->config->item('NEWZ36').'KRANew',array('EmpCode'=>$ecode))->result_array();
             
+            $db2->select('*');
+            $userdetail = $db2->get_where($this->config->item('NEWZ36').'LoginKRA',array('EmpCode'=>$ecode))->result_array();
+            
             if(count($result)>0){
                 $userinfo = array();
                 $krafeed = array();
                 
                 $userinfo['session_id'] = $session[0]['s_id'];
                 $userinfo['ecode'] = $ecode;
-                $userinfo['post'] = $result[0]['post'];
-                $userinfo['uname'] = $result[0]['Name'];
-                $userinfo['reporting_ecode'] = $result[0]['KRAReportTo']; 
-                $userinfo['reporting_name'] = $result[0]['KRAReportName'];
-                $userinfo['dept'] = $result[0]['Dept'];
-                $userinfo['jdate'] = $result[0]['JDate'];
-                $userinfo['img'] = $result[0]['PImg'];
+                $userinfo['post'] = $userdetail[0]['Designation'];
+                $userinfo['uname'] = $userdetail[0]['Name'];
+                $userinfo['reporting_ecode'] = $userdetail[0]['Report1']; 
+                $userinfo['reporting_name'] = $userdetail[0]['ReportTo'];
+                $userinfo['dept'] = $userdetail[0]['Dept'];
+                $userinfo['jdate'] = $userdetail[0]['JDate'];
+                $userinfo['img'] = $userdetail[0]['PImg'];
                 $userinfo['created_at'] = date('Y-m-d H:i:s');
+                $this->db->insert('kra_user_detail',$userinfo);
                 
+                $userinfo = array();
+                $userinfo['session_id'] = $prev_session[0]['s_id'];
+                $userinfo['ecode'] = $ecode;
+                $userinfo['post'] = $userdetail[0]['Designation'];
+                $userinfo['uname'] = $userdetail[0]['Name'];
+                $userinfo['reporting_ecode'] = $userdetail[0]['Report1'];
+                $userinfo['reporting_name'] = $userdetail[0]['ReportTo'];
+                $userinfo['dept'] = $userdetail[0]['Dept'];
+                $userinfo['jdate'] = $userdetail[0]['JDate'];
+                $userinfo['img'] = $userdetail[0]['PImg'];
+                $userinfo['created_at'] = date('Y-m-d H:i:s');
                 $this->db->insert('kra_user_detail',$userinfo);
                 
                 $x = $this->db->insert_id();
@@ -107,5 +125,21 @@ class Kra_model extends CI_Model {
     function kra_feed($ecode,$session){
         $result = $this->db->query("select * from kra_feed where kra_id = (select id from kra_user_detail where ecode = '$ecode' AND session_id = $session AND status = 1)")->result_array();
         return $result;
+    }
+    
+    function kra_submit($data,$session_id,$ecode){
+        $this->db->select('id');
+        $kra_id = $this->db->get_where('kra_user_detail',array('session_id'=>$session_id,'ecode'=>$ecode,'status'=>1))->result_array();
+        
+        $this->db->select('id');
+        $krafeed = $this->db->get_where('kra_feed',array('kra_id'=>$kra_id[0]['id']))->result_array();
+        
+        if(count($krafeed)>0){ 
+            $this->db->where('id',$krafeed[0]['id']);
+            $this->db->update('kra_feed',$data);
+        } else {
+            $data['kra_id'] = $kra_id[0]['id'];
+            $this->db->insert('kra_feed',$data);
+        }
     }
 }

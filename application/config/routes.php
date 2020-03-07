@@ -17,7 +17,7 @@ $route['es/NH-FH-Avail-Form'] = 'Emp_ctrl/nh_fh_avail_form/';
 $route['emp/es/PL-Summary-Report'] = 'Emp_ctrl/pl_summary_report/';
 $route['emp/es/Attendance-Record'] = 'Emp_ctrl/attendance_record/';
 $route['es/Attendance-Record'] = 'Emp_ctrl/attendance/';
-$route['es/KRA/(:any)'] = 'Kra_ctrl/index/$1';
+$route['es/KRA/(:any)/(:any)'] = 'Kra_ctrl/index/$1/$2';
 
 
 ///OUTPUT

@@ -98,6 +98,12 @@ class My_library {
 	    return $result[0]['refrence_id'];
 	}
 	
+	function get_current_session(){
+	    $this->CI->db->select('*');
+	    $result = $this->CI->db->get_where('session',array('is_active'=>'curr','status'=>1))->result_array();
+	    return $result[0]['name'];
+	}
+	
 	function sentmail($mail_body,$sendto){
 		$tos = '';
 		foreach($sendto as $send){
