@@ -109,14 +109,14 @@ class Kra_model extends CI_Model {
         $this->db->select('*');
         $session = $this->db->get_where('session',array('is_active'=>'curr'))->result_array();
         
-        $this->db->select('*');
+        $this->db->select('*,date_format(jdate,"%d-%m-%Y") as jdate1');
         $userdetail = $this->db->get_where('kra_user_detail',array('ecode'=>$ecode,'session_id'=>$session[0]['s_id'],'status'=>1))->result_array();
         
         if(!count($userdetail)>0){
             $this->db->select('*');
             $session = $this->db->get_where('session',array('is_active'=>'pre'))->result_array();
             
-            $this->db->select('*');
+            $this->db->select('*,date_format(jdate,"%d-%m-%Y") as jdate1');
             $userdetail = $this->db->get_where('kra_user_detail',array('ecode'=>$ecode,'session_id'=>$session[0]['s_id'],'status'=>1))->result_array();
         }
         return $userdetail;

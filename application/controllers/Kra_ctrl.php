@@ -16,49 +16,49 @@ class Kra_ctrl extends CI_Controller {
 		}
 	}
 
-	function index($session,$ecode){
+	function index($session=null,$ecode=null){
 	    if($_SERVER['REQUEST_METHOD'] === 'POST'){
 	        $this->form_validation->set_rules('session', 'Session', 'required');
-	        $this->form_validation->set_rules('key_result_area1','Key Result Area','trim|required');
-	        $this->form_validation->set_rules('key_result_area2','Key Result Area','trim|required');
-	        $this->form_validation->set_rules('key_result_area3','Key Result Area','trim|required');
-	        $this->form_validation->set_rules('key_result_area4','Key Result Area','trim|required');
-	        $this->form_validation->set_rules('key_result_area5','Key Result Area','trim|required');
-	        $this->form_validation->set_rules('key_result_area6','Key Result Area','trim|required');
-	        $this->form_validation->set_rules('key_performance_indicator1','key performance Indicator','trim|required');
-	        $this->form_validation->set_rules('key_performance_indicator2','key performance Indicator','trim|required');
-	        $this->form_validation->set_rules('key_performance_indicator3','key performance Indicator','trim|required');
-	        $this->form_validation->set_rules('key_performance_indicator4','key performance Indicator','trim|required');
-	        $this->form_validation->set_rules('key_performance_indicator5','key performance Indicator','trim|required');
-	        $this->form_validation->set_rules('key_performance_indicator6','key performance Indicator','trim|required');
-	        $this->form_validation->set_rules('weightage1','Weightage','trim|required');
-	        $this->form_validation->set_rules('weightage2','Weightage','trim|required');
-	        $this->form_validation->set_rules('weightage3','Weightage','trim|required');
-	        $this->form_validation->set_rules('weightage4','Weightage','trim|required');
-	        $this->form_validation->set_rules('weightage5','Weightage','trim|required');
-	        $this->form_validation->set_rules('weightage6','Weightage','trim|required');
-	        $this->form_validation->set_rules('target1','Target','trim|required');
-	        $this->form_validation->set_rules('target2','Target','trim|required');
-	        $this->form_validation->set_rules('target3','Target','trim|required');
-	        $this->form_validation->set_rules('target4','Target','trim|required');
-	        $this->form_validation->set_rules('target5','Target','trim|required');
-	        $this->form_validation->set_rules('target6','Target','trim|required');
-	        $this->form_validation->set_rules('acheived1','Acheived','trim|required');
-	        $this->form_validation->set_rules('acheived2','Acheived','trim|required');
-	        $this->form_validation->set_rules('acheived3','Acheived','trim|required');
-	        $this->form_validation->set_rules('acheived4','Acheived','trim|required');
-	        $this->form_validation->set_rules('acheived5','Acheived','trim|required');
-	        $this->form_validation->set_rules('acheived6','Acheived','trim|required');
-	        $this->form_validation->set_rules('weighted_score1','Weighted score','trim|required');
-	        $this->form_validation->set_rules('weighted_score2','Weighted score','trim|required');
-	        $this->form_validation->set_rules('weighted_score3','Weighted score','trim|required');
-	        $this->form_validation->set_rules('weighted_score4','Weighted score','trim|required');
-	        $this->form_validation->set_rules('weighted_score5','Weighted score','trim|required');
-	        $this->form_validation->set_rules('weighted_score6','Weighted score','trim|required');
-	        $this->form_validation->set_rules('appraisel_cmt','Appraisal comment','trim|required');
-	        $this->form_validation->set_rules('develop_need1','Development Need','trim|required');
-	        $this->form_validation->set_rules('develop_need2','Development Need','trim|required');
-	        $this->form_validation->set_rules('develop_plan','Development Plan','trim|required');
+	        $this->form_validation->set_rules('key_result_area1','Key Result Area','trim');
+	        $this->form_validation->set_rules('key_result_area2','Key Result Area','trim');
+	        $this->form_validation->set_rules('key_result_area3','Key Result Area','trim');
+	        $this->form_validation->set_rules('key_result_area4','Key Result Area','trim');
+	        $this->form_validation->set_rules('key_result_area5','Key Result Area','trim');
+	        $this->form_validation->set_rules('key_result_area6','Key Result Area','trim');
+	        $this->form_validation->set_rules('key_performance_indicator1','key performance Indicator','trim');
+	        $this->form_validation->set_rules('key_performance_indicator2','key performance Indicator','trim');
+	        $this->form_validation->set_rules('key_performance_indicator3','key performance Indicator','trim');
+	        $this->form_validation->set_rules('key_performance_indicator4','key performance Indicator','trim');
+	        $this->form_validation->set_rules('key_performance_indicator5','key performance Indicator','trim');
+	        $this->form_validation->set_rules('key_performance_indicator6','key performance Indicator','trim');
+	        $this->form_validation->set_rules('weightage1','Weightage','trim');
+	        $this->form_validation->set_rules('weightage2','Weightage','trim');
+	        $this->form_validation->set_rules('weightage3','Weightage','trim');
+	        $this->form_validation->set_rules('weightage4','Weightage','trim');
+	        $this->form_validation->set_rules('weightage5','Weightage','trim');
+	        $this->form_validation->set_rules('weightage6','Weightage','trim');
+	        $this->form_validation->set_rules('target1','Target','trim');
+	        $this->form_validation->set_rules('target2','Target','trim');
+	        $this->form_validation->set_rules('target3','Target','trim');
+	        $this->form_validation->set_rules('target4','Target','trim');
+	        $this->form_validation->set_rules('target5','Target','trim');
+	        $this->form_validation->set_rules('target6','Target','trim');
+	        $this->form_validation->set_rules('acheived1','Acheived','trim');
+	        $this->form_validation->set_rules('acheived2','Acheived','trim');
+	        $this->form_validation->set_rules('acheived3','Acheived','trim');
+	        $this->form_validation->set_rules('acheived4','Acheived','trim');
+	        $this->form_validation->set_rules('acheived5','Acheived','trim');
+	        $this->form_validation->set_rules('acheived6','Acheived','trim');
+	        $this->form_validation->set_rules('weighted_score1','Weighted score','trim');
+	        $this->form_validation->set_rules('weighted_score2','Weighted score','trim');
+	        $this->form_validation->set_rules('weighted_score3','Weighted score','trim');
+	        $this->form_validation->set_rules('weighted_score4','Weighted score','trim');
+	        $this->form_validation->set_rules('weighted_score5','Weighted score','trim');
+	        $this->form_validation->set_rules('weighted_score6','Weighted score','trim');
+	        $this->form_validation->set_rules('appraisel_cmt','Appraisal comment','trim');
+	        $this->form_validation->set_rules('develop_need1','Development Need','trim');
+	        $this->form_validation->set_rules('develop_need2','Development Need','trim');
+	        $this->form_validation->set_rules('develop_plan','Development Plan','trim');
 	        
 	        
 	        $this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
@@ -92,12 +92,12 @@ class Kra_ctrl extends CI_Controller {
 	            $data['key_performance_indicator4'] = $this->input->post('key_performance_indicator4');
 	            $data['key_performance_indicator5'] = $this->input->post('key_performance_indicator5');
 	            $data['key_performance_indicator6'] = $this->input->post('key_performance_indicator6');
-	            $data['weightage1'] = $this->input->post('key_performance_indicator1');
-	            $data['weightage2'] = $this->input->post('key_performance_indicator2');
-	            $data['weightage3'] = $this->input->post('key_performance_indicator3');
-	            $data['weightage4'] = $this->input->post('key_performance_indicator4');
-	            $data['weightage5'] = $this->input->post('key_performance_indicator5');
-	            $data['weightage6'] = $this->input->post('key_performance_indicator6');
+	            $data['weightage1'] = $this->input->post('weightage1');
+	            $data['weightage2'] = $this->input->post('weightage2');
+	            $data['weightage3'] = $this->input->post('weightage3');
+	            $data['weightage4'] = $this->input->post('weightage4');
+	            $data['weightage5'] = $this->input->post('weightage5');
+	            $data['weightage6'] = $this->input->post('weightage6');
 	            $data['target1'] = $this->input->post('target1');
 	            $data['target2'] = $this->input->post('target2');
 	            $data['target3'] = $this->input->post('target3');
@@ -120,9 +120,31 @@ class Kra_ctrl extends CI_Controller {
 	            $data['develop_need1'] = $this->input->post('develop_need1');
 	            $data['develop_need2'] = $this->input->post('develop_need2');
 	            $data['develop_plan'] = $this->input->post('develop_plan');
+				
 	            $this->Kra_model->kra_submit($data,$session_id,$ecode);
+				
+				
+				$data = array();
+				$this->session->set_flashdata('msg', '<h3 class="text-center bg-success">KRA Updated successfully.</h3>');
+	            $this->db->select('*');
+	            $data['session'] = $this->db->get_where('session',array('status'=>1))->result_array();
+	            
+	            $this->db->select('s_id');
+	            $session = $this->db->get_where('session',array('is_active'=>'curr','status'=>1))->result_array();
+	            $this->Kra_model->set_detail($ecode);
+	            $data['user_detail'] = $this->Kra_model->get_detail($ecode);
+	            $data['kra_feeds'] = $this->Kra_model->kra_feed($ecode,$session[0]['s_id']);
+	            
+	            $data['title'] = $this->config->item('project_title').' |KRA';
+	            $data['head'] = $this->load->view('common/head',$data,true);
+	            $data['footer'] = $this->load->view('common/footer',$data,true);
+	            $this->load->view('pages/es/kra',$data);
 	        }
 	    } else {
+			if($ecode == null){
+				$ecode = $session;
+				$session = '2018-19';
+			}
     		$data = array();
     		$this->db->select('*');
     		$data['session'] = $this->db->get_where('session',array('status'=>1))->result_array();
