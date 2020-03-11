@@ -128,18 +128,46 @@ class Kra_model extends CI_Model {
     }
     
     function kra_submit($data,$session_id,$ecode){
-        $this->db->select('id');
-        $kra_id = $this->db->get_where('kra_user_detail',array('session_id'=>$session_id,'ecode'=>$ecode,'status'=>1))->result_array();
+        $this->db->trans_begin();
         
-        $this->db->select('id');
-        $krafeed = $this->db->get_where('kra_feed',array('kra_id'=>$kra_id[0]['id']))->result_array();
+            $this->db->select('id');
+            $kra_id = $this->db->get_where('kra_user_detail',array('session_id'=>$session_id,'ecode'=>$ecode,'status'=>1))->result_array();
+            
+            $this->db->where('id',$kra_id[0]['id']);
+            $this->db->update('kra_user_detail',array('is_submited'=>1));
+            
+            $this->db->select('id');
+            $krafeed = $this->db->get_where('kra_feed',array('kra_id'=>$kra_id[0]['id']))->result_array();
+            
+            if(count($krafeed)>0){ 
+                $this->db->where('id',$krafeed[0]['id']);
+                $this->db->update('kra_feed',$data);
+            } else {
+                $data['kra_id'] = $kra_id[0]['id'];
+                $this->db->insert('kra_feed',$data);
+            }
         
-        if(count($krafeed)>0){ 
-            $this->db->where('id',$krafeed[0]['id']);
-            $this->db->update('kra_feed',$data);
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
         } else {
-            $data['kra_id'] = $kra_id[0]['id'];
-            $this->db->insert('kra_feed',$data);
+            $this->db->trans_commit();
         }
+    }
+    
+    
+    /////////////////// HOD ////////////////////////
+    
+    function get_employee_list($ecode,$session,$status){
+        return $result = $this->db->query('select kud.*,kf.hod_status from kra_user_detail kud
+                            left JOIN kra_feed kf on kud.id = kf.kra_id
+                            where kud.reporting_ecode = "'.$ecode.'" AND kud.is_submited = '.$status.' AND kud.session_id = (select s_id from session where name = "'.$session.'")')->result_array();
+    }
+    
+    function appraiser_score($data,$other){
+        $id = $this->db->query("select id from kra_user_detail where ecode = '".$other['ecode']."' AND session_id = (select s_id from session where name = '".$other['session']."') AND status = 1")->result_array();
+        
+        $this->db->where('kra_id',$id[0]['id']);
+        $this->db->update('kra_feed',$data);
+        return true;
     }
 }

@@ -19,18 +19,18 @@ class Kra_ctrl extends CI_Controller {
 	function index($session=null,$ecode=null){
 	    if($_SERVER['REQUEST_METHOD'] === 'POST'){
 	        $this->form_validation->set_rules('session', 'Session', 'required');
-	        $this->form_validation->set_rules('key_result_area1','Key Result Area','trim');
-	        $this->form_validation->set_rules('key_result_area2','Key Result Area','trim');
-	        $this->form_validation->set_rules('key_result_area3','Key Result Area','trim');
-	        $this->form_validation->set_rules('key_result_area4','Key Result Area','trim');
-	        $this->form_validation->set_rules('key_result_area5','Key Result Area','trim');
-	        $this->form_validation->set_rules('key_result_area6','Key Result Area','trim');
-	        $this->form_validation->set_rules('key_performance_indicator1','key performance Indicator','trim');
-	        $this->form_validation->set_rules('key_performance_indicator2','key performance Indicator','trim');
-	        $this->form_validation->set_rules('key_performance_indicator3','key performance Indicator','trim');
-	        $this->form_validation->set_rules('key_performance_indicator4','key performance Indicator','trim');
-	        $this->form_validation->set_rules('key_performance_indicator5','key performance Indicator','trim');
-	        $this->form_validation->set_rules('key_performance_indicator6','key performance Indicator','trim');
+	        $this->form_validation->set_rules('key_result_area1','Key Result Area','trim|required');
+	        $this->form_validation->set_rules('key_result_area2','Key Result Area','trim|required');
+	        $this->form_validation->set_rules('key_result_area3','Key Result Area','trim|required');
+	        $this->form_validation->set_rules('key_result_area4','Key Result Area','trim|required');
+	        $this->form_validation->set_rules('key_result_area5','Key Result Area','trim|required');
+	        $this->form_validation->set_rules('key_result_area6','Key Result Area','trim|required');
+	        $this->form_validation->set_rules('key_performance_indicator1','key performance Indicator','trim|required');
+	        $this->form_validation->set_rules('key_performance_indicator2','key performance Indicator','trim|required');
+	        $this->form_validation->set_rules('key_performance_indicator3','key performance Indicator','trim|required');
+	        $this->form_validation->set_rules('key_performance_indicator4','key performance Indicator','trim|required');
+	        $this->form_validation->set_rules('key_performance_indicator5','key performance Indicator','trim|required');
+	        $this->form_validation->set_rules('key_performance_indicator6','key performance Indicator','trim|required');
 	        $this->form_validation->set_rules('weightage1','Weightage','trim');
 	        $this->form_validation->set_rules('weightage2','Weightage','trim');
 	        $this->form_validation->set_rules('weightage3','Weightage','trim');
@@ -160,6 +160,69 @@ class Kra_ctrl extends CI_Controller {
     		$data['footer'] = $this->load->view('common/footer',$data,true);
     		$this->load->view('pages/es/kra',$data);
 	    }
+	}
+	
+	
+	
+	
+	function hod_dashboard($ecode,$session_id=null){
+	    if($session_id == null){
+	        $session_id = $this->my_library->get_current_session();
+	    }
+	    $data = array();
+	    $this->db->select('*');
+	    $data['session'] = $this->db->get_where('session',array('status'=>1))->result_array();
+	    
+	    $this->db->select('s_id');
+	    $session = $this->db->get_where('session',array('name'=>$session_id,'status'=>1))->result_array();
+	    
+	    $data['pending_employees'] = $this->Kra_model->get_employee_list($ecode,$session_id,0);
+	    $data['employees'] = $this->Kra_model->get_employee_list($ecode,$session_id,1);
+	    
+	    $data['user_detail'] = $this->Kra_model->get_detail($ecode);
+	    $data['kra_feeds'] = $this->Kra_model->kra_feed($ecode,$session[0]['s_id']);
+	    
+	    $data['title'] = $this->config->item('project_title').' |HOD KRA';
+	    $data['head'] = $this->load->view('common/head',$data,true);
+	    $data['footer'] = $this->load->view('common/footer',$data,true);
+	    $this->load->view('pages/hod/kra',$data);
+	}
+	
+	function employee_detail($session_id,$ecode){
+	    $data = array();
+	    $this->db->select('*');
+	    $data['session'] = $this->db->get_where('session',array('status'=>1))->result_array();
+	    
+	    $this->db->select('s_id');
+	    $session = $this->db->get_where('session',array('name'=>$session_id,'status'=>1))->result_array();
+	    
+	    $data['pending_employees'] = $this->Kra_model->get_employee_list($ecode,$session_id,0);
+	    $data['employees'] = $this->Kra_model->get_employee_list($ecode,$session_id,1);
+	    
+	    $data['user_detail'] = $this->Kra_model->get_detail($ecode);
+	    $data['kra_feeds'] = $this->Kra_model->kra_feed($ecode,$session[0]['s_id']);
+	    
+	    $data['title'] = $this->config->item('project_title').' |HOD KRA';
+	    $data['head'] = $this->load->view('common/head',$data,true);
+	    $data['footer'] = $this->load->view('common/footer',$data,true);
+	    $this->load->view('pages/hod/employee_detail_kra',$data);
+	}
+	
+	function appraiser_score($hod,$session,$ecode){
+	    $other['hod'] = $hod;
+	    $other['session'] = $session;
+	    $other['ecode'] = $ecode;
+	    $data['appraiser_score1_hod'] = $this->input->post('appraiser_score1');
+	    $data['appraiser_score2_hod'] = $this->input->post('appraiser_score2');
+	    $data['appraiser_score3_hod'] = $this->input->post('appraiser_score3');
+	    $data['appraiser_score4_hod'] = $this->input->post('appraiser_score4');
+	    $data['appraiser_score5_hod'] = $this->input->post('appraiser_score5');
+	    $data['appraiser_score6_hod'] = $this->input->post('appraiser_score6');
+	    $data['appraiser_comment_hod'] = $this->input->post('appraiser_score_comment');
+	    $data['hod_status'] = date('Y-m-d H:i:s');
+	    
+	    $this->Kra_model->appraiser_score($data,$other);
+	    redirect('/HOD/'.$hod.'/KRA/'.$session.'/'.$ecode);
 	}
 	
 }

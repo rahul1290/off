@@ -17,7 +17,15 @@ $route['es/NH-FH-Avail-Form'] = 'Emp_ctrl/nh_fh_avail_form/';
 $route['emp/es/PL-Summary-Report'] = 'Emp_ctrl/pl_summary_report/';
 $route['emp/es/Attendance-Record'] = 'Emp_ctrl/attendance_record/';
 $route['es/Attendance-Record'] = 'Emp_ctrl/attendance/';
+
+$route['HOD/(:any)/KRA'] = 'Kra_ctrl/hod_dashboard/$1';
+$route['HOD/(:any)/KRA/(:any)'] = 'Kra_ctrl/hod_dashboard/$1/$2';
+$route['HOD/(:any)/KRA/(:any)/(:any)'] = 'Kra_ctrl/employee_detail/$2/$3';
+$route['HOD/score/(:any)/(:any)/(:any)'] = 'Kra_ctrl/appraiser_score/$1/$2/$3';
+
+$route['es/KRA/(:any)'] = 'Kra_ctrl/index/$1';
 $route['es/KRA/(:any)/(:any)'] = 'Kra_ctrl/index/$1/$2';
+
 
 
 ///OUTPUT
