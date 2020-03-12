@@ -15,7 +15,8 @@ class Kra_ctrl extends CI_Controller {
 			redirect('Auth');
 		}
 	}
-
+	
+	
 	function index($session=null,$ecode=null){
 	    if($_SERVER['REQUEST_METHOD'] === 'POST'){
 	        $this->form_validation->set_rules('session', 'Session', 'required');
@@ -31,24 +32,24 @@ class Kra_ctrl extends CI_Controller {
 	        $this->form_validation->set_rules('key_performance_indicator4','key performance Indicator','trim|required');
 	        $this->form_validation->set_rules('key_performance_indicator5','key performance Indicator','trim|required');
 	        $this->form_validation->set_rules('key_performance_indicator6','key performance Indicator','trim|required');
-	        $this->form_validation->set_rules('weightage1','Weightage','trim');
-	        $this->form_validation->set_rules('weightage2','Weightage','trim');
-	        $this->form_validation->set_rules('weightage3','Weightage','trim');
-	        $this->form_validation->set_rules('weightage4','Weightage','trim');
-	        $this->form_validation->set_rules('weightage5','Weightage','trim');
-	        $this->form_validation->set_rules('weightage6','Weightage','trim');
-	        $this->form_validation->set_rules('target1','Target','trim');
-	        $this->form_validation->set_rules('target2','Target','trim');
-	        $this->form_validation->set_rules('target3','Target','trim');
-	        $this->form_validation->set_rules('target4','Target','trim');
-	        $this->form_validation->set_rules('target5','Target','trim');
-	        $this->form_validation->set_rules('target6','Target','trim');
-	        $this->form_validation->set_rules('acheived1','Acheived','trim');
-	        $this->form_validation->set_rules('acheived2','Acheived','trim');
-	        $this->form_validation->set_rules('acheived3','Acheived','trim');
-	        $this->form_validation->set_rules('acheived4','Acheived','trim');
-	        $this->form_validation->set_rules('acheived5','Acheived','trim');
-	        $this->form_validation->set_rules('acheived6','Acheived','trim');
+	        $this->form_validation->set_rules('weightage1','Weightage','trim|required');
+	        $this->form_validation->set_rules('weightage2','Weightage','trim|required');
+	        $this->form_validation->set_rules('weightage3','Weightage','trim|required');
+	        $this->form_validation->set_rules('weightage4','Weightage','trim|required');
+	        $this->form_validation->set_rules('weightage5','Weightage','trim|required');
+	        $this->form_validation->set_rules('weightage6','Weightage','trim|required');
+	        $this->form_validation->set_rules('target1','Target','trim|required');
+	        $this->form_validation->set_rules('target2','Target','trim|required');
+	        $this->form_validation->set_rules('target3','Target','trim|required');
+	        $this->form_validation->set_rules('target4','Target','trim|required');
+	        $this->form_validation->set_rules('target5','Target','trim|required');
+	        $this->form_validation->set_rules('target6','Target','trim|required');
+	        $this->form_validation->set_rules('acheived1','Acheived','trim|required');
+	        $this->form_validation->set_rules('acheived2','Acheived','trim|required');
+	        $this->form_validation->set_rules('acheived3','Acheived','trim|required');
+	        $this->form_validation->set_rules('acheived4','Acheived','trim|required');
+	        $this->form_validation->set_rules('acheived5','Acheived','trim|required');
+	        $this->form_validation->set_rules('acheived6','Acheived','trim|required');
 	        $this->form_validation->set_rules('weighted_score1','Weighted score','trim');
 	        $this->form_validation->set_rules('weighted_score2','Weighted score','trim');
 	        $this->form_validation->set_rules('weighted_score3','Weighted score','trim');
@@ -69,8 +70,8 @@ class Kra_ctrl extends CI_Controller {
 	            
 	            $this->db->select('s_id');
 	            $session = $this->db->get_where('session',array('is_active'=>'curr','status'=>1))->result_array();
-	            $this->Kra_model->set_detail($ecode);
-	            $data['user_detail'] = $this->Kra_model->get_detail($ecode);
+	            $this->Kra_model->set_detail(base64_decode($ecode));
+	            $data['user_detail'] = $this->Kra_model->get_detail(base64_decode($ecode));
 	            $data['kra_feeds'] = $this->Kra_model->kra_feed($ecode,$session[0]['s_id']);
 	            
 	            $data['title'] = $this->config->item('project_title').' |KRA';
@@ -79,7 +80,7 @@ class Kra_ctrl extends CI_Controller {
 	            $this->load->view('pages/es/kra',$data);
 	        } else {
 	            $session_id = $this->input->post('session');
-	            $ecode = $ecode;
+	            $ecode = base64_decode($ecode);
 	            $data['key_result_area1'] = $this->input->post('key_result_area1');
 	            $data['key_result_area2'] = $this->input->post('key_result_area2');
 	            $data['key_result_area3'] = $this->input->post('key_result_area3');
@@ -142,9 +143,14 @@ class Kra_ctrl extends CI_Controller {
 	        }
 	    } else {
 			if($ecode == null){
-				$ecode = $session;
-				$session = '2018-19';
+				$ecode = base64_decode($session);
+				//$ecode = $session;
+				$session = $this->my_library->get_current_session();
+			} else {
+				$ecode = base64_decode($ecode);
+				$session = base64_decode($session);
 			}
+
     		$data = array();
     		$this->db->select('*');
     		$data['session'] = $this->db->get_where('session',array('status'=>1))->result_array();
@@ -166,6 +172,7 @@ class Kra_ctrl extends CI_Controller {
 	
 	
 	function hod_dashboard($ecode,$session_id=null){
+		$ecode = base64_decode($ecode);
 	    if($session_id == null){
 	        $session_id = $this->my_library->get_current_session();
 	    }
@@ -179,6 +186,7 @@ class Kra_ctrl extends CI_Controller {
 	    $data['pending_employees'] = $this->Kra_model->get_employee_list($ecode,$session_id,0);
 	    $data['employees'] = $this->Kra_model->get_employee_list($ecode,$session_id,1);
 	    
+		$this->Kra_model->set_detail($ecode);
 	    $data['user_detail'] = $this->Kra_model->get_detail($ecode);
 	    $data['kra_feeds'] = $this->Kra_model->kra_feed($ecode,$session[0]['s_id']);
 	    
@@ -222,7 +230,8 @@ class Kra_ctrl extends CI_Controller {
 	    $data['hod_status'] = date('Y-m-d H:i:s');
 	    
 	    $this->Kra_model->appraiser_score($data,$other);
-	    redirect('/HOD/'.$hod.'/KRA/'.$session.'/'.$ecode);
+	    redirect('/HOD/'.$hod.'/KRA/'.$session);
+	    //redirect('/HOD/'.$hod.'/KRA/'.$session.'/'.$ecode);
 	}
 	
 }

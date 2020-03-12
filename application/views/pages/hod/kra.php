@@ -59,7 +59,19 @@
           <div class="container-fluid col-10">	
 			<div class="col-12 mb-3" style="background-color: #012f6a; important!">
 				<img src="<?php echo base_url();?>assets/dist/img/logo_w.png" style="height:100px;"/>
-				<span style="font-size:3vw;" class="offset-sm-3 text-center text-light">ONLINE APPRAISAL</span>
+				<span style="font-size:3vw;" class="offset-sm-3 text-center text-light">SUPERIOR RATING</span>
+				<?php if($this->my_library->reporting_to($user_detail[0]['ecode']) > 0){ ?>		
+					<nav class="navbar navbar-expand-lg">
+                      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                          <li class="nav-item float-right">
+                          	<a class="nav-link text-light" href="<?php echo base_url();?>HOD/<?php echo base64_encode($user_detail[0]['ecode']); ?>/KRA">Superior Rating</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </nav>
+					
+				<?php } ?>
 			</div>
 			<div class="card card-info">
               <div class="card-header" style="border-radius:0px;">

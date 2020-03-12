@@ -36,11 +36,13 @@ class Kra_model extends CI_Model {
                 $userinfo['dept'] = $userdetail[0]['Dept'];
                 $userinfo['jdate'] = $userdetail[0]['JDate'];
                 $userinfo['img'] = $userdetail[0]['PImg'];
+				$userinfo['code'] = $userdetail[0]['Code'];
                 $userinfo['created_at'] = date('Y-m-d H:i:s');
                 $this->db->insert('kra_user_detail',$userinfo);
                 
                 $userinfo = array();
                 $userinfo['session_id'] = $prev_session[0]['s_id'];
+				$userinfo['code'] = $userdetail[0]['Code'];
                 $userinfo['ecode'] = $ecode;
                 $userinfo['post'] = $userdetail[0]['Designation'];
                 $userinfo['uname'] = $userdetail[0]['Name'];

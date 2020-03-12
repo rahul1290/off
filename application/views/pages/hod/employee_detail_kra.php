@@ -71,7 +71,20 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
           <div class="container-fluid col-10">	
 			<div class="col-12 mb-3" style="background-color: #012f6a; important!">
 				<img src="<?php echo base_url();?>assets/dist/img/logo_w.png" style="height:100px;"/>
-				<span style="font-size:3vw;" class="offset-sm-3 text-center text-light">ONLINE APPRAISAL</span>
+				<span style="font-size:3vw;" class="offset-sm-3 text-center text-light">SUPERIOR RATING</span>
+				
+				<?php if($this->my_library->reporting_to($user_detail[0]['reporting_ecode']) > 0){ ?>		
+					<nav class="navbar navbar-expand-lg">
+                      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                          <li class="nav-item float-right">
+                          	<a class="nav-link text-light" href="<?php echo base_url();?>HOD/<?php echo base64_encode($user_detail[0]['reporting_ecode']); ?>/KRA">Superior Rating</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </nav>
+					
+				<?php } ?>
 			</div>
 			<div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
@@ -136,7 +149,7 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
 					EMPLOYEE APPRAISAL FORM <b>[ <?php echo $this->uri->segment(3);?> ]</b>
 				</span>
               </div>
-              <form name="f1" method="POST" action="<?php echo base_url('HOD/score/').$this->uri->segment(2).'/'.$this->uri->segment(4).'/'.$this->uri->segment(5); ?>">
+              <form id="f1" method="POST" action="<?php echo base_url('HOD/score/').$this->uri->segment(2).'/'.$this->uri->segment(4).'/'.$this->uri->segment(5); ?>" onsubmit="return form_submit()">
               <div class="card-body">
               	<div class="row">
               		<div class="table-responsive">
@@ -162,7 +175,10 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                   					<td><?php echo $kra_feeds[0]['target1']; ?></td>
                   					<td><?php echo $kra_feeds[0]['acheived1']; ?></td>
                   					<td><?php echo $kra_feeds[0]['weighted_score1']; ?></td>
-                  					<td><input type="text" name="appraiser_score1" id="appraiser_score1" class="form-control appraiser_score" value="<?php echo $kra_feeds[0]['appraiser_score1_hod']; ?>"></td>
+                  					<td>
+                  						<input type="text" name="appraiser_score1" id="appraiser_score1" data-id="1" class="form-control appraiser_score" value="<?php echo $kra_feeds[0]['appraiser_score1_hod']; ?>">
+                  						<div id="appraiser_score1_error" class="text-danger" style="display: none;"></div>
+                  					</td>
                   				</tr>
                   				<tr>
                   					<td>2.</td>
@@ -172,7 +188,11 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                   					<td><?php echo $kra_feeds[0]['target2']; ?></td>
                   					<td><?php echo $kra_feeds[0]['acheived2']; ?></td>
                   					<td><?php echo $kra_feeds[0]['weighted_score2']; ?></td>
-                  					<td><input type="text" name="appraiser_score2" id="appraiser_score2" class="form-control appraiser_score" value="<?php echo $kra_feeds[0]['appraiser_score2_hod']; ?>"></td>
+                  					<td>
+                  						<input type="text" name="appraiser_score2" id="appraiser_score2" data-id="2" class="form-control appraiser_score" value="<?php echo $kra_feeds[0]['appraiser_score2_hod']; ?>">
+                  						<div id="appraiser_score2_error" class="text-danger" style="display: none;"></div>
+                  					</td>
+                  					
                   				</tr>
                   				<tr>
                   					<td>3.</td>
@@ -182,7 +202,10 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                   					<td><?php echo $kra_feeds[0]['target3']; ?></td>
                   					<td><?php echo $kra_feeds[0]['acheived3']; ?></td>
                   					<td><?php echo $kra_feeds[0]['weighted_score3']; ?></td>
-                  					<td><input type="text" name="appraiser_score3" id="appraiser_score3" class="form-control appraiser_score" value="<?php echo $kra_feeds[0]['appraiser_score3_hod']; ?>"></td>
+                  					<td>
+                  						<input type="text" name="appraiser_score3" id="appraiser_score3" data-id="3" class="form-control appraiser_score" value="<?php echo $kra_feeds[0]['appraiser_score3_hod']; ?>">
+                  						<div id="appraiser_score3_error" class="text-danger" style="display: none;"></div>
+                  					</td>
                   				</tr>
                   				<tr>
                   					<td>4.</td>
@@ -192,7 +215,10 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                   					<td><?php echo $kra_feeds[0]['target4']; ?></td>
                   					<td><?php echo $kra_feeds[0]['acheived4']; ?></td>
                   					<td><?php echo $kra_feeds[0]['weighted_score4']; ?></td>
-                  					<td><input type="text" name="appraiser_score4" id="appraiser_score4" class="form-control appraiser_score" value="<?php echo $kra_feeds[0]['appraiser_score4_hod']; ?>"></td>
+                  					<td>
+                  						<input type="text" name="appraiser_score4" id="appraiser_score4" data-id="4" class="form-control appraiser_score" value="<?php echo $kra_feeds[0]['appraiser_score4_hod']; ?>">
+                  						<div id="appraiser_score4_error" class="text-danger" style="display: none;"></div>
+                  					</td>
                   				</tr>
                   				<tr>
                   					<td>5.</td>
@@ -202,7 +228,10 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                   					<td><?php echo $kra_feeds[0]['target5']; ?></td>
                   					<td><?php echo $kra_feeds[0]['acheived5']; ?></td>
                   					<td><?php echo $kra_feeds[0]['weighted_score5']; ?></td>
-                  					<td><input type="text" name="appraiser_score5" id="appraiser_score5" class="form-control appraiser_score" value="<?php echo $kra_feeds[0]['appraiser_score5_hod']; ?>"></td>
+                  					<td>
+                  						<input type="text" name="appraiser_score5" id="appraiser_score5" data-id="5" class="form-control appraiser_score" value="<?php echo $kra_feeds[0]['appraiser_score5_hod']; ?>">
+                  						<div id="appraiser_score5_error" class="text-danger" style="display: none;"></div>
+                  					</td>
                   				</tr>
                   				<?php if($this->uri->segment('4') != '2018-19') { ?>
                       				<tr>
@@ -213,12 +242,15 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                       					<td><?php echo $kra_feeds[0]['target6']; ?></td>
                       					<td><?php echo $kra_feeds[0]['acheived6']; ?></td>
                       					<td><?php echo $kra_feeds[0]['weighted_score6']; ?></td>
-                      					<td><input type="text" name="appraiser_score6" id="appraiser_score6" class="form-control appraiser_score" value="<?php echo $kra_feeds[0]['appraiser_score6_hod']; ?>"></td>
+                      					<td>
+                      						<input type="text" name="appraiser_score6" id="appraiser_score6" data-id="6" class="form-control appraiser_score" value="<?php echo $kra_feeds[0]['appraiser_score6_hod']; ?>">
+                      						<div id="appraiser_score6_error" class="text-danger" style="display: none;"></div>
+                      					</td>
                       				</tr>
 								<?php } ?>
 								<tr>
 									<td colspan="3" class="text-center"><b>Total</b></td>
-									<td class="text-center"><b><span>
+									<td class=""><b><span>
 										<?php
 										  if($this->uri->segment('4') != '2018-19'){
 										      echo $kra_feeds[0]['weightage1'] + $kra_feeds[0]['weightage2'] + $kra_feeds[0]['weightage3'] + $kra_feeds[0]['weightage4'] + $kra_feeds[0]['weightage5'] + $kra_feeds[0]['weightage6'];
@@ -227,7 +259,7 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
 										  } ?>
 									</span>%</b></td>
 									<td colspan="2"></td>
-									<td class="text-center"><b><span>
+									<td class=""><b><span>
 										<?php
 										  if($this->uri->segment('4') != '2018-19'){
 										      echo $kra_feeds[0]['weighted_score1'] + $kra_feeds[0]['weighted_score2'] + $kra_feeds[0]['weighted_score3'] + $kra_feeds[0]['weighted_score4'] + $kra_feeds[0]['weighted_score5'] + $kra_feeds[0]['weighted_score6'];
@@ -236,7 +268,7 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
 										  } ?>
 									</b>
 									</td>
-									<td><span id="appraiser_score_total"></span></td>
+									<td><b><span id="appraiser_score_total"></span></b></td>
 								</tr>
                   			</tbody>
                   		</table>
@@ -258,7 +290,8 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                   			
                   			<div>
                   				<label>APPRAISER COMMENTS:</label>
-                  				<textarea rows="" cols="" class="form-control" name="appraiser_score_comment"><?php echo $kra_feeds[0]['appraiser_comment_hod']; ?></textarea>
+                  				<textarea id="appraisal_comment" rows="" cols="" class="form-control" name="appraiser_score_comment"><?php echo $kra_feeds[0]['appraiser_comment_hod']; ?></textarea>
+                  				<div id="appraisal_comment_error" class="text-danger" style="display: none;"></div>
                   			</div>
 							<div class="text-center mt-3">
 								<input type="submit" name="submit" class="btn btn-success" value="UPDATE" <?php if($this->my_library->get_current_session() != $this->uri->segment('4')) { echo 'disabled'; }?>>
@@ -290,6 +323,30 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
     </div>
     
     <script>
+    function form_submit(){
+		var counter = 0;
+		$(".appraiser_score").each(function(){
+			var id = $(this).data('id');
+			if(!parseFloat($('#appraiser_score'+id).val()) > '0'){
+				counter = counter + 1;
+				$('#appraiser_score'+id+'_error').html('not to be zero').show();
+			} 
+		});
+
+		if(!$('#appraisal_comment').val().length){
+			counter = counter + 1;
+			$('#appraisal_comment_error').html('Appraisal Comment is required.').show();
+		} else {
+			$('#appraisal_comment_error').html('').hide();
+		}
+		
+		if(!counter){
+			return true;
+		} else {
+			return false;
+		}
+	}
+    
     var baseUrl = $('#base_url').val();
     score();
 

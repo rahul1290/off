@@ -103,6 +103,12 @@ class My_library {
 	    $result = $this->CI->db->get_where('session',array('is_active'=>'curr','status'=>1))->result_array();
 	    return $result[0]['name'];
 	}
+
+	function reporting_to($ecode){
+		$this->CI->db->select('count(*) as report_to');
+		$result = $this->CI->db->get_where('kra_user_detail',array('reporting_ecode'=>$ecode,'status'=>1))->result_array();
+		return $result[0]['report_to']; 
+	}
 	
 	function sentmail($mail_body,$sendto){
 		$tos = '';
