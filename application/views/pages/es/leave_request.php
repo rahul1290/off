@@ -20,14 +20,11 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-      <?php
-//       $diff = date_diff(date_create($this->my_library->mydate('08/03/2020')),date_create($this->my_library->mydate('20/03/2020')));
-//       echo $diff->format("%a");
-        ?>
 		<div class="offset-md-1 col-md-10">
+			<?php echo $this->session->flashdata('msg'); ?>
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
-                <h3 class="card-title">LEAVE REQUEST</h3>
+                <h3 class="card-title">LEAVE REQUEST FORM</h3>
               </div>
               <div class="card-body">
 				<div class="table-responsive">
@@ -56,7 +53,7 @@
                               			
                               	<?php if(count($nhfhs)>0){ ?>
                               	<br/><b>NH/FH:</b> <ul style="list-style: none;"><?php foreach($nhfhs as $nhfh){ ?>
-													<li><input type="checkbox" name="nhfhs[]" class="nhfhs" data-value="<?php echo $nhfh['refrence_no']; ?>" value="<?php echo $nhfh['refrence_no']; ?>" /><?php echo $nhfh['date']; ?></li>											        
+													<li><input type="checkbox" name="nhfhs[]" class="nhfhs" data-value="<?php echo $nhfh['refrence_id']; ?>" value="<?php echo $nhfh['refrence_id']; ?>" /><?php echo $this->my_library->sql_datepicker($nhfh['date_from']); ?></li>											        
 										    <?php } ?> </ul>
 								<?php } ?>
                                <hr/><br/>Total PL Deduct: <span id="pl_deduct"></span>
@@ -89,7 +86,50 @@
 					<input type="button" value="Submit" class="btn btn-warning" id="submit" />
 					<input type="button" value="Cancel" class="btn btn-secondary" />
 				</div>
-          </div>
+			<hr/>
+          
+    		  <div class="card card-info">
+                  <div class="card-header" style="border-radius:0px;">
+                    <h3 class="card-title">LEAVE REQUESTS</h3>
+                  </div>
+                  <div class="card-body">
+    				<div class="table-responsive">
+    					<table class="table table-bordered" id="example">
+    						<thead>
+        						<tr>
+        							<th>S.No.</th>
+        							<th>REFERENCE No.</th>
+        							<th>REQUEST SUBMIT DATE</th>
+        							<th>LEAVE FROM</th>
+        							<th>LEAVE TO</th>
+        							<th>HOD REMARK</th>
+        							<th>HOD STATUS</th>
+        							<th>HR REMARK</th>
+        							<th>HR STATUS</th>
+        						</tr>
+    						</thead>
+    						<tbody>
+    								<?php if(count($requests)>0) { $c=1; foreach($requests as $request){ ?>
+    									<tr>
+        								    <td><?php echo $c++; ?></td>
+        								    <td><?php echo $request['refrence_id']; ?></td>
+        								    <td><?php echo $request['created_at']; ?></td>
+        								    <td><?php echo $request['date_from']; ?></td>
+        								    <td><?php echo $request['date_to']; ?></td>
+        								    <td><?php echo $request['hod_remark']; ?></td>
+        								    <td><?php echo $request['hod_status']; ?></td>
+        								    <td><?php echo $request['hr_remark']; ?></td>
+        								    <td><?php echo $request['hr_status']; ?></td>
+    								    </tr>
+    								<?php }}?>
+    							</tr>
+    						</tbody>
+    					</table>
+    				</div>
+    				
+                  </div>
+                </div>
+            </div>
 		  
 		  
 		  <div class="offset-md-1 col-md-10" style="display:none;">
@@ -129,6 +169,7 @@
 					<input type="button" value="Cancel" class="btn btn-secondary">
 				</div>
           </div>
+          <hr/>
 		  
 		  
 		
@@ -156,7 +197,8 @@
 var baseUrl = $('#baseUrl').val();
 
 $(document).ready(function(){
-
+	$('#example').DataTable();
+	
 	function date_convert(date){
 		v = date.split('/');
 		return v[1]+'/'+v[0]+'/'+v[2];

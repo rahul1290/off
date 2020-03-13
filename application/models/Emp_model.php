@@ -94,6 +94,13 @@ class Emp_model extends CI_Model {
 	}
 	
 	
+	function leave_requests($ecode){
+	    $this->db->select('*');
+	    $result = $this->db->get_where('users_leave_requests',array('request_type'=>'LEAVE','ecode'=>$ecode,'status'=>1))->result_array();
+	    return $result;
+	}
+	
+	
 	/*
 	function emp(){
 		$this->db2 = $this->load->database('sqlsrv',TRUE);

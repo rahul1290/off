@@ -49,7 +49,7 @@ class Nh_fh_model extends CI_Model {
 	}
 	
 	function user_nhfh_requests($ecode){
-		$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date,"%d/%m/%Y") as date');
+		$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date');
 		$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'request_type'=>'NH_FH','status'=>1))->result_array();
 		return $result;
 	}

@@ -238,7 +238,7 @@ class Hr_ctrl extends CI_Controller {
 	function hf_leave_request_update(){
 		$data['req_id'] = $this->input->post('req_id');
 		$data['key'] = $this->input->post('key');
-		$data['value'] = $this->input->post('value');
+		$data['value'] = trim($this->input->post('value'));
 		$data['hr_id']	= $this->session->userdata('ecode');
 		$data['created_at'] = date('Y-m-d H:i:s');
 		if($this->Hr_model->hf_leave_request_update($data)){

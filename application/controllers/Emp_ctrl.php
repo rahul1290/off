@@ -28,7 +28,7 @@ class Emp_ctrl extends CI_Controller {
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
 		$data['body'] = $this->load->view('pages/emp_dashboard',$data,true);
 		//===============common===============//
-		$data['title'] = 'Home | Emp-Portal';
+		$data['title'] = $this->config->item('project_title').' | Dashboard';
 		$data['head'] = $this->load->view('common/head',$data,true);
 		$data['footer'] = $this->load->view('common/footer',$data,true);
 		$this->load->view('layout_master',$data);
@@ -95,18 +95,34 @@ class Emp_ctrl extends CI_Controller {
 	        $data['requirment'] = $this->input->post('reason');
 	        $data['date_from'] = $from_date;
 	        $data['date_to'] = $to_date;
-	        $date['created_at'] = date('Y-m-d H:i:s');
+	        $data['created_at'] = date('Y-m-d H:i:s');
 	        $data['wod'] = $this->input->post('wod');
 	        $coff = $this->input->post('coff');
+	        $nhfh = $this->input->post('nhfh');
 	        
 	        $coff_ids = array();
-	        $this->db->select('id');
-	        $this->db->where_in('refrence_id',$coff);
-	        $result = $this->db->get('users_leave_requests')->result_array();
-	        foreach($result as $r){
-	            $coff_ids[].= $r['id'];
+	        $nhfh_ids = array();
+	        if($coff != ''){
+    	        $this->db->select('id');
+    	        $this->db->where_in('refrence_id',$coff);
+    	        $result = $this->db->get('users_leave_requests')->result_array();
+    	        
+    	        foreach($result as $r){
+    	            $coff_ids[].= $r['id'];
+    	        }
 	        }
 	        
+	        if($nhfh != ''){
+	            $this->db->select('id');
+	            $this->db->where_in('refrence_id',$nhfh);
+	            $result = $this->db->get('users_leave_requests')->result_array();
+	            
+	            foreach($result as $r){
+	                $nhfh_ids[].= $r['id'];
+	            }
+	        }
+	        
+	        print_r($nhfh_ids); die;
 	        if($this->db->insert('users_leave_requests',$data)){
 	            $id = $this->db->insert_id();
 	            $this->db->where('id',$id);
@@ -114,7 +130,24 @@ class Emp_ctrl extends CI_Controller {
 	            
 	            $this->db->where_in('id',$coff_ids);
 	            $this->db->update('users_leave_requests',array('request_id'=>$data['refrence_id'].'-'.$id));
+	            $this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your Leave request submitted successfully.</h3>');
+
+	            //////////////////////////////////////////
+	            $data = array();
+	            $data['coffs'] = $this->my_library->coff($this->session->userdata('ecode'));
+	            $data['nhfhs'] = $this->my_library->nhfh($this->session->userdata('ecode'));
 	            
+	            $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+	            $data['footer'] = $this->load->view('include/footer','',true);
+	            $data['top_nav'] = $this->load->view('include/top_nav','',true);
+	            $data['aside'] = $this->load->view('include/aside',$data,true);
+	            $data['notepad'] = $this->load->view('include/shift_timing','',true);
+	            $data['body'] = $this->load->view('pages/es/leave_request',$data,true);
+	            
+	            $data['title'] = $this->config->item('project_title').' | Leave Request';
+	            $data['head'] = $this->load->view('common/head',$data,true);
+	            $data['footer'] = $this->load->view('common/footer',$data,true);
+	            $this->load->view('layout_master',$data);
 	        }
 	        
 	        
@@ -128,10 +161,9 @@ class Emp_ctrl extends CI_Controller {
     		$data['footer'] = $this->load->view('include/footer','',true);
     		$data['top_nav'] = $this->load->view('include/top_nav','',true);
     		$data['aside'] = $this->load->view('include/aside',$data,true);
-    		//$data['open'] = 'true';
     		$data['notepad'] = $this->load->view('include/shift_timing','',true);
+    		$data['requests'] = $this->Emp_model->leave_requests($this->session->userdata('ecode'));
     		$data['body'] = $this->load->view('pages/es/leave_request',$data,true);
-    
     		$data['title'] = $this->config->item('project_title').' | Leave Request';
     		$data['head'] = $this->load->view('common/head',$data,true);
     		$data['footer'] = $this->load->view('common/footer',$data,true);
@@ -283,7 +315,7 @@ class Emp_ctrl extends CI_Controller {
 				//$data['open'] = 'true';
 				$data['notepad'] = $this->load->view('include/shift_timing','',true);
 				
-				$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date,"%d/%m/%Y") as date');
+				$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date');
 				$data['requests'] = $this->db->get_where('users_leave_requests',array('ecode'=>$this->session->userdata('ecode'),'request_type'=>'OFF_DAY','status'=>1))->result_array();
 
 				$data['body'] = $this->load->view('pages/es/off_day_duty_form',$data,true);
@@ -307,7 +339,7 @@ class Emp_ctrl extends CI_Controller {
 			
 			//check user is already requested or not
 			$this->db->select('*');
-			$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'date'=>$nhfhdate,'request_type'=>$type,'status'=>1))->result_array();
+			$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'date_from'=>$nhfhdate,'request_type'=>$type,'status'=>1))->result_array();
 			
 			if(count($result)>0){
 				echo json_encode(array('msg'=>'You already requested for this date.','status'=>500));
@@ -369,7 +401,7 @@ class Emp_ctrl extends CI_Controller {
 				$data['notepad'] = $this->load->view('include/shift_timing','',true);
 				$data['body'] = $this->load->view('pages/es/nh_fh_day_duty_form',$data,true);
 				//===============common===============//
-				$data['title'] = 'IBC24| es | NH FH DAY DUTY FORM';
+				$data['title'] = $this->config->item('project_title').'| NH FH DAY DUTY FORM';
 				$data['head'] = $this->load->view('common/head',$data,true);
 				$data['footer'] = $this->load->view('common/footer',$data,true);
 				$this->load->view('layout_master',$data);
@@ -378,7 +410,7 @@ class Emp_ctrl extends CI_Controller {
 				$data['ecode'] = $this->session->userdata('ecode');
 				$data['requirment'] = $this->input->post('requirment');
 				$date = $this->Nh_fh_model->get_nhfh($this->input->post('nhfh_date'));
-				$data['date'] = $date[0]['nhfh_date'];
+				$data['date_from'] = $date[0]['nhfh_date'];
 				$data['request_type'] = 'NH_FH';
 				$data['refrence_id'] = 'NH_HF-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
 				$data['created_at'] = date('Y-m-d H:i:s');
@@ -450,10 +482,10 @@ class Emp_ctrl extends CI_Controller {
 		}
 		$type = $this->input->get('report_type');
 		
-		$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date,"%d/%m/%Y") as date');
+		$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date');
 		if(isset($from_date)){
-			$this->db->where('date >=',$from_date);
-			$this->db->where('date <=',$to_date);
+			$this->db->where('date_from >=',$from_date);
+			$this->db->where('date_from <=',$to_date);
 		}
 		if(isset($type) && $type != 'All'){
 			$this->db->where('request_type',$type);

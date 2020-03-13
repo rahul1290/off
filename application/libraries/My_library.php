@@ -79,10 +79,10 @@ class My_library {
 	}
 	
 	function nhfh($ecode){
-	    $this->CI->db->select('pl.*,date_format(ulr.date_from,"%d/%m/%Y") as date');
-	    $this->CI->db->order_by('pl.created_at','desc');
-	    $this->CI->db->join('users_leave_requests ulr','ulr.refrence_id = pl.refrence_no AND ulr.status = 1');
-	    $result = $this->CI->db->get_where('pl_management pl',array('pl.type'=>'NH_FH','pl.credit<>'=>NULL,'pl.ecode'=>$ecode,'pl.status'=>1))->result_array();
+	    $this->CI->db->select('*');
+	    $this->CI->db->where_in('request_type','NH_FH');
+	    $this->CI->db->where('request_id IS NULL');
+	    $result = $this->CI->db->get_where('users_leave_requests',array('ecode'=>$ecode,'hr_status'=>'GRANTED','status'=>1))->result_array();
 	    return $result;
 	}
 	

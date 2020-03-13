@@ -24,7 +24,8 @@ class Auth extends CI_Controller {
 	
 	function index(){
 		if($this->is_login()){
-			redirect('dashboard');
+			//redirect('dashboard');
+			redirect('es/Attendance-Record');
 		} else {
 			redirect('Auth/login');
 		}
@@ -199,4 +200,27 @@ class Auth extends CI_Controller {
 			$this->load->view('pages/login',$data);
 		}
 	}
+	
+// 	function pl_management(){
+// 	    $this->db2 = $this->load->database('sqlsrv',TRUE);
+	    
+// 	    $this->db2->select('*');
+// 	    $result = $this->db2->get_where($this->config->item('NEWZ36').'PLManagement',array('EmpCode'=>'SBMMPL-01149'))->result_array();
+	    
+// 	    $insert_data = array();
+// 	    foreach($result as $r){
+// 	        $temp = array();
+// 	        $temp['type'] = 'PL';
+// 	        $temp['refrence_no'] = $r['Reference'];
+// 	        $temp['ecode'] = $r['EmpCode'];
+// 	        $temp['credit'] = $r['Credit'];
+// 	        $temp['debit'] = $r['Debit'];
+// 	        $temp['balance'] = $r['Balance'];
+// 	        $temp['date'] = $r['Date'];
+// 	        $temp['created_at'] = date('Y-m-d H:i:s');
+// 	        $temp['created_by'] = $this->session->userdata('ecode');
+// 	        $insert_data[] = $temp;
+// 	    }
+// 	    $this->db->insert_batch('pl_management',$insert_data);
+// 	}
 }

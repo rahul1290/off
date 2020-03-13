@@ -61,9 +61,7 @@
 												<label><?php echo $request['hod_status']; ?></label>
 											</td>
 											<td>
-												<textarea class="form-control hr_remark" data-rid="<?php echo $request['id']; ?>">
-													<?php if(isset($request['hr_remark'])){ echo $request['hr_remark']; }?>
-												</textarea>
+												<textarea class="form-control hr_remark" data-rid="<?php echo $request['id']; ?>"><?php if(isset($request['hr_remark'])){ echo $request['hr_remark']; }?></textarea>
 											</td> 
 											<td>
 												<select class="hr_status" name="hr_status" data-rid="<?php echo $request['id']; ?>">
@@ -194,6 +192,7 @@ $(document).ready(function(){
 				beforeSend: function() {},
 				success: function(response){
 					if(response.status == 200){
+						location.reload();
 					} else {
 					}
 				}
