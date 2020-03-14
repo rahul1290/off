@@ -205,7 +205,7 @@ class Auth extends CI_Controller {
 // 	    $this->db2 = $this->load->database('sqlsrv',TRUE);
 	    
 // 	    $this->db2->select('*');
-// 	    $result = $this->db2->get_where($this->config->item('NEWZ36').'PLManagement',array('EmpCode'=>'SBMMPL-01149'))->result_array();
+// 	    $result = $this->db2->get_where($this->config->item('NEWZ36').'PLManagement',array('EmpCode'=>'SBMMPL-01037'))->result_array();
 	    
 // 	    $insert_data = array();
 // 	    foreach($result as $r){

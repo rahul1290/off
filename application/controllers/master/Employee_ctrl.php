@@ -268,9 +268,9 @@ class Employee_ctrl extends CI_Controller {
 		}
 	}
 	
+	
 	function privileges($ecode){
 		if($_SERVER['REQUEST_METHOD'] === 'POST'){
-			
 			$departments = $this->input->post('departments');
 			if(count($departments)){ 
 				$dep_array = array();
@@ -323,14 +323,16 @@ class Employee_ctrl extends CI_Controller {
 			$path = base_url('master/employee/privileges/').$ecode;
 			redirect($path);
 			
-		} else{ 
+		} else{
 			$data = array();
+			$data['user_detail'] = $this->Employee_model->employees($ecode);
 			$data['results'] = $this->Department_model->get_department();
 			$data['departments'] = $this->Department_model->get_department();
 			$data['user_departments'] = $this->Department_model->get_employee_department($ecode);
 			$data['users'] = $this->Employee_model->departments_users($ecode);
 			$data['supervised'] = $this->Employee_model->supervised($ecode);
 			$data['user_links'] = $this->Employee_model->user_link($ecode);
+			
 			$udep = array();
 			foreach($data['departments'] as $department) {
 				foreach($data['users'] as $users) {
@@ -344,10 +346,9 @@ class Employee_ctrl extends CI_Controller {
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
 			$data['aside'] = $this->load->view('include/aside','',true);
-			//$data['notepad'] = $this->load->view('include/shift_timing','',true);
 			$data['body'] = $this->load->view('pages/master/privileges',$data,true);
 			//===============common===============//
-			$data['title'] = 'IBC24 | Department Master';
+			$data['title'] = $this->config->item('project_title').' | User privileges';
 			$data['head'] = $this->load->view('common/head',$data,true);
 			$data['footer'] = $this->load->view('common/footer',$data,true);
 			$this->load->view('layout_master',$data);

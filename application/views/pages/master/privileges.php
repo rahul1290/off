@@ -49,7 +49,7 @@ foreach($user_links as $user_link){
 				<table class="table table-bordered">
 					<tr>
 						<td>Name</td>
-						<td>Rahul Sinha</td>
+						<td><?php echo $user_detail[0]['name']; ?></td>
 					</tr>
 					<tr>
 						<td>Department</td>
@@ -90,9 +90,9 @@ foreach($user_links as $user_link){
 									$p = 1;
 									if($l['parent_id'] == 0){
 										if(in_array($l['id'],$ulink)){
-											echo '<li><input name="ulink[]" value="'.$l['id'].'" type="checkbox" checked onclick="f1.submit();">'.$l['link_name'];
+											echo '<li><input class="parent" data-id="'.$l['id'].'" name="ulink[]" value="'.$l['id'].'" type="checkbox" checked /*onclick="f1.submit();"*/ />'.$l['link_name'];
 										} else {
-											echo '<li><input name="ulink[]" value="'.$l['id'].'" type="checkbox" onclick="f1.submit();">'.$l['link_name'];
+											echo '<li><input class="parent" data-id="'.$l['id'].'" name="ulink[]" value="'.$l['id'].'" type="checkbox" /*onclick="f1.submit();"*/ />'.$l['link_name'];
 										}
 										$c = 0;
 										foreach($links as $l1){
@@ -103,9 +103,9 @@ foreach($user_links as $user_link){
 												}
 												$c = $c + 1;
 												if(in_array($l1['id'],$ulink)){ 
-													echo '<li><input name="ulink[]" value="'.$l1['id'].'" type="checkbox" checked onclick="f1.submit();">'.$l1['link_name'].'</li>';
+													echo '<li><input class="child child_'.$l['id'].'" data-id="'.$l['id'].'" name="ulink[]" value="'.$l1['id'].'" type="checkbox" checked /*onclick="f1.submit();"*/ />'.$l1['link_name'].'</li>';
 												} else {
-													echo '<li><input name="ulink[]" value="'.$l1['id'].'" type="checkbox" onclick="f1.submit();">'.$l1['link_name'].'</li>';
+													echo '<li><input class="child child_'.$l['id'].'" data-id="'.$l['id'].'" name="ulink[]" value="'.$l1['id'].'" type="checkbox" /*onclick="f1.submit();"*/ />'.$l1['link_name'].'</li>';
 												}
 											}
 										}
@@ -193,5 +193,15 @@ $(document).ready(function(){
 			}
 		});
 	});
+
+	$(document).on('click','.parent',function(){
+		var id = $(this).data('id');
+		if($(this).prop("checked") == true){
+            $('.child_'+id).prop("checked", true);
+        } else if($(this).prop("checked") == false){
+        	$('.child_'+id).prop("checked", false);
+        }
+	});
+	
 });
 </script>
