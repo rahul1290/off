@@ -87,6 +87,7 @@ class Emp_ctrl extends CI_Controller {
 	
 	function leave_request(){
 	    if($_SERVER['REQUEST_METHOD'] == 'POST') {
+	        print_r($this->input->post()); die;
 	        $from_date = $this->my_library->mydate($this->input->post('from_date'));
 	        $to_date = $this->my_library->mydate($this->input->post('to_date'));
 	        $data['request_type'] = 'LEAVE';

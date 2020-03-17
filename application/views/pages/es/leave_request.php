@@ -23,8 +23,8 @@
       <div class="container-fluid">
 		<div class="col-12">
 			<form name="f1" method="POST" action="<?php echo base_url('es/leave-request');?>">
-			<input type="text" id="f1_pl" value="<?php echo $pls[0]['balance']; ?>" />
-			<input type="text" id="f1_lop" value="0" />
+			<input type="text" name="f1_pl" id="f1_pl" value="<?php echo $pls[0]['balance']; ?>" />
+			<input type="text" name="f1_lop" id="f1_lop" value="0" />
 			  
 			<?php echo $this->session->flashdata('msg'); ?>
             <div class="card card-info">

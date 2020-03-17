@@ -60,18 +60,29 @@
 			<div class="col-12 mb-3" style="background-color: #012f6a; important!">
 				<img src="<?php echo base_url();?>assets/dist/img/logo_w.png" style="height:100px;"/>
 				<span style="font-size:3vw;" class="offset-sm-3 text-center text-light">SUPERIOR RATING</span>
-				<?php if($this->my_library->reporting_to($user_detail[0]['ecode']) > 0){ ?>		
-					<nav class="navbar navbar-expand-lg">
-                      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav mr-auto">
-                          <li class="nav-item float-right">
-                          	<a class="nav-link text-light" href="<?php echo base_url();?>HOD/<?php echo base64_encode($user_detail[0]['ecode']); ?>/KRA">Superior Rating</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </nav>
-					
-				<?php } ?>
+				<nav class="navbar navbar-expand-lg">
+				  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mr-auto">
+					<?php if($this->my_library->reporting_to($user_detail[0]['ecode']) > 0){ ?>		
+					  <li class="nav-item float-right mr-2" style="background-color: red; border-radius: 11px; display:none;">
+						<a class="nav-link text-light" href="<?php echo base_url('es/KRA/');?><?php echo $this->uri->segment('2'); ?>">KRA</a>
+					  </li>
+					  <li class="nav-item float-right" style="background-color: red; border-radius: 11px; display:none;">
+						<a class="nav-link text-light" href="<?php echo base_url();?>HOD/<?php echo $this->uri->segment('2'); ?>/KRA">Superior Rating</a>
+					  </li>
+					<?php } ?>
+					<?php if(in_array($user_detail[0]['ecode'], $this->config->item('hr_list'))){ ?>
+							<li class="nov-item float-right" style="background-color: red; border-radius: 11px; display:none;">
+								<a class="nav-link text-light" href="<?php echo base_url();?>HR/KRA/<?php echo base64_encode($user_detail[0]['ecode']); ?>/<?php
+								if($this->uri->segment('4') == ''){
+									echo base64_encode($this->my_library->get_current_session());
+								}
+								?>">View Report</a>
+							</li>
+					  <?php } ?>                        
+					 </ul>
+				  </div>
+				</nav>
 			</div>
 			<div class="card card-info">
               <div class="card-header" style="border-radius:0px;">

@@ -144,7 +144,6 @@ class Kra_ctrl extends CI_Controller {
 	    } else {
 			if($ecode == null){
 				$ecode = base64_decode($session);
-				//$ecode = $session;
 				$session = $this->my_library->get_current_session();
 			} else {
 				$ecode = base64_decode($ecode);
@@ -172,7 +171,7 @@ class Kra_ctrl extends CI_Controller {
 	
 	
 	function hod_dashboard($ecode,$session_id=null){
-		$ecode = base64_decode($ecode);
+	    $ecode = base64_decode($ecode);
 	    if($session_id == null){
 	        $session_id = $this->my_library->get_current_session();
 	    }
@@ -194,6 +193,29 @@ class Kra_ctrl extends CI_Controller {
 	    $data['head'] = $this->load->view('common/head',$data,true);
 	    $data['footer'] = $this->load->view('common/footer',$data,true);
 	    $this->load->view('pages/hod/kra',$data);
+	}
+	
+	
+	function hr_dashboard($ecode,$session_id,$department=NULL,$submited=NULL){
+	    $ecode = base64_decode($ecode);
+	    if($session_id == null){
+	        $session_id = $this->my_library->get_current_session();
+	    }
+	    $data = array();
+	    $this->db->select('*');
+	    $data['session'] = $this->db->get_where('session',array('status'=>1))->result_array();
+	    
+	    $this->db->select('s_id');
+	    $session = $this->db->get_where('session',array('name'=>base64_decode($session_id),'status'=>1))->result_array();
+	    
+	    $data['departments'] = $this->Kra_model->get_departments(base64_decode($session_id));
+	    $data['user_detail'] = $this->Kra_model->get_detail($ecode);
+		$data['kra_feeds'] = $this->Kra_model->kra_feeds(base64_decode($session_id),base64_decode($department),base64_decode($submited));
+		
+	    $data['title'] = $this->config->item('project_title').' |HOD KRA';
+	    $data['head'] = $this->load->view('common/head',$data,true);
+	    $data['footer'] = $this->load->view('common/footer',$data,true);
+	    $this->load->view('pages/hradmin/kra',$data);
 	}
 	
 	function employee_detail($session_id,$ecode){

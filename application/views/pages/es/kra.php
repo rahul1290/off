@@ -73,17 +73,26 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
 				<img src="<?php echo base_url();?>assets/dist/img/logo_w.png" style="height:100px;"/>
 				<span style="font-size:3vw;" class="offset-sm-3 text-center text-light">ONLINE APPRAISAL</span>
 				
-				<?php if($this->my_library->reporting_to($user_detail[0]['ecode']) > 0){ ?>		
-					<nav class="navbar navbar-expand-lg">
+				<nav class="navbar navbar-expand-lg">
                       <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
-                          <li class="nav-item float-right">
+						<?php if($this->my_library->reporting_to($user_detail[0]['ecode']) > 0){ ?>		
+                          <li class="nav-item float-right" style="background-color: red; border-radius: 11px; display:none;">
                           	<a class="nav-link text-light" href="<?php echo base_url();?>HOD/<?php echo base64_encode($user_detail[0]['ecode']); ?>/KRA">Superior Rating</a>
                           </li>
-                        </ul>
+						<?php } ?>
+						<?php if(in_array($user_detail[0]['ecode'], $this->config->item('hr_list'))){ ?>
+                                <li class="nov-item float-right" style="background-color: red; border-radius: 11px; display:none;">
+                                	<a class="nav-link text-light" href="<?php echo base_url();?>HR/KRA/<?php echo base64_encode($user_detail[0]['ecode']); ?>/<?php
+                                	if($this->uri->segment('4') == ''){
+                                	    echo base64_encode($this->my_library->get_current_session());
+                                	}
+                                	?>">View Report</a>
+                                </li>
+                          <?php } ?>                        
+						 </ul>
                       </div>
                     </nav>
-				<?php } ?>
 			</div>
 			
 			<div class="card card-info">
@@ -99,7 +108,7 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
               <div class="card-body">
               	<div class="row">
 					<div class="col-2">
-						<img class="" src="https://employee.ibc24.in/OLAppraisal/EmpImage/<?php if(isset($user_detail[0]['img'])){ echo $user_detail[0]['img']; } ?>" style="width: auto; height:200px; margin: 20px 10px 10px 10px;" />
+						<img class="" src="https://employee.ibc24.in/OLAppraisal/EmpImage/<?php if(isset($user_detail[0]['img'])){ echo $user_detail[0]['img']; } ?>" style="width: auto; height:200px; margin: 20px 10px 10px 10px;max-width:158px;" />
 					</div>
               		<div class="col-md-10 col-xs-12">
               			<table class="table table-bordered table-striped">
@@ -195,9 +204,11 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                   					<th>Key Result Area(s)</th>
                   					<th>Key Performance Indicator(s)</th>
                   					<th>Weightage (%)</th>
-                  					<th>Target (In Nos.)</th>
-                  					<th>Acheived (In Nos.)</th>
-                  					<th>Weighted Score (Out of 100)</th>
+                  					<th>Target </br><small>(In Nos.)</small></th>
+                  					<th>Achieved </br><small>(In Nos.)</small></th>
+                  					<th>Weighted Score (Out of 100)
+									</br><small>(acheived/target) * weightage</small>
+									</th>
                   				</tr>
                   			</thead>
                   			<tbody>
@@ -480,7 +491,13 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
 		});
 		
 		if(!counter){
-			return true;
+			var x = parseFloat($('#weightage1').val())+parseFloat($('#weightage2').val())+parseFloat($('#weightage3').val())+parseFloat($('#weightage4').val())+parseFloat($('#weightage5').val())+parseFloat($('#weightage6').val());
+			console.log(x);
+			if(x == 100){
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}
@@ -566,7 +583,7 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
 		if( parseFloat(acheived) > parseFloat(target) ){
 			$(this).focus();
 			$('#submit').prop('disabled', true);
-			$('#acheived'+id+'_errors').show().html('Acheived not grater than Target.');
+			$('#acheived'+id+'_errors').show().html('Achieved not greater than Target.');
 		} else {
 			$('#submit').prop('disabled', false);
 			$('#acheived'+id+'_errors').hide().html('');
@@ -591,7 +608,7 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
 	$(document).on('keyup blur','.weightage',function(){
 		var id = $(this).data('id');
 		if(parseFloat($(this).val()) > 100){
-			$('#weightage'+id+'_errors').show().html('Not grater than 100%');
+			$('#weightage'+id+'_errors').show().html('Not greater than 100%');
 			$(this).focus();
 		} else {
 			$('#weightage'+id+'_errors').hide().html('');

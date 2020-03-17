@@ -172,4 +172,34 @@ class Kra_model extends CI_Model {
         $this->db->update('kra_feed',$data);
         return true;
     }
+    
+    
+    /////////////////// HR //////////////////////////
+    function get_departments($session_id){
+        $this->db->select('*');
+        $session = $this->db->get_where('session',array('name'=>$session_id,'status'=>1))->result_array();
+        
+        $this->db->select('distinct(dept)');
+        return $result = $this->db->get_where('kra_user_detail',array('status'=>1,'session_id'=>$session[0]['s_id']))->result_array();
+    }
+    
+    
+    function kra_feeds($session_id,$department=null,$submited=null){
+        $this->db->select('*');
+        $session = $this->db->get_where('session',array('name'=>$session_id,'status'=>1))->result_array();
+        
+        $this->db->select('kud.*,kf.*');
+        $this->db->join('kra_feed kf','kf.kra_id = kud.id AND kf.status = 1','left');
+        if($department){
+            $this->db->where('dept',$department);
+        }
+		if($submited == 'YES'){
+			$this->db->where('is_submited','1');
+		} else if($submited == 'NO'){
+			$this->db->where('is_submited','0');
+		}
+        $result = $this->db->get_where('kra_user_detail kud',array('kud.session_id'=>$session[0]['s_id'],'kud.status'=>1))->result_array();
+		//print_r($this->db->last_query()); die;
+		return $result;
+    }
 }

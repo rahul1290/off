@@ -26,6 +26,8 @@ $route['HOD/score/(:any)/(:any)/(:any)'] = 'Kra_ctrl/appraiser_score/$1/$2/$3';
 $route['es/KRA/(:any)'] = 'Kra_ctrl/index/$1';
 $route['es/KRA/(:any)/(:any)'] = 'Kra_ctrl/index/$1/$2';
 
+$route['HR/KRA/(:any)/(:any)'] = 'Kra_ctrl/hr_dashboard/$1/$2';
+$route['HR/KRA/(:any)/(:any)/(:any)'] = 'Kra_ctrl/hr_dashboard/$1/$2/$3';
 
 
 ///OUTPUT
