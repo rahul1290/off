@@ -23,8 +23,8 @@
       <div class="container-fluid">
 		<div class="col-12">
 			<form name="f1" method="POST" action="<?php echo base_url('es/leave-request');?>">
-			<input type="text" name="f1_pl" id="f1_pl" value="<?php echo $pls[0]['balance']; ?>" />
-			<input type="text" name="f1_lop" id="f1_lop" value="0" />
+			<input type="hidden" name="f1_pl" id="f1_pl" value="<?php echo $pls[0]['balance']; ?>" />
+			<input type="hidden" name="f1_lop" id="f1_lop" value="0" />
 			  
 			<?php echo $this->session->flashdata('msg'); ?>
             <div class="card card-info">
@@ -45,7 +45,7 @@
 								<input type="text" id="from_date" name="from_date" class="form-control datepicker" autocomplete="off">
 									<b>TO</b>
 								<input type="text" id="to_date" name="to_date" class="form-control datepicker" autocomplete="off">
-								<span id='date_range' style="display: none;"></span>
+								<span id='date_range' class="ml-2" style="display: none;"></span>
 							</td>
 						</tr>
 						<tr id="leave_adjust" style="display: none;">
@@ -103,7 +103,7 @@
                   </div>
                   <div class="card-body">
     				<div class="table-responsive">
-    					<table class="table table-bordered" id="example">
+    					<table class="table table-bordered text-center" id="example">
     						<thead>
         						<tr>
         							<th>S.No.</th>
@@ -112,6 +112,7 @@
         							<th>LEAVE FROM</th>
         							<th>LEAVE TO</th>
         							<th>LEAVE DURATION</th>
+        							<th>PL TAKEN</th>
         							<th>OFF TAKEN</th>
         							<th>HOD REMARK</th>
         							<th>HOD STATUS</th>
@@ -139,6 +140,7 @@
             								        echo ' day';
             								    
                                             ?></td>
+                                            <td><?php echo $request['pl']; ?></td>
         								    <td>
         								    	<?php if($request['NHFH'] != ''){
         								            echo 'NH/FH\'s:<br/><ul style="list-style:none;">';

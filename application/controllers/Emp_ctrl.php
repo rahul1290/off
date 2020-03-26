@@ -87,7 +87,6 @@ class Emp_ctrl extends CI_Controller {
 	
 	function leave_request(){
 	    if($_SERVER['REQUEST_METHOD'] == 'POST') {
-	        print_r($this->input->post()); die;
 	        $from_date = $this->my_library->mydate($this->input->post('from_date'));
 	        $to_date = $this->my_library->mydate($this->input->post('to_date'));
 	        $data['request_type'] = 'LEAVE';
@@ -98,6 +97,8 @@ class Emp_ctrl extends CI_Controller {
 	        $data['date_to'] = $to_date;
 	        $data['created_at'] = date('Y-m-d H:i:s');
 	        $data['wod'] = $this->input->post('wod');
+	        $data['pl'] = $this->input->post('f1_pl');
+	        $data['lop'] = $this->input->post('f1_lop');
 	        $coff = $this->input->post('coff');
 	        $nhfh = $this->input->post('nhfh');
 	        
@@ -129,6 +130,8 @@ class Emp_ctrl extends CI_Controller {
 	            $data['coffs'] = $this->my_library->coff($this->session->userdata('ecode'));
 	            $data['nhfhs'] = $this->my_library->nhfh($this->session->userdata('ecode'));
 	            $data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+	            $data['pls_applied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+	            $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pls_applied'];
 	            
 	            $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 	            $data['footer'] = $this->load->view('include/footer','',true);
@@ -150,7 +153,9 @@ class Emp_ctrl extends CI_Controller {
     		$data['coffs'] = $this->my_library->coff($this->session->userdata('ecode'));
     		$data['nhfhs'] = $this->my_library->nhfh($this->session->userdata('ecode'));
     		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-
+    		$data['pls_applied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+    		$data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pls_applied'];
+    		
     		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
     		$data['footer'] = $this->load->view('include/footer','',true);
     		$data['top_nav'] = $this->load->view('include/top_nav','',true);

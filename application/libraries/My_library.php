@@ -70,6 +70,12 @@ class My_library {
 	    return $result;
 	}
 	
+	function pl_applied($ecode){
+	    $this->CI->db->select('sum(pl) as total');
+	    $result = $this->CI->db->get_where('users_leave_requests',array('ecode'=>$ecode,'hr_Status'=>'PENDING','status'=>1))->result_array();
+	    return $result[0]['total'];
+	}
+	
 	function coff($ecode){
 	    $this->CI->db->select('*');
 	    $this->CI->db->where_in('request_type','OFF_DAY');
