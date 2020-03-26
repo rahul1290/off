@@ -27,8 +27,7 @@ $route['es/KRA/(:any)'] = 'Kra_ctrl/index/$1';
 $route['es/KRA/(:any)/(:any)'] = 'Kra_ctrl/index/$1/$2';
 
 $route['HR/KRA/(:any)/(:any)'] = 'Kra_ctrl/hr_dashboard/$1/$2';
-$route['HR/KRA/(:any)/(:any)/(:any)'] = 'Kra_ctrl/hr_dashboard/$1/$2/$3';
-
+$route['HR/KRA/(:any)/(:any)/(:any)/(:any)'] = 'Kra_ctrl/hr_dashboard/$1/$2/$3/$4';
 
 ///OUTPUT
 $route['output/broadcast'] = 'output/Output_ctrl/index';

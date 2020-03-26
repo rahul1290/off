@@ -23,8 +23,7 @@ date_default_timezone_set('Asia/Kolkata');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://192.168.25.184:82/emp/trunk/';
-$config['base_url'] = 'http://localhost/emp/trunk/';
+$config['base_url'] = 'http://emp2.ibc24.in/kra/';
 
 ////////////////////////////*************************************/////////////////////
 $config['img_url'] = 'https://employee.ibc24.in/OLAppraisal/EmpImage/';
@@ -34,7 +33,7 @@ $config['NEWZ36'] = 'NEWZ36.dbo.';
 $config['Savior'] = 'Savior.dbo.';
 $config['project_title'] = 'IBC24';
 
-$config['hr_list'] = array('SBMMPL-00310','SBMMPL-00948');
+$config['hr_list'] = array('SBMMPL-00310','SBMMPL-00948','SBMMPL-00144');
 ////////////////////////////*************************************/////////////////////
 /*
 |--------------------------------------------------------------------------
@@ -170,8 +169,6 @@ $config['composer_autoload'] = FALSE;
 |
 */
 $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-@\=';
-
-
 /*
 |--------------------------------------------------------------------------
 | Enable Query Strings

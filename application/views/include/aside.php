@@ -8,25 +8,23 @@ foreach($links as $link){
 
 <aside class="main-sidebar sidebar-dark-warning elevation-4">
     <!-- Brand Logo -->
-    <a href="<?php echo base_url('dashboard');?>" class="brand-link">
+    <a href="index3.html" class="brand-link">
       <img src="<?php echo base_url('assets');?>/dist/img/logoo.png" alt="AdminLTE Logo" class="brand-image /*img-circle*/ elevation-3"
            style="opacity: 1">
-      <span class="brand-text font-weight-light">IBC 24</span>
+      <span class="brand-text font-weight-light">Ibc 24</span>
     </a>
 
     <!-- Sidebar -->
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
-      <a href="<?php echo base_url(); ?>">
-          <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="image">
-              <img src="<?php echo $this->config->item('img_url').$this->session->userdata('ecode').'.jpg'; ?>" class="img-circle elevation-4" alt="User Image">
-            </div>
-            <div class="info">
-            	<label><?php echo $this->session->userdata('username'); ?></label>
-            </div>
-          </div>
-      </a>
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="<?php echo $this->config->item('img_url').$this->session->userdata('ecode').'.jpg'; ?>" class="img-circle elevation-4" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="#" class="d-block"><?php echo $this->session->userdata('username'); ?></a>
+        </div>
+      </div>
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
@@ -402,7 +400,7 @@ foreach($links as $link){
 			</ul>
 		 </li>
 		 
-		<li class="nav-item">
+		<li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('TOUR REQUESTS',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
 			<a href="<?php echo base_url('output/broadcast');?>" class="nav-link
 				<?php if($this->uri->segment('2') == 'broadcast'){ echo "active"; } ?>
 			">

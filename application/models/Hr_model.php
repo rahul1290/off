@@ -81,7 +81,7 @@ class Hr_model extends CI_Model {
 		if($ref_id != null){
 			$this->db->where('ulr.refrence_id',$ref_id);
 		}
-		$result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'NH_FH','ulr.hod_status<>'=>'PENDING','ulr.hr_status'=>'PENDING','ulr.status'=>1))->result_array();
+		$result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'NH_FH','ulr.hod_status'=>'PENDING','ulr.hr_status'=>'PENDING','ulr.status'=>1))->result_array();
 		return $result;
 	}
 	
@@ -96,34 +96,34 @@ class Hr_model extends CI_Model {
     						)
     		);
     		
-//     		$this->db->select('*');
-//     		$this->db->order_by('created_at','desc');
-//     		$this->db->limit(1);
-//     		$pl_result = $this->db->get_where('pl_management',array('ecode'=>$this->my_library->leave_requester_ecode($data['req_id']),'type'=>'PL','status'=>1))->result_array();
+    		$this->db->select('*');
+    		$this->db->order_by('created_at','desc');
+    		$this->db->limit(1);
+    		$pl_result = $this->db->get_where('pl_management',array('ecode'=>$this->my_library->leave_requester_ecode($data['req_id']),'type'=>'PL','status'=>1))->result_array();
     		
-//     		if(count($pl_result)>0){
-//     		    $this->db->insert('pl_management',array(
-//     		        'type' => 'PL',
-//     		        'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
-//     		        'ecode' => $this->my_library->leave_requester_ecode($data['req_id']),
-//     		        'credit' => $pl_result[0]['credit'],
-//     		        'debit' => '0.5',
-//     		        'balance' => (float)$pl_result[0]['balance'] - '0.5',
-//     		        'created_at' => date('Y-m-d H:i:s'),
-//     		        'created_by' => $this->session->userdata('ecode')
-//     		    ));
-//     		} else {
-//     		    $this->db->insert('pl_management',array(
-//     		        'type' => 'PL',
-//     		        'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
-//     		        'ecode' => $this->my_library->leave_requester_ecode($data['req_id']),
-//     		        'credit' => '0',
-//     		        'debit' => '0.5',
-//     		        'balance' => '-0.5',
-//     		        'created_at' => date('Y-m-d H:i:s'),
-//     		        'created_by' => $this->session->userdata('ecode')
-//     		    ));
-//     		}
+    		if(count($pl_result)>0){
+    		    $this->db->insert('pl_management',array(
+    		        'type' => 'PL',
+    		        'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
+    		        'ecode' => $this->my_library->leave_requester_ecode($data['req_id']),
+    		        'credit' => $pl_result[0]['credit'],
+    		        'debit' => '0.5',
+    		        'balance' => (float)$pl_result[0]['balance'] - '0.5',
+    		        'created_at' => date('Y-m-d H:i:s'),
+    		        'created_by' => $this->session->userdata('ecode')
+    		    ));
+    		} else {
+    		    $this->db->insert('pl_management',array(
+    		        'type' => 'PL',
+    		        'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
+    		        'ecode' => $this->my_library->leave_requester_ecode($data['req_id']),
+    		        'credit' => '0',
+    		        'debit' => '0.5',
+    		        'balance' => '-0.5',
+    		        'created_at' => date('Y-m-d H:i:s'),
+    		        'created_by' => $this->session->userdata('ecode')
+    		    ));
+    		}
     		
 		if ($this->db->trans_status() === FALSE){
 		    $this->db->trans_rollback();

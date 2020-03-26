@@ -97,8 +97,7 @@ class Emp_ctrl extends CI_Controller {
 	        $data['date_to'] = $to_date;
 	        $data['created_at'] = date('Y-m-d H:i:s');
 	        $data['wod'] = $this->input->post('wod');
-	        $data['pl'] = $this->input->post('f1_pl');
-	        $data['lop'] = $this->input->post('f1_lop');
+			$data['lop'] = $this->input->post('f1_lop');
 	        $coff = $this->input->post('coff');
 	        $nhfh = $this->input->post('nhfh');
 	        
@@ -130,8 +129,6 @@ class Emp_ctrl extends CI_Controller {
 	            $data['coffs'] = $this->my_library->coff($this->session->userdata('ecode'));
 	            $data['nhfhs'] = $this->my_library->nhfh($this->session->userdata('ecode'));
 	            $data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-	            $data['pls_applied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-	            $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pls_applied'];
 	            
 	            $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 	            $data['footer'] = $this->load->view('include/footer','',true);
@@ -143,7 +140,7 @@ class Emp_ctrl extends CI_Controller {
 	            $data['title'] = $this->config->item('project_title').' | Leave Request';
 	            $data['head'] = $this->load->view('common/head',$data,true);
 	            $data['footer'] = $this->load->view('common/footer',$data,true);
-	            $this->load->view('layout_master',$data);
+	            $this->load->view('layout_master',$data,'refresh');
 	        }
 	        
 	        
@@ -153,9 +150,7 @@ class Emp_ctrl extends CI_Controller {
     		$data['coffs'] = $this->my_library->coff($this->session->userdata('ecode'));
     		$data['nhfhs'] = $this->my_library->nhfh($this->session->userdata('ecode'));
     		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-    		$data['pls_applied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-    		$data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pls_applied'];
-    		
+
     		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
     		$data['footer'] = $this->load->view('include/footer','',true);
     		$data['top_nav'] = $this->load->view('include/top_nav','',true);

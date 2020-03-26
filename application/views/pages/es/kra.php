@@ -71,7 +71,7 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
           <div class="container-fluid col-10">	
 			<div class="col-12 mb-3" style="background-color: #012f6a; important!">
 				<img src="<?php echo base_url();?>assets/dist/img/logo_w.png" style="height:100px;"/>
-				<span style="font-size:3vw;" class="offset-sm-3 text-center text-light">ONLINE APPRAISAL</span>
+				<span style="font-size:3vw;" class="offset-sm-3 text-center text-light">KRA ALLOCATION</span>
 				
 				<nav class="navbar navbar-expand-lg">
                       <div class="collapse navbar-collapse" id="navbarSupportedContent">
