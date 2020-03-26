@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 //$active_group = 'default';
-$active_group = 'localhost';
+$active_group = '239';
 $query_builder = TRUE;
 
 $db['sqlsrv'] = array(

@@ -97,6 +97,7 @@ class Emp_ctrl extends CI_Controller {
 	        $data['date_to'] = $to_date;
 	        $data['created_at'] = date('Y-m-d H:i:s');
 	        $data['wod'] = $this->input->post('wod');
+	        $data['pl'] = $this->input->post('f1_pl');
 			$data['lop'] = $this->input->post('f1_lop');
 	        $coff = $this->input->post('coff');
 	        $nhfh = $this->input->post('nhfh');
@@ -123,26 +124,9 @@ class Emp_ctrl extends CI_Controller {
 	            
 	            
 	            $this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your Leave request submitted successfully.</h3>');
-
-	            //////////////////////////////////////////
-	            $data = array();
-	            $data['coffs'] = $this->my_library->coff($this->session->userdata('ecode'));
-	            $data['nhfhs'] = $this->my_library->nhfh($this->session->userdata('ecode'));
-	            $data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-	            
-	            $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
-	            $data['footer'] = $this->load->view('include/footer','',true);
-	            $data['top_nav'] = $this->load->view('include/top_nav','',true);
-	            $data['aside'] = $this->load->view('include/aside',$data,true);
-	            $data['notepad'] = $this->load->view('include/shift_timing','',true);
-	            $data['requests'] = $this->Emp_model->leave_requests($this->session->userdata('ecode'));
-	            $data['body'] = $this->load->view('pages/es/leave_request',$data,true);
-	            $data['title'] = $this->config->item('project_title').' | Leave Request';
-	            $data['head'] = $this->load->view('common/head',$data,true);
-	            $data['footer'] = $this->load->view('common/footer',$data,true);
-	            $this->load->view('layout_master',$data,'refresh');
+                
+                redirect('es/leave-request','refresh');
 	        }
-	        
 	        
 	        
 	    } else {
@@ -150,6 +134,9 @@ class Emp_ctrl extends CI_Controller {
     		$data['coffs'] = $this->my_library->coff($this->session->userdata('ecode'));
     		$data['nhfhs'] = $this->my_library->nhfh($this->session->userdata('ecode'));
     		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+    		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+    		$data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+    		
 
     		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
     		$data['footer'] = $this->load->view('include/footer','',true);
@@ -217,7 +204,7 @@ class Emp_ctrl extends CI_Controller {
 					} else {
 						$this->session->set_flashdata('msg', '<h3 class="bg-info p-2 text-center">warning! Database issue, Please contact to IT team.</h3>');
 					}
-					redirect(base_url('es/hf-leave-request'));
+					redirect(base_url('es/hf-leave-request'),'refresh');
 				}
 		} else {
 			$data = array();
@@ -297,7 +284,7 @@ class Emp_ctrl extends CI_Controller {
 					} else {
 						$this->session->set_flashdata('msg', '<h3 class="bg-info p-2 text-center">warning! Database issue, Please contact to IT team.</h3>');
 					}
-					redirect(base_url('es/off-day-duty-form'));
+					redirect(base_url('es/off-day-duty-form'),'refresh');
 				}
 
 			} else {
@@ -418,7 +405,7 @@ class Emp_ctrl extends CI_Controller {
 				} else{
 					$this->session->set_flashdata('msg', '<h3 class="bg-info p-2 text-center">warning! Database issue, Please contact to IT team.</h3>');
 				}
-				redirect(base_url('es/nh-fh-day-duty-form'));
+				redirect(base_url('es/nh-fh-day-duty-form'),'refresh');
 			}
 			
  		} else {

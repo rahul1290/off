@@ -71,7 +71,7 @@ class My_library {
 	}
 	
 	function pl_applied($ecode){
-	    $this->CI->db->select('sum(pl) as total');
+	    $this->CI->db->select('ifnull(sum(pl),0) as total');
 	    $result = $this->CI->db->get_where('users_leave_requests',array('ecode'=>$ecode,'hr_Status'=>'PENDING','status'=>1))->result_array();
 	    return $result[0]['total'];
 	}
