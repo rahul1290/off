@@ -22,7 +22,7 @@
     <div class="content">
       <div class="container-fluid">
 		<form name="f1" method="POST" action="<?php echo base_url('es/nh-fh-day-duty-form');?>"> 
-		<div class="offset-md-1 col-md-10 mb-3">
+		<div class="col-12 mb-3">
 		   <?php echo $this->session->flashdata('msg'); ?>
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
@@ -75,7 +75,7 @@
 		  <hr/>
 		  
 		  <?php if(count($nh_fh_requests)>0){ ?>
-			  <div class="offset-md-1 col-md-10">
+			  <div class="col-12">
 				<div class="card card-info">
 				  <div class="card-header" style="border-radius:0px;">
 					<h3 class="card-title">NH/FH DAY DUTY REQUEST'S LIST</h3>

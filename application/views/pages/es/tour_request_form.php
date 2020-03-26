@@ -20,7 +20,7 @@
     <!-- Main content -->
     <!--<div class="content">-->
       <div class="container-fluid">
-		<div class="offset-md-1 col-md-10 mb-3">
+		<div class="col-12 mb-3">
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
                 <h3 class="card-title">TOUR REQUEST FORM1</h3>
@@ -63,7 +63,7 @@
           </div>
 		  <hr/>
 		  
-		  <div class="offset-md-1 col-md-10">
+		  <div class="col-12">
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
                 <h3 class="card-title">PREVIOUS TOUR REQUEST STATUS</h3>
