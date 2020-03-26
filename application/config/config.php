@@ -24,6 +24,7 @@ date_default_timezone_set('Asia/Kolkata');
 |
 */
 $config['base_url'] = 'http://192.168.25.184:82/emp/trunk/';
+$config['base_url'] = 'http://localhost/emp/trunk/';
 
 ////////////////////////////*************************************/////////////////////
 $config['img_url'] = 'https://employee.ibc24.in/OLAppraisal/EmpImage/';
