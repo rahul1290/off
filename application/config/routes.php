@@ -33,6 +33,10 @@ $route['HR/KRA/(:any)/(:any)/(:any)/(:any)'] = 'Kra_ctrl/hr_dashboard/$1/$2/$3/$
 $route['output/broadcast'] = 'output/Output_ctrl/index';
 
 ///hod////////////////
+$route['hod/leave-request'] = 'hod/Hod_ctrl/leave_request/';
+$route['hod/leave-request/(:any)'] = 'hod/Hod_ctrl/leave_request/$1';
+$route['hod/leave-request-update'] = 'hod/Hod_ctrl/leave_request_update';
+
 $route['hod/hf-leave-request'] = 'hod/Hod_ctrl/hf_leave_request/';
 $route['hod/hf-leave-request/(:any)'] = 'hod/Hod_ctrl/hf_leave_request/$1';
 $route['hod/hf-leave-request-update'] = 'hod/Hod_ctrl/hf_leave_request_update';
@@ -53,6 +57,10 @@ $route['IT-Policies'] = 'Hr_ctrl/it_policies/';
 $route['hr/Emp-Info'] = 'Hr_ctrl/emp_info/';
 $route['emp/hr/Salary-Slip'] = 'Hr_ctrl/salary_slip/';
 $route['emp/hr/Holiday-List'] = 'Hr_ctrl/holiday_list/';
+
+$route['hr/leave-request'] = 'Hr_ctrl/leave_request';
+$route['hr/leave-request/(:any)'] = 'Hr_ctrl/leave_request/$1';
+$route['hr/leave-request-update'] = 'Hr_ctrl/leave_request_update';
 
 $route['hr/hf-leave-request'] = 'Hr_ctrl/hf_leave_request';
 $route['hr/hf-leave-request/(:any)'] = 'Hr_ctrl/hf_leave_request/$1';

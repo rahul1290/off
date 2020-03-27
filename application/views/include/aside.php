@@ -195,6 +195,14 @@ foreach($links as $link){
 			  
 			  <!-- employee -->
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('EMPLOYEE INFORMATION',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+                <a href="<?php echo base_url('hr/leave-request'); ?>" class="nav-link
+					<?php if($this->uri->segment('2') == 'leave-request'){ echo "active"; } ?>
+				">
+				  <i class="fas fa-user"></i>
+                  <p>LEAVE REQUESTS</p>
+                </a>
+              </li>
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('EMPLOYEE INFORMATION',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('hr/hf-leave-request'); ?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'hf-leave-request'){ echo "active"; } ?>
 				">
@@ -354,8 +362,8 @@ foreach($links as $link){
 			
             <ul class="nav nav-treeview">
               <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('LEAVE REQUESTS',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('hod/hf_leave_request');?>" class="nav-link
-					<?php if($this->uri->segment('2') == 'hf-leave-request1'){ echo "active"; } ?>
+                <a href="<?php echo base_url('hod/leave-request');?>" class="nav-link
+					<?php if($this->uri->segment('2') == 'leave-request'){ echo "active"; } ?>
 				">
 				  <i class="far fa-file-pdf"></i>
                   <p>&nbsp;LEAVE REQUESTS</p>
