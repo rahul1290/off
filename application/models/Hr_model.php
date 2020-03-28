@@ -62,41 +62,49 @@ class Hr_model extends CI_Model {
 	}
 	
 	function leave_request_update($data){
-	    print_r($data); die;
 	    $this->db->trans_begin();
-	    
 	    $this->db->where('id',$data['req_id']);
 	    $this->db->update('users_leave_requests',array(
 	        $data['key'] => $data['value'],
 	        'hr_id' => $data['hr_id'],
 	        'hr_remark_date' => $data['created_at']
-	    )
-	        );
+	    ));
+	    
+	    //get employee code by refrence id
+	    $ecode = $this->my_library->leave_requester_ecode($data['req_id']);
 	    
 	    $this->db->select('*');
-	    $this->db->order_by('created_at','desc');
-	    $this->db->limit(1);
-	    $pl_result = $this->db->get_where('pl_management',array('ecode'=>$this->my_library->leave_requester_ecode($data['req_id']),'type'=>'PL','status'=>1))->result_array();
+	    $this->db->order_by('date','desc');
+	    $this->db->limit('1');
+	    $pl_result = $this->db->get_where('pl_management',array('ecode'=>$ecode,'type'=>'PL','status'=>1))->result_array();
 	    
 	    if(count($pl_result)>0){
+	        $this->db->select('*');
+	        $request_info = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id'],'status'=>1))->result_array();
+	        
 	        $this->db->insert('pl_management',array(
 	            'type' => 'PL',
 	            'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
-	            'ecode' => $this->my_library->leave_requester_ecode($data['req_id']),
-	            'credit' => $pl_result[0]['credit'],
-	            'debit' => '0.5',
-	            'balance' => (float)$pl_result[0]['balance'] - '0.5',
+	            'ecode' => $ecode,
+	            'credit' => '',
+	            'debit' => $request_info[0]['pl'],
+	            'balance' => (float)$pl_result[0]['balance'] - $request_info[0]['pl'],
+	            'date' => date('Y-m-d H:i:s'),
 	            'created_at' => date('Y-m-d H:i:s'),
 	            'created_by' => $this->session->userdata('ecode')
 	        ));
 	    } else {
+	        $this->db->select('*');
+	        $request_info = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id'],'status'=>1))->result_array();
+	        
 	        $this->db->insert('pl_management',array(
 	            'type' => 'PL',
 	            'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
-	            'ecode' => $this->my_library->leave_requester_ecode($data['req_id']),
+	            'ecode' => $ecode,
 	            'credit' => '0',
-	            'debit' => '0.5',
-	            'balance' => '-0.5',
+	            'debit' => $request_info[0]['pl'],
+	            'date' => date('Y-m-d H:i:s'),
+	            'balance' => '-'.$request_info[0]['pl'],
 	            'created_at' => date('Y-m-d H:i:s'),
 	            'created_by' => $this->session->userdata('ecode')
 	        ));
@@ -106,7 +114,6 @@ class Hr_model extends CI_Model {
 	        $this->db->trans_rollback();
 	    } else {
 	        $this->db->trans_commit();
-	        //$this->db->trans_rollback();
 	        return true;
 	    }
 	}
