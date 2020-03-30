@@ -19,10 +19,10 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-		<div class="offset-md-1 col-md-10">
+		<div class="col-12">
             <form name="f1" method="POST" action="<?php echo base_url('master/employee/create'); ?>">
 				<div class="form-row mb-3" style="border: solid 1px #123456;">
-					<legend class="the-legend bg-dark pl-2">Official Details</legend>
+					<legend class="the-legend bg-info pl-2">Official Details</legend>
 					<div class="form-group col-md-2">
 						<label for="ecode"><span class="text-danger pr-1">*</span>Employee Code</label>
 						<input type="text" class="form-control" id="ecode" name="ecode" placeholder="Enter Employee Code" value="<?php if(set_value('ecode') != '') { echo set_value('ecode'); } else { echo 'SBMMPL-0'; } ?>">
@@ -132,7 +132,7 @@
 				</div>
 				
 				<div class="form-row mb-3" style="border: solid 1px #123456;">
-					<legend class="the-legend bg-dark pl-2">Employee Info</legend>
+					<legend class="the-legend bg-info pl-2">Employee Info</legend>
 					
 					<div class="form-group col-md-2">
 						<label for="contactno">Contact No.</label>
@@ -167,7 +167,7 @@
 				</div>
 				
 				<div class="form-row mb-3" style="border: solid 1px #123456;">
-					<legend class="the-legend bg-dark pl-2">Other Info</legend>
+					<legend class="the-legend bg-info pl-2">Other Info</legend>
 					
 					<div class="form-group col-md-6">
 						<label for="father_name">Father Name</label>
