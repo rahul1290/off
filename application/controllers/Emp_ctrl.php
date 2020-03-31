@@ -87,47 +87,74 @@ class Emp_ctrl extends CI_Controller {
 	
 	function leave_request(){
 	    if($_SERVER['REQUEST_METHOD'] == 'POST') {
-	        $from_date = $this->my_library->mydate($this->input->post('from_date'));
-	        $to_date = $this->my_library->mydate($this->input->post('to_date'));
-	        $data['request_type'] = 'LEAVE';
-	        $data['refrence_id'] = 'LEAVE-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
-	        $data['ecode'] = $this->session->userdata('ecode');
-	        $data['requirment'] = $this->input->post('reason');
-	        $data['date_from'] = $from_date;
-	        $data['date_to'] = $to_date;
-	        $data['created_at'] = date('Y-m-d H:i:s');
-	        $data['wod'] = $this->input->post('wod');
-	        $data['pl'] = $this->input->post('f1_pl');
-			$data['lop'] = $this->input->post('f1_lop');
-	        $coff = $this->input->post('coff');
-	        $nhfh = $this->input->post('nhfh');
+	        $this->form_validation->set_rules('from_date', 'From Date', 'required');
+	        $this->form_validation->set_rules('to_date', 'To Date', 'required');
+	        $this->form_validation->set_rules('reason','Reason','required|trim');
+	        $this->form_validation->set_rules('wod','wod','required');
 	        
-	        $coff_ids = array();
-	        $nhfh_ids = array();
-	        
-	        if($this->db->insert('users_leave_requests',$data)){
-	            $id = $this->db->insert_id();
-	            $this->db->where('id',$id);
-	            $this->db->update('users_leave_requests',array('refrence_id'=>$data['refrence_id'].'-'.$id));
+	        $this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
+	        if ($this->form_validation->run() == FALSE) {
+	            $data = array();
+	            $data['coffs'] = $this->my_library->coff($this->session->userdata('ecode'));
+	            $data['nhfhs'] = $this->my_library->nhfh($this->session->userdata('ecode'));
+	            $data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+	            $data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+	            $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
 	            
-	            
-	            if($coff != ''){
-	                $this->db->where_in('refrence_id',$coff);
-	                $this->db->update('users_leave_requests',array('request_id'=>$data['refrence_id'].'-'.$id));
-	            }
-	            
-	            if($nhfh != ''){
-	                $this->db->where_in('refrence_id',$nhfh);
-	                $this->db->update('users_leave_requests',array('request_id'=>$data['refrence_id'].'-'.$id));
-	            }
-	            
-	            
-	            
-	            $this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your Leave request submitted successfully.</h3>');
-                
-                redirect('es/leave-request','refresh');
+	            $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+	            $data['footer'] = $this->load->view('include/footer','',true);
+	            $data['top_nav'] = $this->load->view('include/top_nav','',true);
+	            $data['aside'] = $this->load->view('include/aside',$data,true);
+	            $data['notepad'] = $this->load->view('include/shift_timing','',true);
+	            $data['requests'] = $this->Emp_model->leave_requests($this->session->userdata('ecode'));
+	            $data['body'] = $this->load->view('pages/es/leave_request',$data,true);
+	            $data['title'] = $this->config->item('project_title').' | Leave Request';
+	            $data['head'] = $this->load->view('common/head',$data,true);
+	            $data['footer'] = $this->load->view('common/footer',$data,true);
+	            $this->load->view('layout_master',$data);
 	        }
-	        
+	        else {
+                $from_date = $this->my_library->mydate($this->input->post('from_date'));
+                $to_date = $this->my_library->mydate($this->input->post('to_date'));
+                $data['request_type'] = 'LEAVE';
+                $data['refrence_id'] = 'LEAVE-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
+                $data['ecode'] = $this->session->userdata('ecode');
+                $data['requirment'] = $this->input->post('reason');
+                $data['date_from'] = $from_date;
+                $data['date_to'] = $to_date;
+                $data['created_at'] = date('Y-m-d H:i:s');
+                $data['wod'] = $this->input->post('wod');
+                $data['pl'] = $this->input->post('f1_pl');
+        		$data['lop'] = $this->input->post('f1_lop');
+                $coff = $this->input->post('coff');
+                $nhfh = $this->input->post('nhfh');
+                
+                $coff_ids = array();
+                $nhfh_ids = array();
+                
+                if($this->db->insert('users_leave_requests',$data)){
+                    $id = $this->db->insert_id();
+                    $this->db->where('id',$id);
+                    $this->db->update('users_leave_requests',array('refrence_id'=>$data['refrence_id'].'-'.$id));
+                    
+                    
+                    if($coff != ''){
+                        $this->db->where_in('refrence_id',$coff);
+                        $this->db->update('users_leave_requests',array('request_id'=>$data['refrence_id'].'-'.$id));
+                    }
+                    
+                    if($nhfh != ''){
+                        $this->db->where_in('refrence_id',$nhfh);
+                        $this->db->update('users_leave_requests',array('request_id'=>$data['refrence_id'].'-'.$id));
+                    }
+                    
+                    
+                    
+                    $this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your Leave request submitted successfully.</h3>');
+                    
+                    redirect('es/leave-request','refresh');
+                }
+	        } 
 	        
 	    } else {
     		$data = array();

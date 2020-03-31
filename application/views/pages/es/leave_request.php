@@ -42,9 +42,11 @@
 						<tr>
 							<td><b>Leave From</b></td>
 							<td>
-								<input type="text" id="from_date" name="from_date" class="form-control datepicker" autocomplete="off">
+								<input type="text" id="from_date" name="from_date" class="form-control datepicker" autocomplete="off"><?php echo set_value('from_date'); ?>
+								<?php echo form_error('from_date'); ?>
 									<b>TO</b>
 								<input type="text" id="to_date" name="to_date" class="form-control datepicker" autocomplete="off">
+								<?php echo form_error('to_date'); ?>
 								<span id='date_range' class="ml-2" style="display: none;"></span>
 							</td>
 						</tr>
@@ -71,6 +73,7 @@
 							<td><b>REASON FOR LEAVE</b></td>
 							<td>
 								<textarea id="reason" name="reason" class="form-control"></textarea>
+								<?php echo form_error('reason'); ?>
 							</td>
 						</tr>
 						<tr>
@@ -83,6 +86,7 @@
 								<input type="radio" name="wod" value="5" class="wo ml-1">THU
 								<input type="radio" name="wod" value="6" class="wo ml-1">FRI
 								<input type="radio" name="wod" value="7" class="wo ml-1">SAT
+								<?php echo form_error('wod'); ?>
 							</td>
 						</tr>
 					</table>
@@ -97,14 +101,15 @@
 			</form>
 			<hr/>
           
+          <?php if(count($requests)>0) { ?>
     		  <div class="card card-info">
                   <div class="card-header" style="border-radius:0px;">
                     <h3 class="card-title">LEAVE REQUESTS</h3>
                   </div>
                   <div class="card-body">
     				<div class="table-responsive">
-    					<table class="table table-bordered text-center" id="example">
-    						<thead>
+    					<table class="table table-bordered table-striped text-center" id="example">
+    						<thead class="bg-dark">
         						<tr>
         							<th>S.No.</th>
         							<th>REFERENCE No.</th>
@@ -121,7 +126,7 @@
         						</tr>
     						</thead>
     						<tbody>
-    								<?php if(count($requests)>0) { $c=1; foreach($requests as $request){ ?>
+    								<?php  $c=1; foreach($requests as $request){ ?>
     									<tr>
         								    <td><?php echo $c++; ?></td>
         								    <td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
@@ -156,18 +161,30 @@
         								        echo '<ul/>'; } ?>
         								    </td>
         								    <td><?php echo $request['hod_remark']; ?></td>
-        								    <td><?php echo $request['hod_status']; ?></td>
+        								    <td class="<?php if($request['hod_status'] == 'REJECTED'){ 
+													echo "bg-danger"; 
+											} else if($request['hod_status'] == 'PENDING'){
+													echo "bg-warning";
+											} else {
+												echo "bg-success";
+											}?>"><?php echo $request['hod_status']; ?></td>
         								    <td><?php echo $request['hr_remark']; ?></td>
-        								    <td><?php echo $request['hr_status']; ?></td>
+        								    <td class="<?php if($request['hod_status'] == 'REJECTED'){ 
+													echo "bg-danger"; 
+											} else if($request['hod_status'] == 'PENDING'){
+													echo "bg-warning";
+											} else {
+												echo "bg-success";
+											}?>"><?php echo $request['hr_status']; ?></td>
     								    </tr>
-    								<?php }}?>
+    								<?php }?>
     							</tr>
     						</tbody>
     					</table>
     				</div>
-    				
                   </div>
                 </div>
+                <?php } ?>
             </div>
 		  
           <hr/>
