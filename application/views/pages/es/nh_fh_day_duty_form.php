@@ -99,7 +99,7 @@
 							<tbody>
 								<?php $c=1; foreach($nh_fh_requests as $request){ ?>
 									<td><?php echo $c++; ?></td>
-									<td><?php echo $request['refrence_id']; ?></td>
+									<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
 									<td><?php echo $request['created_at']; ?></td>
 									<td><?php echo $request['date']; ?></td>
 									<td><?php echo strlen($request['requirment']) > 50 ? substr($request['requirment'],0,50)."...<a href='#'>read more</a>" : $request['requirment']; ?></td>
