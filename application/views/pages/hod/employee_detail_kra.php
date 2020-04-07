@@ -163,7 +163,7 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
               <div class="card-body">
               	<div class="row">
               		<div class="table-responsive">
-                  		<table class="table table-bordered">
+                  		<table class="table table-bordered text-center">
                   			<thead>
                   				<tr>
                   					<th>S.No.</th>
@@ -350,6 +350,10 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
 			$('#appraisal_comment_error').html('').hide();
 		}
 		
+		if(parseFloat($('#appraiser_score_total').text()) > '100.00'){
+			counter = counter + 1;
+		}
+		
 		if(!counter){
 			return true;
 		} else {
@@ -363,6 +367,7 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
     $(document).on('keyup blur','.appraiser_score',function(){
     	score();
     });
+	
 	
 	function score(){
 		if(typeof $('#appraiser_score1').val() === 'undefined') { var w1 = '0'; } else { if($('#appraiser_score1').val() == ''){ var w1 = '0' } else { var w1 = $('#appraiser_score1').val() } }
@@ -380,6 +385,15 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
      $(this).val($(this).val().replace(/[^0-9\.]/g,''));
 		if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
 			event.preventDefault();
+		}
+		var id = $(this).data('id');
+		if(parseFloat($(this).val()) > '100.00'){
+			$('#appraiser_score'+id+'_error').html('Value not be greater than 100').show();
+		} else {
+			$('#appraiser_score'+id+'_error').html('').hide();
+		}
+		if(parseFloat($('#appraiser_score_total').text()) > '100.00'){
+			$('#appraiser_score_total').html('<b class="text-danger">Appraiser total should not more than 100.</b>');
 		}
      });
 	

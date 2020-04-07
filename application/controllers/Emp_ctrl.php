@@ -47,7 +47,7 @@ class Emp_ctrl extends CI_Controller {
 			
 			$data['paycode'] = $this->my_library->get_paycode($data['paycode']);
 			$data['from_date'] = $year.'-'.$month.'-01';
-			$data['to_date'] = $year.'-'.Date("m", strtotime("2017-" . $month . "-01" . " +1 month")).'-01';
+			$data['to_date'] = date($year.'-'.$month.'-'.date('t',strtotime($data['from_date'])));
 			
 			$result = $this->Emp_model->attendance($data);
 			if($result){

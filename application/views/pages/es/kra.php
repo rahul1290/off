@@ -77,12 +77,12 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                       <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
 						<?php if($this->my_library->reporting_to($user_detail[0]['ecode']) > 0){ ?>		
-                          <li class="nav-item float-right" style="background-color: red; border-radius: 11px; display:none;">
+                          <li class="nav-item float-right" style="background-color: red; border-radius: 11px; display:inline;">
                           	<a class="nav-link text-light" href="<?php echo base_url();?>HOD/<?php echo base64_encode($user_detail[0]['ecode']); ?>/KRA">Superior Rating</a>
                           </li>
 						<?php } ?>
 						<?php if(in_array($user_detail[0]['ecode'], $this->config->item('hr_list'))){ ?>
-                                <li class="nov-item float-right" style="background-color: red; border-radius: 11px; display:none;">
+                                <li class="nov-item float-right" style="background-color: red; border-radius: 11px; display:inline;">
                                 	<a class="nav-link text-light" href="<?php echo base_url();?>HR/KRA/<?php echo base64_encode($user_detail[0]['ecode']); ?>/<?php
                                 	if($this->uri->segment('4') == ''){
                                 	    echo base64_encode($this->my_library->get_current_session());

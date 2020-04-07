@@ -64,7 +64,7 @@ class Emp_model extends CI_Model {
 								END
 							END) as HOURSWORKED");
 		//$this->db->join($this->config->item('NEWZ36').'LoginKRA l','l.PAYCODE = tblr.PAYCODE');
-		$db2->where(array('tblr.DateOFFICE >='=>$data['from_date'],'tblr.DateOFFICE <'=>$data['to_date']));
+		$db2->where(array('tblr.DateOFFICE >='=>$data['from_date'],'tblr.DateOFFICE <='=>$data['to_date']));
 		$result = $db2->get_where($this->config->item('Savior').'tblTimeRegister tblr',array('tblr.PAYCODE'=>$data['paycode']))->result_array();
 		return $result;
 	}
