@@ -162,7 +162,9 @@ class Emp_ctrl extends CI_Controller {
     		$data['nhfhs'] = $this->my_library->nhfh($this->session->userdata('ecode'));
     		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
     		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-    		$data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+    		if(count($data['pls'])>0){
+    		  $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+    		}
     		
 
     		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));

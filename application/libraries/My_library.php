@@ -64,7 +64,7 @@ class My_library {
 	
 	function pl_calculator($ecode){
 	    $this->CI->db->select('*');
-	    $this->CI->db->order_by('created_at','desc');
+	    $this->CI->db->order_by('date','desc');
 	    $this->CI->db->limit(1);
 	    $result = $this->CI->db->get_where('pl_management',array('type'=>'PL','ecode'=>$ecode))->result_array();
 	    return $result;

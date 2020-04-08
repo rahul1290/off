@@ -7,6 +7,12 @@ class Employee_ctrl extends CI_Controller {
         parent::__construct();
         $this->load->database();
 		$this->load->model(array('Auth_model','master/Employee_model','master/Department_model','master/Designation_model','master/Empcode_model','master/Grade_model','master/Location_model'));
+		$this->is_login();
+    }
+    function is_login(){
+        if(!$this->session->userdata('ecode')){
+            redirect('Auth');
+        }
     }
 	
 	function index(){

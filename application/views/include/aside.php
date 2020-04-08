@@ -157,39 +157,7 @@ foreach($links as $link){
 					<?php if($this->uri->segment('2') == 'HR-Policies'){ echo "active"; } ?>
 				">
 				  <i class="far fa-file-pdf"></i>
-                  <p>&nbsp;HR POLICIES</p>
-                </a>
-              </li>
-			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('EMPLOYEE INFORMATION',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('hr/Emp-Info'); ?>" class="nav-link
-					<?php if($this->uri->segment('2') == 'Emp-Info'){ echo "active"; } ?>
-				">
-				  <i class="fas fa-user"></i>
-                  <p>&nbsp;EMPLOYEE INFORMATION</p>
-                </a>
-              </li>
-			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('SALARY SLIP',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('emp/hr/Salary-Slip'); ?>" class="nav-link
-					<?php if($this->uri->segment('3') == 'Salary-Slip'){ echo "active"; } ?>
-				">
-				  <i class="fas fa-file-alt"></i>
-                  <p>&nbsp;SALARY SLIP</p>
-                </a>
-              </li>
-			  
-			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('HOLIDAY LIST',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('emp/hr/Holiday-List'); ?>" class="nav-link
-					<?php if($this->uri->segment('3') == 'Holiday-List'){ echo "active"; } ?>
-				">
-				  <i class="fas fa-dove"></i>
-                  <p>HOLIDAY LIST</p>
-                </a>
-              </li>
-			  
-			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('TOUR REPORT FORMAT',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="#" class="nav-link">
-				  <i class="fas fa fa-file-excel" aria-hidden="true"></i>
-                  <p>TOUR REPORT FORMAT</p>
+                  <p>&nbsp;PDFS</p>
                 </a>
               </li>
 			  
