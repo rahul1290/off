@@ -78,9 +78,13 @@ class Hr_ctrl extends CI_Controller {
 			}
 		} else {
 			$data = array();
+			$data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
+			$data['users'] = $this->Emp_model->get_employee($this->session->userdata('ecode'));
+			$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+			
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
-			$data['aside'] = $this->load->view('include/aside','',true);
+			$data['aside'] = $this->load->view('include/aside',$data,true);
 			//$data['notepad'] = $this->load->view('include/notepad','',true);
 			$data['body'] = $this->load->view('pages/hradmin/roaster',$data,true);
 			//===============common===============//
