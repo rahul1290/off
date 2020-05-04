@@ -603,7 +603,7 @@ class Emp_ctrl extends CI_Controller {
 		$data['notepad'] = $this->load->view('include/notepad','',true);
 		$data['body'] = $this->load->view('pages/emp_dashboard',$data,true);
 		//===============common===============//
-		$data['title'] = 'Home | Emp-Portal';
+		$data['title'] = $this->config->item('project_title').' | Emp-Portal';
 		$data['head'] = $this->load->view('common/head',$data,true);
 		$data['footer'] = $this->load->view('common/footer',$data,true);
 		$this->load->view('layout_master',$data);

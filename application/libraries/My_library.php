@@ -53,7 +53,7 @@ class My_library {
 		return $result;
 	}
 	
-	function links($ecode){
+	function links($ecode){  
 		$this->CI->db->select('sl.link_name');
 		$this->CI->db->join('system-links sl','sl.id = ul.link_id');
 		$result = $this->CI->db->get_where('user_links ul',array('ul.ecode'=>$ecode,'ul.status'=>1))->result_array();
