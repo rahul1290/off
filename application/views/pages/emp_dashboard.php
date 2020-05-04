@@ -64,7 +64,7 @@
 					<div class="icon">
 						<i class="fa fa-desktop" aria-hidden="true"></i>
 					</div>
-					<a href="<?php echo base_url('ibc/IT-Policies'); ?>" class="small-box-footer">
+					<a href="<?php echo base_url('es/IT-Policies'); ?>" class="small-box-footer">
 						More info <i class="fas fa-arrow-circle-right"></i>
 					</a>
 				</div>
@@ -96,7 +96,7 @@
 					<div class="icon">
 						<i class="fa fa-user" aria-hidden="true"></i>
 					</div>
-					<a href="<?php echo base_url('ibc/hr/HR-Policies');?>" class="small-box-footer">
+					<a href="<?php echo base_url('es/HR-Policies');?>" class="small-box-footer">
 						More info <i class="fas fa-arrow-circle-right"></i>
 					</a>
 				</div>

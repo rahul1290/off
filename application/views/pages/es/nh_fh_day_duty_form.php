@@ -8,7 +8,7 @@
 				</div><!-- /.col -->
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="<?php echo base_url();?>">Home</a></li>
+						<li class="breadcrumb-item"><a href="<?php echo base_url('dashboard');?>">Home</a></li>
 						<li class="breadcrumb-item active">Employee Section</li>
 						<li class="breadcrumb-item active">NH/FH day duty form</li>
 					</ol>
@@ -88,16 +88,17 @@
 									<th>S.No.</th>
 									<th>REFERENCE No.</th>
 									<th>REQUEST SUBMIT DATE</th>
-									<th>NH/FH DATE</th>
+									<th>NH/FH DUTY DATE</th>
 									<th>REASON</th>
 									<th>HOD REMARK</th>
 									<th>HOD STATUS</th>
-									<th>HR REMARKS</th>
-									<th>HR STATUS</th>
+									<!--th>HR REMARKS</th>
+									<th>HR STATUS</th-->
 								</tr>
 							</thead>
 							<tbody>
 								<?php $c=1; foreach($nh_fh_requests as $request){ ?>
+									<tr>
 									<td><?php echo $c++; ?></td>
 									<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
 									<td><?php echo $request['created_at']; ?></td>
@@ -113,7 +114,7 @@
 												echo "bg-success";
 											}?>"
 										><?php echo $request['hod_status']; ?></td>
-									<td><?php echo $request['hr_remark']; ?></td>
+									<?php /*<td><?php echo $request['hr_remark']; ?></td>
 									<td class="
 											<?php if($request['hr_status'] == 'REJECTED'){ 
 													echo "bg-danger"; 
@@ -123,6 +124,8 @@
 												echo "bg-success";
 											}?>"
 										><?php echo $request['hr_status']; ?></td>
+									*/ ?>
+									</tr>
 								<?php } ?>
 							</tbody>
 						</table>

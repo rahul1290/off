@@ -5,7 +5,8 @@ class Hod_model extends CI_Model {
 
     ////LEAVE REQUEST
     function leave_request($ulist,$ref_id){
-        $this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y %H:%i:%s") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y %H:%i:%s") as last_update');
+        $this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y %H:%i:%s") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y %H:%i:%s") as last_update,(select group_concat(ulr2.refrence_id) from users_leave_requests ulr2 WHERE ulr2.request_id = ulr.refrence_id AND ulr2.request_type = "OFF_DAY") as coff,
+						 (select group_concat(ulr2.refrence_id) from users_leave_requests ulr2 WHERE ulr2.request_id = ulr.refrence_id AND ulr2.request_type = "NH_FH") as nhfhs');
         $this->db->where_in('ulr.ecode',$ulist,false);
         $this->db->join('users u','u.ecode = ulr.ecode');
         $this->db->join('department_master dm','dm.id = u.department_id');
@@ -14,11 +15,12 @@ class Hod_model extends CI_Model {
         }
         $this->db->order_by('ulr.hod_remark_date','desc');
         $result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'LEAVE','ulr.hod_status<>'=>'PENDING','ulr.status'=>1))->result_array();
-        return $result;
+		return $result;
     }
     
     function leave_pending_request($ulist,$ref_id){
-        $this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y %H:%i:%s") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y %H:%i:%s") as last_update');
+        $this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y %H:%i:%s") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y %H:%i:%s") as last_update,(select group_concat(ulr2.refrence_id) from users_leave_requests ulr2 WHERE ulr2.request_id = ulr.refrence_id AND ulr2.request_type = "OFF_DAY") as coff,
+						 (select group_concat(ulr2.refrence_id) from users_leave_requests ulr2 WHERE ulr2.request_id = ulr.refrence_id AND ulr2.request_type = "NH_FH") as nhfhs');
         $this->db->where_in('ulr.ecode',$ulist,false);
         $this->db->join('users u','u.ecode = ulr.ecode');
         $this->db->join('department_master dm','dm.id = u.department_id');
@@ -26,7 +28,7 @@ class Hod_model extends CI_Model {
             $this->db->where('ulr.refrence_id',$ref_id);
         }
         $result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'LEAVE','ulr.hod_status'=>'PENDING','ulr.status'=>1))->result_array();
-        return $result;
+		return $result;
     }
     
     function leave_request_update($data){

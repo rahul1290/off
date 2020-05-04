@@ -1,5 +1,4 @@
-  
-  <div class="content-wrapper">	
+<div class="content-wrapper">	
 	<div class="content-header bg-light mb-3">
 		<div class="container-fluid">
 			<div class="row mb-2">
@@ -8,8 +7,8 @@
 				</div><!-- /.col -->
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="<?php echo base_url();?>">Home</a></li>
-						<li class="breadcrumb-item active">Employee Section</li>
+						<li class="breadcrumb-item"><a href="<?php echo base_url('dashboard');?>">Home</a></li>
+						<li class="breadcrumb-item active">HR Management</li>
 						<li class="breadcrumb-item active">HF Leave Request</li>
 					</ol>
 				</div><!-- /.col -->
@@ -27,52 +26,54 @@
 					<h3 class="card-title">NEW REQUESTS</h3>
 				  </div>
 				  <div class="card-body">
-					<div class="table-responsive">
-						<table class="table table-bordered text-center" id="example">
-							<thead>	
-								<tr class="bg-dark">
-									<th>S.No.</th>
-									<th>REFERENCE No.</th>
-									<th>DEPARTMENT</th>
-									<th>EMPLOYEE NAME</th>
-									<th>REQUEST SUBMIT DATE</th>
-									<th>HALF TAKEN DATE</th>
-									<th>REASON</th>
-									<th>HOD REMARK</th>
-									<th>HOD STATUS</th>
-									<th>HR REMARK</th>
-									<th>HR STATUS</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php if(count($pending_requests)>0){?>
-									<?php $c=1; foreach($pending_requests as $request){ ?>
-										<tr>	
-											<td><?php echo $c++; ?>.</td>
-											<td><?php echo $request['refrence_id']; ?></td>
-											<td><?php echo $request['dept_name']; ?></td>
-											<td><?php echo $request['name']; ?></td>
-											<td><?php echo $request['created_at']; ?></td>
-											<td><?php echo $request['date']; ?></td>
-											<td><?php echo strlen($request['requirment']) > 50 ? ucfirst(substr($request['requirment'],0,50))."...<a href='#'>read more</a>" : ucfirst($request['requirment']); ?></td>
-											<td><label><?php echo $request['hod_remark']; ?></label></td>
-											<td><label><?php echo $request['hod_status']; ?><hr/><?php echo $request['hod_remark_date']; ?></label></td>
-											<td>
-												<textarea name="" id="" class="hr_remark form-control"></textarea>
-											</td>
-											<td>
-												<select class="hr_status" name="hr_status" data-rid="<?php echo $request['id']; ?>">
-													<option value="PENDING" <?php if($request['hr_status'] == 'PENDING'){ echo 'selected'; }?>>PENDING</option>
-													<option  value="REJECTED" <?php if($request['hr_status'] == 'REJECTED'){ echo 'selected'; }?>>REJECTED</option>
-													<option  value="GRANTED" <?php if($request['hr_status'] == 'GRANTED'){ echo 'selected'; }?>>GRANTED</option>
-												</select>
-											</td>
-										</tr>
+					<?php if(count($pending_requests)>0){ ?>
+						<div class="table-responsive">
+							<table class="table table-bordered text-center" id="example">
+								<thead>	
+									<tr class="bg-dark">
+										<th>S.No.</th>
+										<th>REFERENCE No.</th>
+										<th>DEPARTMENT</th>
+										<th>EMPLOYEE NAME</th>
+										<th>REQUEST SUBMIT DATE</th>
+										<th>HALF TAKEN DATE</th>
+										<th>REASON</th>
+										<th>HOD REMARK</th>
+										<th>HOD STATUS</th>
+										<th>HR REMARK</th>
+										<th>HR STATUS</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php if(count($pending_requests)>0){?>
+										<?php $c=1; foreach($pending_requests as $request){ ?>
+											<tr>	
+												<td><?php echo $c++; ?>.</td>
+												<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
+												<td><?php echo $request['dept_name']; ?></td>
+												<td><?php echo $request['name']; ?></td>
+												<td><?php echo $request['created_at']; ?></td>
+												<td><?php echo $request['date']; ?></td>
+												<td><?php echo strlen($request['requirment']) > 50 ? ucfirst(substr($request['requirment'],0,50))."...<a href='#'>read more</a>" : ucfirst($request['requirment']); ?></td>
+												<td><label><?php echo $request['hod_remark']; ?></label></td>
+												<td><label><?php echo $request['hod_status']; ?><hr/><?php //echo $request['hod_remark_date']; ?></label></td>
+												<td>
+													<textarea name="" id="" class="hr_remark form-control"></textarea>
+												</td>
+												<td>
+													<select class="hr_status" name="hr_status" data-rid="<?php echo $request['id']; ?>">
+														<option value="PENDING" <?php if($request['hr_status'] == 'PENDING'){ echo 'selected'; }?>>PENDING</option>
+														<option  value="REJECTED" <?php if($request['hr_status'] == 'REJECTED'){ echo 'selected'; }?>>REJECTED</option>
+														<option  value="GRANTED" <?php if($request['hr_status'] == 'GRANTED'){ echo 'selected'; }?>>GRANTED</option>
+													</select>
+												</td>
+											</tr>
+										<?php } ?>
 									<?php } ?>
-								<?php } ?>
-							</tbody>
-						</table>
-					</div>
+								</tbody>
+							</table>
+						</div>
+					<?php } else { echo "<p class='text-center'>No new record found.</p>"; }?>
 				  </div>
 				</div>
 			  </div>
@@ -84,6 +85,7 @@
 					<h3 class="card-title">PREVIOUS HF REQUESTS</h3>
 				  </div>
 				  <div class="card-body">
+					<?php if(count($requests)>0){ ?>
 					<div class="table-responsive">
 						<table class="table table-bordered text-center" id="example2">
 							<thead>	
@@ -107,7 +109,7 @@
 									<?php $c=1; foreach($requests as $request){ ?>
 										<tr>	
 											<td><?php echo $c++; ?>.</td>
-											<td><?php echo $request['refrence_id']; ?></td>
+											<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
 											<td><?php echo $request['dept_name']; ?></td>
 											<td><?php echo $request['name']; ?></td>
 											<td><?php echo $request['created_at']; ?></td>
@@ -117,10 +119,10 @@
 												<label><?php echo $request['hod_remark']; ?></label>
 											</td>
 											<td>
-												<?php echo $request['hod_status']; ?><hr/><?php echo $request['hod_remark_date']; ?>
+												<?php echo $request['hod_status']; ?><?php //echo $request['hod_remark_date']; ?>
 											</td>
 											<td><?php echo $request['hr_remark']; ?></td>
-											<td><?php echo $request['hr_status']; ?><hr/><?php echo $request['hr_remark_date']; ?></td>
+											<td><?php echo $request['hr_status']; ?><?php //echo $request['hr_remark_date']; ?></td>
 											<td>
 												<?php echo $request['hod_name']; ?>
 											</td>
@@ -130,6 +132,7 @@
 							</tbody>
 						</table>
 					</div>
+					<?php } else { echo "<p class='text-center'>No record found.</p>"; }?>
 				  </div>
 				</div>
 			  </div>

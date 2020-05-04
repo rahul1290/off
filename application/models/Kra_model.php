@@ -148,7 +148,6 @@ class Kra_model extends CI_Model {
                 $data['kra_id'] = $kra_id[0]['id'];
                 $this->db->insert('kra_feed',$data);
             }
-        
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
         } else {

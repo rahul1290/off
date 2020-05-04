@@ -8,7 +8,7 @@
 				</div><!-- /.col -->
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="<?php echo base_url();?>">Home</a></li>
+						<li class="breadcrumb-item"><a href="<?php echo base_url('dashboard');?>">Home</a></li>
 						<li class="breadcrumb-item active">Employee Section</li>
 						<li class="breadcrumb-item active">Off day duty form</li>
 					</ol>
@@ -85,8 +85,8 @@
 									<th>REASON</th>
 									<th>HOD REMARK</th>	
 									<th>HOD STATUS</th>
-									<th>HR REMARKS</th>
-									<th>HR STATUS</th>
+									<!--th>HR REMARKS</th>
+									<th>HR STATUS</th-->
 								</tr>
 							</thead>
 							<tbody>
@@ -108,7 +108,7 @@
 												echo "bg-success";
 											}?>"
 										><?php echo $request['hod_status']; ?></td>
-										
+										<?php /*
 										<td><?php echo $request['hr_remark']; ?></td>
 										<td class="
 											<?php if($request['hr_status'] == 'REJECTED'){ 
@@ -119,6 +119,7 @@
 												echo "bg-success";
 											}?>"
 										><?php echo $request['hr_status']; ?></td>
+										*/ ?>
 									</tr>
 								<?php } ?>
 							</tbody>

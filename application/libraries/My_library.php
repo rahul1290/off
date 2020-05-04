@@ -152,6 +152,5 @@ class My_library {
 			echo $this->CI->email->print_debugger();
 			print_r('mail send');
 		}	
-	}
-	
+	}	
 }

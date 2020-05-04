@@ -71,7 +71,9 @@
             </div>
             <!-- /.card -->
 			<div id="attendance"></div>
-			<div id="all_emp_attendance"></div>	
+			<?php if(count($users)>1){ ?>
+				<div id="all_emp_attendance"></div>	
+			<?php } ?>
           </div>
 		
 		
@@ -374,6 +376,9 @@ $(document).ready(function(){
 									'<span class="">'+
 										'ALL EMPLOYEE SHIFT'+
 									'</span>'+
+									'<span class="float-right">'+
+										'<a href="javascript:void(0);" id="shift_export">Export</a>'+
+									'</span>'+
 							'</div>'+
 							'<div class="card-body">'+
 								'<div class="table-responsive"><table class="table table-bordered">'+
@@ -416,6 +421,22 @@ $(document).ready(function(){
 			}
 		});
 	}
+	
+	$(document).on('click','#shift_export',function(){
+		$.ajax({
+			type: 'POST',
+			url: baseUrl+'master/Shift_ctrl/attendance_sheet_export',
+			data: { 
+				'dept_id' : $('#department').val(),
+				'month' : $('#month').val()
+			},
+			dataType: 'json',
+			beforeSend: function() {},
+			success: function(response){
+				window.open(baseUrl+'shifts/'+response.data, '_blank');
+			}
+		});
+	});
 	
 	$(document).on('change','.shift',function(){
 		var day = $(this).data('id');

@@ -4,13 +4,13 @@
 		<div class="container-fluid">
 			<div class="row mb-2">
 				<div class="col-sm-6">
-					<h1 class="m-0 text-dark">EMPLOYEE'S LEAVE REQUESTS STATUS</h1>
+					<h1 class="m-0 text-dark">EMPLOYEE'S LEAVE REQUEST'S</h1>
 				</div><!-- /.col -->
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="<?php echo base_url();?>">Home</a></li>
-						<li class="breadcrumb-item active">Employee Section</li>
-						<li class="breadcrumb-item active">HF Leave Request</li>
+						<li class="breadcrumb-item"><a href="<?php echo base_url('dashboard');?>">Home</a></li>
+						<li class="breadcrumb-item active">HR Management</li>
+						<li class="breadcrumb-item active">Employee's leave request's</li>
 					</ol>
 				</div><!-- /.col -->
 			</div><!-- /.row -->
@@ -27,6 +27,7 @@
 					<h3 class="card-title">NEW REQUESTS</h3>
 				  </div>
 				  <div class="card-body">
+					<?php if(count($pending_requests)>0){?>
 					<div class="table-responsive">
 						<table class="table table-bordered text-center" id="example">
 							<thead>	
@@ -38,6 +39,7 @@
 									<th>REQUEST SUBMIT DATE</th>
 									<th>LEAVE DATE'S</th>
 									<th>LEAVE DURATION</th>
+									<th>LEAVE ADJUSTMENT</th>
 									<th>REASON</th>
 									<th>HOD REMARK</th>
 									<th>HOD STATUS</th>
@@ -46,11 +48,10 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php if(count($pending_requests)>0){?>
 									<?php $c=1; foreach($pending_requests as $request){ ?>
 										<tr>	
 											<td><?php echo $c++; ?>.</td>
-											<td><?php echo $request['refrence_id']; ?></td>
+											<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
 											<td><?php echo $request['dept_name']; ?></td>
 											<td><?php echo $request['name']; ?></td>
 											<td><?php echo $request['created_at']; ?></td>
@@ -67,6 +68,27 @@
             								        echo ' day';
             								    
                                             ?></td>
+											<td>
+												<?php 
+													if($request['coff'] != null){
+														$coffs= explode(',',$request['coff']);
+														echo "COFF'S<br/><ul>";
+														foreach($coffs as $coff){
+															echo "<li>".$this->my_library->remove_hyphen($coff)."</li>";
+														}
+														echo "</ul>";
+													}
+													
+													if($request['nhfhs'] != null){
+														$nhfhs = explode(',',$request['nhfhs']);
+														echo "NHFH'S<br/><ul>";
+														foreach($nhfhs as $nhfh){
+															echo "<li>".$this->my_library->remove_hyphen($nhfh)."</li>";
+														}
+														echo "</ul>";
+													}
+												?>
+											</td>
 											<td><?php echo strlen($request['requirment']) > 50 ? ucfirst(substr($request['requirment'],0,50))."...<a href='#'>read more</a>" : ucfirst($request['requirment']); ?></td>
 											<td><label><?php echo $request['hod_remark']; ?></label></td>
 											<td><label><?php echo $request['hod_status']; ?><hr/><?php echo $request['hod_remark_date']; ?></label></td>
@@ -82,10 +104,12 @@
 											</td>
 										</tr>
 									<?php } ?>
-								<?php } ?>
 							</tbody>
 						</table>
 					</div>
+					<?php } else {
+						echo "<p class='text-center'>No new record found.</p>";
+					}?>
 				  </div>
 				</div>
 			  </div>
@@ -97,6 +121,7 @@
 					<h3 class="card-title">PREVIOUS HF REQUESTS</h3>
 				  </div>
 				  <div class="card-body">
+					<?php if(count($requests)>0){?>
 					<div class="table-responsive">
 						<table class="table table-bordered text-center" id="example2">
 							<thead>	
@@ -106,7 +131,9 @@
 									<th>DEPARTMENT</th>
 									<th>EMPLOYEE NAME</th>
 									<th>REQUEST SUBMIT DATE</th>
-									<th>HALF TAKEN DATE</th>
+									<th>LEAVE DATE'S</th>
+									<th>LEAVE DURATION</th>
+									<th>LEAVE ADJUSTMENT</th>
 									<th>REASON</th>
 									<th>HOD REMARK</th>
 									<th>HOD STATUS</th>
@@ -116,33 +143,65 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php if(count($requests)>0){?>
 									<?php $c=1; foreach($requests as $request){ ?>
 										<tr>	
 											<td><?php echo $c++; ?>.</td>
-											<td><?php echo $request['refrence_id']; ?></td>
+											<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
 											<td><?php echo $request['dept_name']; ?></td>
 											<td><?php echo $request['name']; ?></td>
 											<td><?php echo $request['created_at']; ?></td>
-											<td><?php echo $request['date']; ?></td>
+											<td><?php echo $this->my_library->sql_datepicker($request['date_from']); ?> - <?php echo $this->my_library->sql_datepicker($request['date_to']); ?></td>
+											<td><?php
+            								    $date1 = date_create($this->my_library->mydate($request['date_from']));
+            								    $date2 = date_create($this->my_library->mydate($request['date_to']));
+            								    $diff=date_diff($date1,$date2);
+            								    
+            								    echo $diff->format("%a") + 1;
+            								    if($diff->format("%a") > 0)
+            								        echo ' days';
+            								    else 
+            								        echo ' day';
+            								    
+                                            ?></td>
+											<td>
+												<?php 
+													if($request['coff'] != null){
+														$coffs= explode(',',$request['coff']);
+														echo "COFF'S<br/><ul>";
+														foreach($coffs as $coff){
+															echo "<li>".$this->my_library->remove_hyphen($coff)."</li>";
+														}
+														echo "</ul>";
+													}
+													
+													if($request['nhfhs'] != null){
+														$nhfhs = explode(',',$request['nhfhs']);
+														echo "NHFH'S<br/><ul>";
+														foreach($nhfhs as $nhfh){
+															echo "<li>".$this->my_library->remove_hyphen($nhfh)."</li>";
+														}
+														echo "</ul>";
+													}
+												?>
+											</td>
 											<td><?php echo strlen($request['requirment']) > 50 ? ucfirst(substr($request['requirment'],0,50))."...<a href='#'>read more</a>" : ucfirst($request['requirment']); ?></td>
 											<td>
 												<label><?php echo $request['hod_remark']; ?></label>
 											</td>
 											<td>
-												<?php echo $request['hod_status']; ?><hr/><?php echo $request['hod_remark_date']; ?>
+												<?php echo $request['hod_status']; ?><?php //echo $request['hod_remark_date']; ?>
 											</td>
 											<td><?php echo $request['hr_remark']; ?></td>
-											<td><?php echo $request['hr_status']; ?><hr/><?php echo $request['hr_remark_date']; ?></td>
+											<td><?php echo $request['hr_status']; ?><?php //echo $request['hr_remark_date']; ?></td>
 											<td>
 												<?php echo $request['hod_name']; ?>
 											</td>
 										</tr>
 									<?php } ?>
-								<?php } ?>
 							</tbody>
 						</table>
 					</div>
+					<?php } ?>
 				  </div>
 				</div>
 			  </div>

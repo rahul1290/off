@@ -1,3 +1,6 @@
+<?php if(!isset($pls[0]['balance'])){ 
+	$pls[0]['balance'] = 0;
+}?>
 <input id="current_pl" type="hidden" value="<?php echo $pls[0]['balance'];?>">
 
    <div class="content-wrapper">	
@@ -9,7 +12,7 @@
 				</div><!-- /.col -->
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="<?php echo base_url();?>">Home</a></li>
+						<li class="breadcrumb-item"><a href="<?php echo base_url('dashboard');?>">Home</a></li>
 						<li class="breadcrumb-item active">Employee Section</li>
 						<li class="breadcrumb-item active">Leave Request</li>
 					</ol>
@@ -17,6 +20,7 @@
 			</div><!-- /.row -->
 		</div><!-- /.container-fluid -->
 	</div>
+	
 
     <!-- Main content -->
     <div class="content">
@@ -42,26 +46,44 @@
 						<tr>
 							<td><b>Leave From</b></td>
 							<td>
-								<input type="text" id="from_date" name="from_date" class="form-control datepicker" autocomplete="off"><?php echo set_value('from_date'); ?>
+								<input type="text" id="from_date" name="from_date" class="form-control datepicker" autocomplete="off" value="<?php echo set_value('from_date'); ?>">
 								<?php echo form_error('from_date'); ?>
 									<b>TO</b>
-								<input type="text" id="to_date" name="to_date" class="form-control datepicker" autocomplete="off">
+								<input type="text" id="to_date" name="to_date" class="form-control datepicker" autocomplete="off" value="<?php echo set_value('to_date'); ?>">
 								<?php echo form_error('to_date'); ?>
 								<span id='date_range' class="ml-2" style="display: none;"></span>
 							</td>
 						</tr>
-						<tr id="leave_adjust" style="display: none;">
+						<?php 
+						$x = set_value('coff'); 
+						if(!is_array($x)){
+							if(!strlen($x)){
+								unset($x);
+							}
+						}
+						$y = set_value('nhfh'); 
+						if(!is_array($y)){
+							if(!strlen($y)){
+								unset($y);
+							}
+						}
+						?>
+						<tr id="leave_adjust" style="display: <?php if(isset($x) || isset($y)){ echo ""; } else { echo "none"; }?>;">
 							<td><b>LEAVE ADJUSTMENT</b></td>
 							<td>
 								<?php if(count($coffs)>0){ ?>
-								<b>COMP OFF:</b> <ul style="list-style: none;"><?php foreach($coffs as $coff){ ?>
-													<li><input type="checkbox" name="coff[]" class="leave coffs" data-value="<?php echo $coff['refrence_id']; ?>" value="<?php echo $coff['refrence_id']; ?>" /><?php echo $this->my_library->sql_datepicker($coff['date_from']); ?></li>											        
-										    <?php } ?> </ul>
+								<b>COMP OFF:</b> <ul style="list-style: none;">
+											<?php foreach($coffs as $coff){ ?>
+													<li>
+														<input <?php if(isset($x)){if(in_array($coff['refrence_id'],$x)){ echo "checked"; }} ?> type="checkbox" name="coff[]" class="leave coffs" data-value="<?php echo $coff['refrence_id']; ?>" value="<?php echo $coff['refrence_id']; ?>" /><?php echo $this->my_library->sql_datepicker($coff['date_from']); ?>
+													</li>											        
+										    <?php } ?> 
+											</ul>
 								<?php }?>
                               			
                               	<?php if(count($nhfhs)>0){ ?>
                               	<br/><b>NH/FH:</b> <ul style="list-style: none;"><?php foreach($nhfhs as $nhfh){ ?>
-													<li><input type="checkbox" name="nhfh[]" class="leave nhfhs" data-value="<?php echo $nhfh['refrence_id']; ?>" value="<?php echo $nhfh['refrence_id']; ?>" /><?php echo $this->my_library->sql_datepicker($nhfh['date_from']); ?></li>											        
+													<li><input <?php if(isset($y)){if(in_array($nhfh['refrence_id'],$y)){ echo "checked"; }} ?> type="checkbox" name="nhfh[]" class="leave nhfhs" data-value="<?php echo $nhfh['refrence_id']; ?>" value="<?php echo $nhfh['refrence_id']; ?>" /><?php echo $this->my_library->sql_datepicker($nhfh['date_from']); ?></li>											        
 										    <?php } ?> </ul>
 								<?php } ?>
                                <hr/><br/>
@@ -72,11 +94,12 @@
 						<tr>
 							<td><b>REASON FOR LEAVE</b></td>
 							<td>
-								<textarea id="reason" name="reason" class="form-control"></textarea>
+								<textarea id="reason" name="reason" class="form-control"><?php echo set_value('reason'); ?></textarea>
 								<?php echo form_error('reason'); ?>
 							</td>
 						</tr>
 						<tr>
+							<?php echo set_value('wod'); ?>
 							<td><b>WEEK OFF DAY</b></td>
 							<td>
 								<input type="radio" name="wod" value="1" class="wo ml-1">SUN
@@ -117,12 +140,13 @@
         							<th>LEAVE FROM</th>
         							<th>LEAVE TO</th>
         							<th>LEAVE DURATION</th>
+									<th>REASON</th>
         							<th>PL TAKEN</th>
-        							<th>OFF TAKEN</th>
+        							<th>LEAVE ADJUSTMENT</th>
         							<th>HOD REMARK</th>
         							<th>HOD STATUS</th>
-        							<th>HR REMARK</th>
-        							<th>HR STATUS</th>
+        							<!--th>HR REMARK</th>
+        							<th>HR STATUS</th-->
         						</tr>
     						</thead>
     						<tbody>
@@ -145,6 +169,7 @@
             								        echo ' day';
             								    
                                             ?></td>
+											<td><?php echo $request['requirment']; ?></td>
                                             <td><?php echo $request['pl']; ?></td>
         								    <td>
         								    	<?php if($request['NHFH'] != ''){
@@ -168,6 +193,7 @@
 											} else {
 												echo "bg-success";
 											}?>"><?php echo $request['hod_status']; ?></td>
+											<?php /*
         								    <td><?php echo $request['hr_remark']; ?></td>
         								    <td class="<?php if($request['hod_status'] == 'REJECTED'){ 
 													echo "bg-danger"; 
@@ -176,6 +202,7 @@
 											} else {
 												echo "bg-success";
 											}?>"><?php echo $request['hr_status']; ?></td>
+											*/ ?>
     								    </tr>
     								<?php }?>
     							</tr>
@@ -216,6 +243,7 @@ var baseUrl = $('#baseUrl').val();
 
 $(document).ready(function(){
 	$('#example').DataTable();
+	$('#to_date').trigger('change');
 	Difference_In_Days = 0;
 	leave_adjustment = 0;
 	

@@ -17,9 +17,7 @@ class Emp_ctrl extends CI_Controller {
 	}
 
 	function index(){
-		
 		$this->db2 = $this->load->database('sqlsrv', TRUE);
-
 		$data = array();
 		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		$data['footer'] = $this->load->view('include/footer','',true);
@@ -33,6 +31,7 @@ class Emp_ctrl extends CI_Controller {
 		$data['footer'] = $this->load->view('common/footer',$data,true);
 		$this->load->view('layout_master',$data);
 	}
+	
 	
 	function attendance(){
 		$data = array();
@@ -56,8 +55,6 @@ class Emp_ctrl extends CI_Controller {
 				echo json_encode(array('status'=>500));
 			}
 		} else {
-			//$data['departments'] = $this->Department_model->get_department();
-			//$data['users'] = $this->Emp_model->employee($this->session->userdata('ecode'));
 			$data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
 			$data['users'] = $this->Emp_model->get_employee($this->session->userdata('ecode'));
 			$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
@@ -91,15 +88,18 @@ class Emp_ctrl extends CI_Controller {
 	        $this->form_validation->set_rules('to_date', 'To Date', 'required');
 	        $this->form_validation->set_rules('reason','Reason','required|trim');
 	        $this->form_validation->set_rules('wod','wod','required');
+			$this->form_validation->set_rules('coff[]','coff','trim');
 	        
 	        $this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
 	        if ($this->form_validation->run() == FALSE) {
 	            $data = array();
-	            $data['coffs'] = $this->my_library->coff($this->session->userdata('ecode'));
-	            $data['nhfhs'] = $this->my_library->nhfh($this->session->userdata('ecode'));
-	            $data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+	            $data['coffs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'OFF_DAY' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
+				$data['nhfhs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'NH_FH' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
+				$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
 	            $data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-	            $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+				if(count($data['pls'])>0){
+				  $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+				}
 	            
 	            $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 	            $data['footer'] = $this->load->view('include/footer','',true);
@@ -158,11 +158,12 @@ class Emp_ctrl extends CI_Controller {
 	        
 	    } else {
     		$data = array();
-    		$data['coffs'] = $this->my_library->coff($this->session->userdata('ecode'));
-    		$data['nhfhs'] = $this->my_library->nhfh($this->session->userdata('ecode'));
+			$data['coffs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'OFF_DAY' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
+			$data['nhfhs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'NH_FH' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
+			
     		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
     		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-    		if(count($data['pls'])>0){
+			if(count($data['pls'])>0){
     		  $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
     		}
     		
@@ -249,7 +250,7 @@ class Emp_ctrl extends CI_Controller {
 			
 			$data['body'] = $this->load->view('pages/es/hf_leave_request',$data,true);
 			//===============common===============//
-			$data['title'] = 'Home | HF Leave Request';
+			$data['title'] = $this->config->item('project_title').' | HF Leave Request';
 			$data['head'] = $this->load->view('common/head',$data,true);
 			$data['footer'] = $this->load->view('common/footer',$data,true);
 			$this->load->view('layout_master',$data);
@@ -392,6 +393,38 @@ class Emp_ctrl extends CI_Controller {
 		}
 	}
 	
+	function hr_policies(){
+		$data = array();
+		$this->db->select('*');
+		$this->db->order_by('sort','ASC');
+		$data['policies'] = $this->db->get_where('policies',array('parent_id'=>1,'status'=>1))->result_array();
+		$data['footer'] = $this->load->view('include/footer','',true);
+		$data['top_nav'] = $this->load->view('include/top_nav','',true);
+		$data['aside'] = $this->load->view('include/aside','',true);
+		$data['body'] = $this->load->view('pages/es/hr_policies',$data,true);
+		//===============common===============//
+		$data['title'] = $this->config->item('project_title').' | HR-policies';
+		$data['head'] = $this->load->view('common/head',$data,true);
+		$data['footer'] = $this->load->view('common/footer',$data,true);
+		$this->load->view('layout_master',$data);
+	}
+	
+	function it_policies(){
+		$data = array();
+		$this->db->select('*');
+		$this->db->order_by('sort','ASC');
+		$data['policies'] = $this->db->get_where('policies',array('parent_id'=>2,'status'=>1))->result_array();
+		$data['footer'] = $this->load->view('include/footer','',true);
+		$data['top_nav'] = $this->load->view('include/top_nav','',true);
+		$data['aside'] = $this->load->view('include/aside','',true);
+		$data['body'] = $this->load->view('pages/es/it_policies',$data,true);
+		//===============common===============//
+		$data['title'] = $this->config->item('project_title').' | IT-policies';
+		$data['head'] = $this->load->view('common/head',$data,true);
+		$data['footer'] = $this->load->view('common/footer',$data,true);
+		$this->load->view('layout_master',$data);
+	}
+	
 	function nh_fh_day_duty_form(){
 		if($_SERVER['REQUEST_METHOD'] === 'POST'){
 			$this->form_validation->set_rules('nhfh_date', 'NH/FH Date', 'required');
@@ -506,7 +539,6 @@ class Emp_ctrl extends CI_Controller {
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
 		$data['aside'] = $this->load->view('include/aside',$data,true);
-		//$data['open'] = 'true';
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
 		$data['body'] = $this->load->view('pages/es/all_report',$data,true);
 		$data['head'] = $this->load->view('common/head',$data,true);
@@ -535,17 +567,31 @@ class Emp_ctrl extends CI_Controller {
 	
 	function pl_summary_report(){
 		$data = array();
-		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
-		$data['footer'] = $this->load->view('include/footer','',true);
-		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside','',true);
-		$data['notepad'] = $this->load->view('include/notepad',$data,true);
-		$data['body'] = $this->load->view('pages/emp_dashboard',$data,true);
-		//===============common===============//
-		$data['title'] = 'Home | Emp-Portal';
-		$data['head'] = $this->load->view('common/head',$data,true);
-		$data['footer'] = $this->load->view('common/footer',$data,true);
-		$this->load->view('layout_master',$data);
+		if($_SERVER['REQUEST_METHOD'] === 'POST'){
+			$data['department'] = $this->input->post('department');
+			$data['paycode'] = $this->input->post('employee');			
+			$result = $this->Emp_model->pl_summary_report($data);
+			if($result){
+				echo json_encode(array('data'=>$result,'status'=>200));
+			} else {
+				echo json_encode(array('status'=>500));
+			}
+		} else {
+			$data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
+			$data['users'] = $this->Emp_model->get_employee($this->session->userdata('ecode'));
+			$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+			
+			$data['footer'] = $this->load->view('include/footer','',true);
+			$data['top_nav'] = $this->load->view('include/top_nav','',true);
+			$data['aside'] = $this->load->view('include/aside',$data,true);
+			$data['notepad'] = $this->load->view('include/shift_timing','',true);
+			$data['body'] = $this->load->view('pages/es/pl_record',$data,true);
+			//===============common===============//
+			$data['title'] = $this->config->item('project_title').' | Attendance Record';
+			$data['head'] = $this->load->view('common/head',$data,true);
+			$data['footer'] = $this->load->view('common/footer',$data,true);
+			$this->load->view('layout_master',$data);
+		}
 	}
 	
 	function attendance_record(){
@@ -561,6 +607,5 @@ class Emp_ctrl extends CI_Controller {
 		$data['head'] = $this->load->view('common/head',$data,true);
 		$data['footer'] = $this->load->view('common/footer',$data,true);
 		$this->load->view('layout_master',$data);
-	}
-	
+	}	
 }

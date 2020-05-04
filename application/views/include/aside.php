@@ -22,7 +22,7 @@ foreach($links as $link){
           <img src="<?php echo $this->config->item('img_url').$this->session->userdata('ecode').'.jpg'; ?>" class="img-circle elevation-4" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block"><?php echo $this->session->userdata('username'); ?></a>
+          <a href="<?php echo base_url('dashboard'); ?>" class="d-block"><?php echo $this->session->userdata('username'); ?></a>
         </div>
       </div>
 
@@ -89,6 +89,7 @@ foreach($links as $link){
                 </a>
               </li>
 			  
+			  <?php /*
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('TOUR REQUEST FORM',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('es/Tour-Request-Form'); ?>" class="nav-link
 					<?php if($this->uri->segment('2') == 'Tour-Request-Form'){ echo "active"; } ?>
@@ -107,6 +108,7 @@ foreach($links as $link){
                   <p>ALL REPORT</p>
                 </a>
               </li>
+			  */ ?>
 			  
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('NH/FH AVAIL FORM',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('es/NH-FH-Avail-Form');?>" class="nav-link
@@ -118,8 +120,8 @@ foreach($links as $link){
               </li>
 			  
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('PL SUMMARY REPORT',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('emp/es/PL-Summary-Report'); ?>" class="nav-link
-					<?php if($this->uri->segment('3') == 'PL-Summary-Report'){ echo "active"; } ?>
+                <a href="<?php echo base_url('es/PL-Summary-Report'); ?>" class="nav-link
+					<?php if($this->uri->segment('2') == 'PL-Summary-Report'){ echo "active"; } ?>
 				">
 				  <i class="fab fa-product-hunt text-light mr-1"></i>
                   <p>PL SUMMARY REPORT</p>
@@ -153,11 +155,11 @@ foreach($links as $link){
               </li>
 			  
               <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('HR POLICIES',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('hr/HR-Policies');?>" class="nav-link
-					<?php if($this->uri->segment('2') == 'HR-Policies'){ echo "active"; } ?>
+                <a href="<?php echo base_url('hr/Policies');?>" class="nav-link
+					<?php if($this->uri->segment('2') == 'Policies'){ echo "active"; } ?>
 				">
 				  <i class="far fa-file-pdf"></i>
-                  <p>&nbsp;PDFS</p>
+                  <p>&nbsp;POLICIES</p>
                 </a>
               </li>
 			  

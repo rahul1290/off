@@ -7,9 +7,9 @@
 				</div><!-- /.col -->
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="<?php echo base_url();?>">Home</a></li>
-						<li class="breadcrumb-item active">Employee Section</li>
-						<li class="breadcrumb-item active">HF Leave Request</li>
+						<li class="breadcrumb-item"><a href="<?php echo base_url('dashboard');?>">Home</a></li>
+						<li class="breadcrumb-item active">HR management</li>
+						<li class="breadcrumb-item active">NH/FH day duty requests</li>
 					</ol>
 				</div><!-- /.col -->
 			</div><!-- /.row -->
@@ -26,6 +26,7 @@
 					<h3 class="card-title">NEW REQUESTS</h3>
 				  </div>
 				  <div class="card-body">
+				  <?php if(count($pending_requests)>0){?>
 					<div class="table-responsive">
 						<table class="table table-bordered text-center" id="example">
 							<thead>	
@@ -35,7 +36,7 @@
 									<th>DEPARTMENT</th>
 									<th>EMPLOYEE NAME</th>
 									<th>REQUEST SUBMIT DATE</th>
-									<th>HALF TAKEN DATE</th>
+									<th>NH/FH DUTY DATE</th>
 									<th>REASON</th>
 									<th>HOD REMARK</th>
 									<th>HOD STATUS</th>
@@ -44,7 +45,6 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php if(count($pending_requests)>0){?>
 									<?php $c=1; foreach($pending_requests as $request){ ?>
 										<tr>	
 											<td><?php echo $c++; ?>.</td>
@@ -74,10 +74,12 @@
 											</td>	
 										</tr>
 									<?php } ?>
-								<?php } ?>
 							</tbody>
 						</table>
 					</div>
+					<?php } else {
+						echo "<p class='text-center'>No new record found.</p>";
+					}?>
 				  </div>
 				</div>
 			  </div>
@@ -89,6 +91,7 @@
 					<h3 class="card-title">PREVIOUS NH/FH REQUESTS</h3>
 				  </div>
 				  <div class="card-body">
+					<?php if(count($requests)>0){?>
 					<div class="table-responsive">
 						<table class="table table-bordered text-center" id="example2">
 							<thead>	
@@ -98,7 +101,7 @@
 									<th>DEPARTMENT</th>
 									<th>EMPLOYEE NAME</th>
 									<th>REQUEST SUBMIT DATE</th>
-									<th>HALF TAKEN DATE</th>
+									<th>NH/FH DUTY DATE</th>
 									<th>REASON</th>
 									<th>HOD REMARK</th>
 									<th>HOD STATUS</th>
@@ -108,11 +111,10 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php if(count($requests)>0){?>
 									<?php $c=1; foreach($requests as $request){ ?>
 										<tr>	
 											<td><?php echo $c++; ?>.</td>
-											<td><?php echo $request['refrence_id']; ?></td>
+											<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
 											<td><?php echo $request['dept_name']; ?></td>
 											<td><?php echo $request['name']; ?></td>
 											<td><?php echo $request['created_at']; ?></td>
@@ -122,23 +124,25 @@
 												<label><?php echo $request['hod_remark']; ?></label>
 											</td>
 											<td>
-												<?php echo $request['hod_status']; ?><hr/>
-												<?php echo $request['hod_remark_date']; ?>
+												<?php echo $request['hod_status']; ?>
+												<?php //echo $request['hod_remark_date']; ?>
 											</td>
 											<td>
 												<label><?php echo $request['hr_remark']; ?></label>
 											</td>			
 											<td>
-												<label><?php echo $request['hr_status']; ?><hr/>
-												<?php echo $request['hr_remark_date']; ?></label>
+												<label><?php echo $request['hr_status']; ?>
+												<?php echo $this->my_library->sql_datepicker($request['hr_remark_date']); ?></label>
 											</td>
 											<td><?php echo $request['hr_name']; ?></td>
 										</tr>
 									<?php } ?>
-								<?php } ?>
 							</tbody>
 						</table>
 					</div>
+					<?php } else {
+						echo "<p class='text-center'>No record found.</p>";
+					}?>
 				  </div>
 				</div>
 			  </div>

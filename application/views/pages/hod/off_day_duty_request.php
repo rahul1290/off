@@ -1,5 +1,4 @@
-  
-  <div class="content-wrapper">	
+<div class="content-wrapper">	
 	<div class="content-header bg-light mb-3">
 		<div class="container-fluid">
 			<div class="row mb-2">
@@ -8,9 +7,9 @@
 				</div><!-- /.col -->
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="<?php echo base_url();?>">Home</a></li>
-						<li class="breadcrumb-item active">Employee Section</li>
-						<li class="breadcrumb-item active">HF Leave Request</li>
+						<li class="breadcrumb-item"><a href="<?php echo base_url('dashboard');?>">Home</a></li>
+						<li class="breadcrumb-item active">HOD Section</li>
+						<li class="breadcrumb-item active">Off day duty Request</li>
 					</ol>
 				</div><!-- /.col -->
 			</div><!-- /.row -->
@@ -27,6 +26,7 @@
 					<h3 class="card-title">OFF DAY REQUESTS</h3>
 				  </div>
 				  <div class="card-body">
+					<?php if(count($pending_requests)>0){?>
 					<div class="table-responsive">
 						<table class="table table-bordered text-center" id="example">
 							<thead>	
@@ -36,18 +36,17 @@
 									<th>DEPARTMENT</th>
 									<th>EMPLOYEE NAME</th>
 									<th>REQUEST SUBMIT DATE</th>
-									<th>HALF TAKEN DATE</th>
+									<th>OFF DAY DATE</th>
 									<th>REASON</th>
 									<th>REMARK</th>
 									<th>HOD STATUS</th>
 								</tr>
 							</thead>
 							<tbody>
-								<?php if(count($pending_requests)>0){?>
 									<?php $c=1; foreach($pending_requests as $request){ ?>
 										<tr>	
 											<td><?php echo $c++; ?>.</td>
-											<td><?php echo $request['refrence_id']; ?></td>
+											<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
 											<td><?php echo $request['dept_name']; ?></td>
 											<td><?php echo $request['name']; ?></td>
 											<td><?php echo $request['created_at']; ?></td>
@@ -65,10 +64,12 @@
 											</td>
 										</tr>
 									<?php } ?>
-								<?php } ?>
 							</tbody>
 						</table>
 					</div>
+					<?php } else {
+						echo "<p class='text-center'>No new record found.</p>";
+					}?>
 				  </div>
 				</div>
 			  </div>
@@ -90,7 +91,7 @@
 									<th>DEPARTMENT</th>
 									<th>EMPLOYEE NAME</th>
 									<th>REQUEST SUBMIT DATE</th>
-									<th>HALF TAKEN DATE</th>
+									<th>OFF DAY DATE</th>
 									<th>REASON</th>
 									<th>REMARK</th>
 									<th>HOD STATUS</th>
@@ -102,7 +103,7 @@
 									<?php $c=1; foreach($requests as $request){ ?>
 										<tr>	
 											<td><?php echo $c++; ?>.</td>
-											<td><?php echo $request['refrence_id']; ?></td>
+											<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
 											<td><?php echo $request['dept_name']; ?></td>
 											<td><?php echo $request['name']; ?></td>
 											<td><?php echo $request['created_at']; ?></td>

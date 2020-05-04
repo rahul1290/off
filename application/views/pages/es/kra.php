@@ -224,25 +224,25 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                   					</td>
                   					<td>
                   						<div class="input-group">
-                                          <input type="text" name="weightage1" id="weightage1" data-id="1" class="form-control weightage" value="<?php if(set_value('weightage1') != '') { echo set_value('weightage1'); } else { if(isset($kra_feeds[0]['weightage1'])){ echo $kra_feeds[0]['weightage1']; } }?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?>>
+                                          <input type="text" name="weightage1" id="weightage1" data-id="1" class="form-control weightage visible" value="<?php if(set_value('weightage1') != '') { echo set_value('weightage1'); } else { if(isset($kra_feeds[0]['weightage1'])){ echo $kra_feeds[0]['weightage1']; } }?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?>>
                                           <div class="input-group-append"><span class="input-group-text">%</span></div>
                                         </div>
 										<span class="text-danger" style="display:none;" id="weightage1_errors"></span>
                                         <?php echo form_error('weightage1'); ?>
                   					</td>
                   					<td>
-                  						<input type="text" name="target1" id="target1" data-id="1" class="form-control target" value="<?php if(set_value('target1') != ''){echo trim(set_value('target1'));} else {if(isset($kra_feeds[0]['target1'])){echo $kra_feeds[0]['target1'];}} ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                  						<input type="text" name="target1" id="target1" data-id="1" class="form-control target visible" value="<?php if(set_value('target1') != ''){echo trim(set_value('target1'));} else {if(isset($kra_feeds[0]['target1'])){echo $kra_feeds[0]['target1'];}} ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                   						<?php echo form_error('target1'); ?>
 										<span class="text-danger" style="display:none;" id="target1_errors"></span>
                   					</td>
                   					<td>
-                  						<input type="text" name="acheived1" id="acheived1" data-id="1" class="form-control acheived" value="<?php if(set_value('acheived1') != ''){ echo set_value('acheived1'); } else { if(isset($kra_feeds[0]['acheived1'])){ echo $kra_feeds[0]['acheived1']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                  						<input readonly type="text" name="acheived1" id="acheived1" data-id="1" class="form-control acheived visible" value="<?php if(set_value('acheived1') != ''){ echo set_value('acheived1'); } else { if(isset($kra_feeds[0]['acheived1'])){ echo $kra_feeds[0]['acheived1']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                   						<?php echo form_error('acheived1'); ?>
 										<span class="text-danger" style="display:none;" id="acheived1_errors"></span>
                   					</td>
                   					<td>
 										<?php //echo $kra_feeds[0]['weighted_score1']; ?>
-                  						<input type="text" name="weighted_score1" id="score1" class="form-control score" value="<?php if(set_value('weighted_score1') != ''){ echo set_value('weighted_score1'); } else { if(isset($kra_feeds[0]['weighted_score1'])){ echo $kra_feeds[0]['weighted_score1']; } } ?>" readonly />
+                  						<input type="text" name="weighted_score1" id="score1" class="form-control score visible" value="<?php if(set_value('weighted_score1') != ''){ echo set_value('weighted_score1'); } else { if(isset($kra_feeds[0]['weighted_score1'])){ echo $kra_feeds[0]['weighted_score1']; } } ?>" readonly />
                   						<?php echo form_error('weighted_score1'); ?>
                   					</td>
                   				</tr>
@@ -259,24 +259,24 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                   					</td>
                   					<td>
                   						<div class="input-group">
-                                          <input type="text" name="weightage2" id="weightage2" data-id="2" class="form-control weightage" value="<?php if(set_value('weightage2') != '') { echo set_value('weightage2'); } else { if(isset($kra_feeds[0]['weightage2'])){ echo $kra_feeds[0]['weightage2']; } }?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                                          <input type="text" name="weightage2" id="weightage2" data-id="2" class="form-control weightage visible" value="<?php if(set_value('weightage2') != '') { echo set_value('weightage2'); } else { if(isset($kra_feeds[0]['weightage2'])){ echo $kra_feeds[0]['weightage2']; } }?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                                           <div class="input-group-append"><span class="input-group-text">%</span></div>
                                         </div>
 										<span class="text-danger" style="display:none;" id="weightage1_errors"></span>
                                         <?php echo form_error('weightage2'); ?>
                   					</td>
                   					<td>
-                  						<input type="text" name="target2" id="target2" data-id="2" class="form-control target" value="<?php if(set_value('target2') != ''){ echo set_value('target2'); } else { if(isset($kra_feeds[0]['target2'])){ echo $kra_feeds[0]['target2']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                  						<input type="text" name="target2" id="target2" data-id="2" class="form-control target visible" value="<?php if(set_value('target2') != ''){ echo set_value('target2'); } else { if(isset($kra_feeds[0]['target2'])){ echo $kra_feeds[0]['target2']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                   						<?php echo form_error('target2'); ?>
 										<span class="text-danger" style="display:none;" id="target2_errors"></span>
                   					</td>
                   					<td>
-                  						<input type="text" name="acheived2" id="acheived2" data-id="2" class="form-control acheived" value="<?php if(set_value('acheived2') != ''){ echo set_value('acheived2'); } else { if(isset($kra_feeds[0]['acheived2'])){ echo $kra_feeds[0]['acheived2']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                  						<input readonly type="text" name="acheived2" id="acheived2" data-id="2" class="form-control acheived visible" value="<?php if(set_value('acheived2') != ''){ echo set_value('acheived2'); } else { if(isset($kra_feeds[0]['acheived2'])){ echo $kra_feeds[0]['acheived2']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                   						<?php echo form_error('acheived2'); ?>
 										<span class="text-danger" style="display:none;" id="acheived2_errors"></span>
                   					</td>
                   					<td>
-                  						<input type="text" name="weighted_score2" id="score2" class="form-control score" value="<?php if(set_value('weighted_score2') != ''){ echo set_value('weighted_score2'); } else { if(isset($kra_feeds[0]['weighted_score2'])){ echo $kra_feeds[0]['weighted_score2']; } } ?>" readonly />
+                  						<input type="text" name="weighted_score2" id="score2" class="form-control score visible" value="<?php if(set_value('weighted_score2') != ''){ echo set_value('weighted_score2'); } else { if(isset($kra_feeds[0]['weighted_score2'])){ echo $kra_feeds[0]['weighted_score2']; } } ?>" readonly />
                   						<?php echo form_error('weighted_score2'); ?>
                   					</td>
                   				</tr>
@@ -293,24 +293,24 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                   					</td>
                   					<td>
                   						<div class="input-group">
-                                          <input type="text" name="weightage3" id="weightage3" data-id="3" class="form-control weightage" value="<?php if(set_value('weightage3') != '') { echo set_value('weightage3'); } else { if(isset($kra_feeds[0]['weightage3'])){ echo $kra_feeds[0]['weightage3']; } }?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                                          <input type="text" name="weightage3" id="weightage3" data-id="3" class="form-control weightage visible" value="<?php if(set_value('weightage3') != '') { echo set_value('weightage3'); } else { if(isset($kra_feeds[0]['weightage3'])){ echo $kra_feeds[0]['weightage3']; } }?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                                           <div class="input-group-append"><span class="input-group-text">%</span></div>
                                         </div>
 										<span class="text-danger" style="display:none;" id="weightage1_errors"></span>
                                         <?php echo form_error('weightage3'); ?>
                   					</td>
                   					<td>
-                  						<input type="text" name="target3" id="target3" data-id="3" class="form-control target" value="<?php if(set_value('target3') != ''){ echo set_value('target3'); } else { if(isset($kra_feeds[0]['target3'])){ echo $kra_feeds[0]['target3']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                  						<input type="text" name="target3" id="target3" data-id="3" class="form-control target visible" value="<?php if(set_value('target3') != ''){ echo set_value('target3'); } else { if(isset($kra_feeds[0]['target3'])){ echo $kra_feeds[0]['target3']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                   						<?php echo form_error('target3'); ?>
 										<span class="text-danger" style="display:none;" id="target3_errors"></span>
                   					</td>
                   					<td>
-                  						<input type="text" name="acheived3" id="acheived3" data-id="3" class="form-control acheived" value="<?php if(set_value('acheived3') != ''){ echo set_value('acheived3'); } else { if(isset($kra_feeds[0]['acheived3'])){ echo $kra_feeds[0]['acheived3']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                  						<input readonly type="text" name="acheived3" id="acheived3" data-id="3" class="form-control acheived visible" value="<?php if(set_value('acheived3') != ''){ echo set_value('acheived3'); } else { if(isset($kra_feeds[0]['acheived3'])){ echo $kra_feeds[0]['acheived3']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                   						<?php echo form_error('acheived3'); ?>
 										<span class="text-danger" style="display:none;" id="acheived3_errors"></span>
                   					</td>
                   					<td>
-                  						<input type="text" name="weighted_score3" id="score3" class="form-control score" value="<?php if(set_value('weighted_score3') != ''){ echo set_value('weighted_score3'); } else { if(isset($kra_feeds[0]['weighted_score3'])){ echo $kra_feeds[0]['weighted_score3']; } } ?>" readonly />
+                  						<input type="text" name="weighted_score3" id="score3" class="form-control score visible" value="<?php if(set_value('weighted_score3') != ''){ echo set_value('weighted_score3'); } else { if(isset($kra_feeds[0]['weighted_score3'])){ echo $kra_feeds[0]['weighted_score3']; } } ?>" readonly />
                   						<?php echo form_error('weighted_score3'); ?>
                   					</td>
                   				</tr>
@@ -327,29 +327,30 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                   					</td>
                   					<td>
                   						<div class="input-group">
-                                          <input type="text" name="weightage4" id="weightage4" data-id="4" class="form-control weightage" value="<?php if(set_value('weightage4') != '') { echo set_value('weightage4'); } else { if(isset($kra_feeds[0]['weightage4'])){ echo $kra_feeds[0]['weightage4']; } }?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                                          <input type="text" name="weightage4" id="weightage4" data-id="4" class="form-control weightage visible" value="<?php if(set_value('weightage4') != '') { echo set_value('weightage4'); } else { if(isset($kra_feeds[0]['weightage4'])){ echo $kra_feeds[0]['weightage4']; } }?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                                           <div class="input-group-append"><span class="input-group-text">%</span></div>
                                         </div>
 										<span class="text-danger" style="display:none;" id="weightage1_errors"></span>
                                         <?php echo form_error('weightage4'); ?>
                   					</td>
                   					<td>
-                  						<input type="text" name="target4" id="target4" data-id="4" class="form-control target" value="<?php if(set_value('target4') != ''){ echo set_value('target4'); } else { if(isset($kra_feeds[0]['target4'])){ echo $kra_feeds[0]['target4']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                  						<input type="text" name="target4" id="target4" data-id="4" class="form-control target visible" value="<?php if(set_value('target4') != ''){ echo set_value('target4'); } else { if(isset($kra_feeds[0]['target4'])){ echo $kra_feeds[0]['target4']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                   						<?php echo form_error('target4'); ?>
 										<span class="text-danger" style="display:none;" id="target4_errors"></span>
                   					</td>
                   					<td>
-                  						<input type="text" name="acheived4" id="acheived4" data-id="4" class="form-control acheived" value="<?php if(set_value('acheived4') != ''){ echo set_value('acheived4'); } else { if(isset($kra_feeds[0]['acheived4'])){ echo $kra_feeds[0]['acheived4']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                  						<input readonly type="text" name="acheived4" id="acheived4" data-id="4" class="form-control acheived visible" value="<?php if(set_value('acheived4') != ''){ echo set_value('acheived4'); } else { if(isset($kra_feeds[0]['acheived4'])){ echo $kra_feeds[0]['acheived4']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                   						<?php echo form_error('acheived4'); ?>
 										<span class="text-danger" style="display:none;" id="acheived4_errors"></span>
                   					</td>
                   					<td>
-                  						<input type="text" name="weighted_score4" id="score4" class="form-control score" value="<?php if(set_value('weighted_score4') != ''){ echo set_value('weighted_score4'); } else { if(isset($kra_feeds[0]['weighted_score4'])){ echo $kra_feeds[0]['weighted_score4']; } } ?>" readonly />
+                  						<input type="text" name="weighted_score4" id="score4" class="form-control score visible" value="<?php if(set_value('weighted_score4') != ''){ echo set_value('weighted_score4'); } else { if(isset($kra_feeds[0]['weighted_score4'])){ echo $kra_feeds[0]['weighted_score4']; } } ?>" readonly />
                   						<?php echo form_error('weighted_score4'); ?>
                   					</td>
                   				</tr>
-                  				
-                  				<tr>
+                  				<tr class="text-center"><td colspan="7"><input id="section5_toggle" data-id="section5" type="button" value="Add More" class="btn btn-default" style="display:none;"/></td></tr>
+								
+                  				<tr id="section5" style="display:<?php if(set_value('weightage5')!= '' || isset($kra_feeds[0]['weightage5'])){ echo ""; } else { echo "none"; }?>;">
                   					<td>5.</td>
                   					<td>
                   						<textarea rows="" cols="" class="form-control" name="key_result_area5" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> /><?php if(set_value('key_result_area5') != '') { echo set_value('key_result_area5'); } else { if(isset($kra_feeds[0]['key_result_area5'])){ echo $kra_feeds[0]['key_result_area5']; } } ?></textarea>
@@ -361,29 +362,46 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                   					</td>
                   					<td>
                   						<div class="input-group">
-                                          <input type="text" name="weightage5" id="weightage5" data-id="5" class="form-control weightage" value="<?php if(set_value('weightage5') != '') { echo set_value('weightage5'); } else { if(isset($kra_feeds[0]['weightage5'])){ echo $kra_feeds[0]['weightage5']; } }?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                                          <input type="text" name="weightage5" id="weightage5" data-id="5" class="form-control weightage <?php if(set_value('weightage5')!= '' || isset($kra_feeds[0]['weightage5'])){ echo "visible"; }?>" value="<?php if(set_value('weightage5') != '') { echo set_value('weightage5'); } else { if(isset($kra_feeds[0]['weightage5'])){ echo $kra_feeds[0]['weightage5']; } }?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                                           <div class="input-group-append"><span class="input-group-text">%</span></div>
                                         </div>
 										<span class="text-danger" style="display:none;" id="weightage1_errors"></span>
                                         <?php echo form_error('weightage5'); ?>
                   					</td>
                   					<td>
-                  						<input type="text" name="target5" id="target5" data-id="5" class="form-control target" value="<?php if(set_value('target5') != ''){ echo set_value('target5'); } else { if(isset($kra_feeds[0]['target5'])){ echo $kra_feeds[0]['target5']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                  						<input type="text" name="target5" id="target5" data-id="5" class="form-control target <?php if(set_value('weightage5')!= '' || isset($kra_feeds[0]['weightage5'])){ echo "visible"; }?>" value="<?php if(set_value('target5') != ''){ echo set_value('target5'); } else { if(isset($kra_feeds[0]['target5'])){ echo $kra_feeds[0]['target5']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                   						<?php echo form_error('target5'); ?>
 										<span class="text-danger" style="display:none;" id="target5_errors"></span>
                   					</td>
                   					<td>
-                  						<input type="text" name="acheived5" id="acheived5" data-id="5" class="form-control acheived" value="<?php if(set_value('acheived5') != ''){ echo set_value('acheived5'); } else { if(isset($kra_feeds[0]['acheived5'])){ echo $kra_feeds[0]['acheived5']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                  						<input readonly type="text" name="acheived5" id="acheived5" data-id="5" class="form-control acheived <?php if(set_value('weightage5')!= '' || isset($kra_feeds[0]['weightage5'])){ echo "visible"; }?>" value="<?php if(set_value('acheived5') != ''){ echo set_value('acheived5'); } else { if(isset($kra_feeds[0]['acheived5'])){ echo $kra_feeds[0]['acheived5']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                   						<?php echo form_error('acheived5'); ?>
 										<span class="text-danger" style="display:none;" id="acheived5_errors"></span>
                   					</td>
                   					<td>
-                  						<input type="text" name="weighted_score5" id="score5" class="form-control score" value="<?php if(set_value('weighted_score5') != ''){ echo set_value('weighted_score5'); } else { if(isset($kra_feeds[0]['weighted_score5'])){ echo $kra_feeds[0]['weighted_score5']; } } ?>" readonly />
+                  						<input type="text" name="weighted_score5" id="score5" class="form-control score <?php if(set_value('weightage5')!= '' || isset($kra_feeds[0]['weightage5'])){ echo "visible"; }?>" value="<?php if(set_value('weighted_score5') != ''){ echo set_value('weighted_score5'); } else { if(isset($kra_feeds[0]['weighted_score5'])){ echo $kra_feeds[0]['weighted_score5']; } } ?>" readonly />
                   						<?php echo form_error('weighted_score5'); ?>
                   					</td>
                   				</tr>
                   				<?php if(base64_decode($this->uri->segment('3')) != '2018-19') { ?>
-                  				<tr>
+								<tr class="text-center">
+									<td colspan="7">
+										<input id="section5_cancel" data-id="section6" type="button" value="Cancel" class="btn btn-danger" style="display:
+										<?php if(isset($kra_feeds[0]['weightage6'])){ 
+												if($kra_feeds[0]['weightage6'] == ''){ 
+													if(set_value('weightage6') != '' || isset($kra_feeds[0]['weightage6'])){
+														echo ""; 
+													} else { 
+														echo "none"; 
+													}
+												} else { 
+													echo "none"; 
+												}
+											} else { echo "none"; }?>" />
+										<input id="section6_toggle" data-id="section6" type="button" value="Add More" class="btn btn-default" style="display:<?php if(set_value('weightage6')!= '' || !isset($kra_feeds[0]['weightage6'])){ echo "none"; } else { echo  ""; }?>;" />
+									</td>
+								</tr>
+                  				<tr id="section6" style="display:<?php if(set_value('weightage6')!= '' || isset($kra_feeds[0]['weightage6'])){ echo ""; } else { echo "none"; }?>;">
                   					<td>6.</td>
                   					<td>
                   						<textarea rows="" cols="" class="form-control" name="key_result_area6" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> ><?php if(set_value('key_result_area6') != '') { echo set_value('key_result_area6'); } else { if(isset($kra_feeds[0]['key_result_area6'])){ echo $kra_feeds[0]['key_result_area6']; } } ?></textarea>
@@ -395,27 +413,33 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                   					</td>
                   					<td>
                   						<div class="input-group">
-                                          <input type="text" name="weightage6" id="weightage6" data-id="6" class="form-control weightage" value="<?php if(set_value('weightage6') != '') { echo set_value('weightage6'); } else { if(isset($kra_feeds[0]['weightage6'])){ echo $kra_feeds[0]['weightage6']; } }?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                                          <input type="text" name="weightage6" id="weightage6" data-id="6" class="form-control weightage <?php if(set_value('weightage6')!= '' || isset($kra_feeds[0]['weightage6'])){ echo "visible"; }?>" value="<?php if(set_value('weightage6') != '') { echo set_value('weightage6'); } else { if(isset($kra_feeds[0]['weightage6'])){ echo $kra_feeds[0]['weightage6']; } }?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                                           <div class="input-group-append"><span class="input-group-text">%</span></div>
                                         </div>
 										<span class="text-danger" style="display:none;" id="weightage1_errors"></span>
                                         <?php echo form_error('weightage6'); ?>
                   					</td>
                   					<td>
-                  						<input type="text" name="target6" id="target6" data-id="6" class="form-control target" value="<?php if(set_value('target6') != ''){ echo set_value('target6'); } else { if(isset($kra_feeds[0]['target6'])){ echo $kra_feeds[0]['target6']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                  						<input type="text" name="target6" id="target6" data-id="6" class="form-control target <?php if(set_value('weightage6')!= '' || isset($kra_feeds[0]['weightage6'])){ echo "visible"; }?>" value="<?php if(set_value('target6') != ''){ echo set_value('target6'); } else { if(isset($kra_feeds[0]['target6'])){ echo $kra_feeds[0]['target6']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                   						<?php echo form_error('target6'); ?>
 										<span class="text-danger" style="display:none;" id="target6_errors"></span>
                   					</td>
                   					<td>
-                  						<input type="text" name="acheived6" id="acheived6" data-id="6" class="form-control acheived" value="<?php if(set_value('acheived6') != ''){ echo set_value('acheived6'); } else { if(isset($kra_feeds[0]['acheived6'])){ echo $kra_feeds[0]['acheived6']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
+                  						<input readonly type="text" name="acheived6" id="acheived6" data-id="6" class="form-control acheived <?php if(set_value('weightage6')!= '' || isset($kra_feeds[0]['weightage6'])){ echo "visible"; }?>" value="<?php if(set_value('acheived6') != ''){ echo set_value('acheived6'); } else { if(isset($kra_feeds[0]['acheived6'])){ echo $kra_feeds[0]['acheived6']; } } ?>" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?> />
                   						<?php echo form_error('acheived6'); ?>
 									<span class="text-danger" style="display:none;" id="acheived6_errors"></span>
                   					</td>
                   					<td>
-                  						<input type="text" name="weighted_score6" id="score6" class="form-control score" value="<?php if(set_value('weighted_score6') != ''){ echo set_value('weighted_score6'); } else { if(isset($kra_feeds[0]['weighted_score6'])){ echo $kra_feeds[0]['weighted_score6']; } } ?>" readonly />
+                  						<input type="text" name="weighted_score6" id="score6" class="form-control score <?php if(set_value('weightage6')!= '' || isset($kra_feeds[0]['weightage6'])){ echo "visible"; }?>" value="<?php if(set_value('weighted_score6') != ''){ echo set_value('weighted_score6'); } else { if(isset($kra_feeds[0]['weighted_score6'])){ echo $kra_feeds[0]['weighted_score6']; } } ?>" readonly />
                   						<?php echo form_error('weighted_score6'); ?>
                   					</td>
                   				</tr>
+								<tr class="text-center">
+									<td colspan="7">
+										<input id="section6_cancel" type="button" value="Cancel" class="btn btn-danger" style="display:
+										<?php if(set_value('weightage6') != '' || isset($kra_feeds[0]['weightage6'])){ echo ""; } else { echo "none"; }?>;" />
+									</td>
+								</tr>
 								<?php } ?>
 								<tr>
 									<td colspan="3" class="text-center"><b>Total</b></td>
@@ -447,7 +471,7 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                   				<?php echo form_error('develop_plan'); ?>
 							<div class="text-center mt-3">
 								<input type="submit" name="submit" id="submit" class="btn btn-success" value="UPDATE" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?>>
-								<input type="reset" name="reset" class="btn btn-warning" value="Cancel" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?>>
+								<?php /* <input type="reset" name="reset" class="btn btn-warning" value="Cancel" <?php if($this->my_library->get_current_session() != base64_decode($this->uri->segment('3'))) { echo 'disabled'; }?>>*/?>
 							</div>
                   		</div>
                   		
@@ -476,29 +500,57 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
     </div>
     
     <script>
+	
 	function form_submit(){
 		var counter = 0;
 		$(".acheived").each(function(){
 			var id = $(this).data('id');
-			if($('#target'+id).val() < $('#acheived'+id).val()){
-				counter = counter + 1;
+			if($('#acheived'+id).hasClass('visible')){
+				if($('#target'+id).val() < $('#acheived'+id).val()){
+					counter = counter + 1;
+					console.log('eroor 511');
+				}
 			}
 			
-			if(!parseFloat($('#acheived'+id).val()) > '0'){
-				counter = counter + 1;
-				$('#acheived'+id+'_errors').html('not to be zero').show();
-			} 
+			// if(!parseFloat($('#acheived'+id).val()) > '0'){
+				// counter = counter + 1;
+				// $('#acheived'+id+'_errors').html('not to be zero').show();
+			// } 
+		});
+		
+		$('.target').each(function(){
+			var id = $(this).data('id');
+			if($('#target'+id).hasClass('visible')){
+				if($('#target'+id).val() == ''){
+					counter = counter + 1;
+					$('#target'+id+'_errors').html('Targer is not empty').show();
+					console.log('error 527:'+id);
+				} 
+				// else if(parseFloat($('#target'+id).val()) > 100){
+					// counter = counter + 1;
+					// $('#target'+id+'_errors').html('Target not grater then 100').show();
+					// console.log('error 531:'+id);
+				// }
+			}
 		});
 		
 		if(!counter){
-			var x = parseFloat($('#weightage1').val())+parseFloat($('#weightage2').val())+parseFloat($('#weightage3').val())+parseFloat($('#weightage4').val())+parseFloat($('#weightage5').val())+parseFloat($('#weightage6').val());
-			console.log(x);
+			var x = parseFloat($('#weightage1').val())+parseFloat($('#weightage2').val())+parseFloat($('#weightage3').val())+parseFloat($('#weightage4').val());
+			if($('#weightage5').hasClass('visible')){
+				x = x + parseFloat($('#weightage5').val());
+			} 
+			if($('#weightage6').hasClass('visible')){
+				x = x + parseFloat($('#weightage6').val());
+			}
+			
 			if(x == 100){
 				return true;
 			} else {
+				alert('Something went wrong with weightage.');
 				return false;
 			}
 		} else {
+			alert('Something went wrong.');
 			return false;
 		}
 	}
@@ -544,20 +596,73 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
 		if(typeof $('#weightage4').val() === 'undefined') { var w4 = '0'; } else { if($('#weightage4').val() == ''){ var w4 = '0' } else { var w4 = $('#weightage4').val() } }
 		if(typeof $('#weightage5').val() === 'undefined') { var w5 = '0'; } else { if($('#weightage5').val() == ''){ var w5 = '0' } else { var w5 = $('#weightage5').val() } }
 		if(typeof $('#weightage6').val() === 'undefined') { var w6 = '0'; } else { if($('#weightage6').val() == ''){ var w6 = '0' } else { var w6 = $('#weightage6').val() } }
-		var x = parseFloat(w1)+parseFloat(w2)+parseFloat(w3)+parseFloat(w4)+parseFloat(w5)+parseFloat(w6);
-		if(parseFloat(x) > 100){ 
-			$('#submit').prop('disabled', true);
-			return false;
-			$('#weightage_total').html('<span class="text-danger">'+x+'</span>');
-		} else {
-			if(parseFloat(x) == 100){
-				$('#submit').prop('disabled', false);
-				$('#weightage_total').html(x);
-			} else {
-				$('#submit').prop('disabled', true);
-				$('#weightage_total').html('<span class="text-success">It should be 100 </span>: '+ x);
-			}
+		var x = parseFloat(w1)+parseFloat(w2)+parseFloat(w3)+parseFloat(w4);
+		if(parseFloat(x) == 100){
+			console.log(x+':598');
+			console.log('599');
+			//section 5 disabled
+			$('#weightage5').val('');
+			$('#target5').val('');
+			//$('#section5_toggle').closest('tr').hide();
+			$('#section5_toggle').hide();
+			$('#weightage5').val('');
+			$('#weightage5,#target5,#acheived5,#score5').removeClass('visible');
+			$('#section5,#section5_cancel,#section6_toggle').hide();
+			
+			//section 6 disabled
+			$('#weightage6').val('');
+			$('#target6').val('');
+			//$('#section6_toggle').closest('tr').hide();
+			$('#section6_toggle,#section5_cancel').hide();
+			$('#weightage6,#target6,#acheived6,#score6').removeClass('visible');
+			$('#section6,#section6_cancel').hide();	
+			$('#weightage_total').html(x);		
+			
+			$('#submit').prop('disabled', false);
 			return true;
+		} else {		
+			if($('#weightage5').hasClass('visible')){
+				console.log('603');
+				x = x + parseFloat(w5);
+				if(parseFloat(x) == 100){
+					console.log('606');
+					$('#weightage6').val('0');
+					$('#target6').val('0');
+					//$('#section6_toggle').closest('tr').show();
+					$('#section6_toggle,#section5_cancel').show();
+					$('#weightage6,#target6,#acheived6,#score6').removeClass('visible');
+					$('#section6,#section6_cancel').hide();
+				}
+			} 
+			
+			if($('#weightage6').hasClass('visible')){
+				x = x + parseFloat(w6);
+			}
+			
+			
+			if(parseFloat(x) > 100){ 
+				$('#submit').prop('disabled', true);
+				$('#section5_toggle').hide();
+				$('#section6_toggle').hide();
+				return false;
+				$('#weightage_total').html('<span class="text-danger">'+x+'</span>');
+			} else {
+				if(parseFloat(x) == 100){
+					$('#submit').prop('disabled', false);
+					$('#weightage_total').html(x);
+					$('#section5_toggle').hide();
+					$('#section6_toggle').hide();
+				} else {
+					if($('#weightage5').hasClass('visible') && !$('#weightage6').hasClass('visible')){
+						$('#section6_toggle').show();
+					} else if(!$('#weightage5').hasClass('visible') && !$('#weightage6').hasClass('visible')){
+						$('#section5_toggle').show();		
+					}
+					$('#submit').prop('disabled', true);
+					$('#weightage_total').html('<span class="text-success">It should be 100 </span>: '+ x);
+				}
+				return true;
+			}
 		}
 	}
 	
@@ -594,6 +699,11 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
 
 	$(document).on('keyup blur','.target',function(event){
 		var id = $(this).data('id');
+		
+		// if($(this).val() > 100){
+			// $('#target'+id+'_errors').show().html('Target not grater then 100');
+			// $('#target'+id).focus();
+		// }
 
 		if($('#weightage'+id).val() == '') {
 			var weightage = 0; 
@@ -617,8 +727,8 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
 			if(parseFloat($('#weightage_total').text()) !== '100'){
 			}
 		} else {
-			$('#weightage'+id+'_errors').show().html('Over-all weigtage not more then 100%');
-			$('#weightage_total').html('<span class="text-danger">Over-all weigtage not more then 100</span>');
+			$('#weightage'+id+'_errors').show().html('Over-all weightage not more then 100%');
+			$('#weightage_total').html('<span class="text-danger">Over-all weightage not more then 100</span>');
 			$(this).focus();
 		}
 		calculation(id);
@@ -657,7 +767,42 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
 			event.preventDefault();
 		}
      });
-	
+	 
+	 ///////////////////////new requirments//////////////////
+	 $(document).on('click','#section5_toggle',function(){
+		$('#section5,#section5_cancel,#section6_toggle').show();		
+		$('#weightage5,#target5,#acheived5,#score5').addClass('visible');
+		//$(this).closest('tr').hide();
+		$('#section5_toggle').hide();
+	 });
+	 
+	 $(document).on('click','#section5_cancel',function(){		
+		$('#weightage5').val('0');
+		$('#target5').val('0');
+		//$('#section5_toggle').closest('tr').show();
+		$('#section5_toggle').show();
+		$('#weightage5').val('');
+		$('#weightage5,#target5,#acheived5,#score5').removeClass('visible');
+		$('#section5,#section5_cancel,#section6_toggle').hide();
+		weightage();
+	 });
+	 
+	 $(document).on('click','#section6_toggle',function(){
+		$('#section6,#section6_cancel').show();		
+		$('#weightage6,#target6,#acheived6,#score6').addClass('visible');
+		//$(this).closest('tr').hide();
+		$('#section6_toggle,#section5_cancel').hide();
+	 });
+	 
+	 $(document).on('click','#section6_cancel',function(){		
+		$('#weightage6').val('0');
+		$('#target6').val('0');
+		//$('#section6_toggle').closest('tr').show();
+		$('#section6_toggle,#section5_cancel').show();
+		$('#weightage6,#target6,#acheived6,#score6').removeClass('visible');
+		$('#section6,#section6_cancel').hide();
+		weightage();
+	 });
     </script>
     </body>
 </html>

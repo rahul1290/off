@@ -1,14 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+require_once APPPATH.'third_party/PHPExcel.php';
 class Shift_ctrl extends CI_Controller {
 	
 	public function __construct(){
         parent::__construct();
         $this->load->database();
 		$this->load->model(array('Auth_model','master/Department_model','Emp_model'));
+        $this->excel = new PHPExcel(); 
     }
-	
+
 	function index(){
 		$data = array();
 		$data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
@@ -21,10 +23,103 @@ class Shift_ctrl extends CI_Controller {
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
 		$data['body'] = $this->load->view('pages/master/shift',$data,true);
 		//===============common===============//
-		$data['title'] = 'IBC24 | Grade Master';
+		$data['title'] = $this->config->item('project_title').' | Shift Master';
 		$data['head'] = $this->load->view('common/head',$data,true);
 		$data['footer'] = $this->load->view('common/footer',$data,true);
 		$this->load->view('layout_master',$data);
+	}
+	
+	function attendance_sheet_export(){
+		$dept_id = $this->input->post('dept_id');
+		$month = $this->input->post('month');
+		$data['users'] = $this->Emp_model->get_employee($this->session->userdata('ecode'));
+		if(count($data['users'])>0){
+			$user_ids = array();
+			foreach($data['users'] as $user){
+				$user_ids[] = $user['ecode'];
+			}
+		}
+		if($month == 'p'){
+			$columns = date("t", strtotime("first day of previous month"));
+			$month_year = date("M-Y", strtotime("first day of previous month"));
+			
+			$this->db->select('ta.*,u.name as uname,GROUP_CONCAT(shift_attendance) as shift');
+			$this->db->where('ta.atten_date >=',date("Y-m-01", strtotime("first day of previous month")));
+			$this->db->where('ta.atten_date <=',date("Y-m-t", strtotime("first day of previous month")));
+			$this->db->join('users u','u.ecode = ta.ecode','left');
+			$this->db->having('shift<>','NULL');
+			$this->db->order_by('ta.atten_date','ASC');
+			if(count($data['users'])>0){
+				$this->db->where_in('u.ecode',$user_ids);
+			}
+			$this->db->group_by('ta.ecode');
+			$result = $this->db->get_where('temp_attendance ta',array('ta.department_id'=>$dept_id))->result_array();
+		} 
+		else {
+			$columns = date("t");
+			$month_year = date('M-Y');
+			$this->db->select('ta.*,u.name as uname,GROUP_CONCAT(shift_attendance order by ta.atten_date asc) as shift');
+			$this->db->where('ta.atten_date >=',date("Y-m-01"));
+			$this->db->where('ta.atten_date <=',date("Y-m-t"));
+			$this->db->join('users u','u.ecode = ta.ecode','left');
+			$this->db->having('shift<>','NULL');
+			$this->db->order_by('ta.atten_date','ASC');
+			if(count($data['users'])>0){
+				$this->db->where_in('u.ecode',$user_ids);
+			}
+			$this->db->group_by('ta.ecode');
+			$result = $this->db->get_where('temp_attendance ta',array('ta.department_id'=>$dept_id))->result_array();
+		}
+		$alphabet = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+		$tempfile = 'mobile-'.time().'.xlsx';
+		$fileName = './shifts/'.$tempfile;  
+		$mobiledata = $result;
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
+        // set Header
+		$counter = 1;
+		$objPHPExcel->getActiveSheet()->SetCellValue('A1', 'IT '.$month_year)->getStyle('A1')->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+		$objPHPExcel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+		$objPHPExcel->getActiveSheet()->SetCellValue('A2', 'Employee Name')->getStyle('A2')->getFont()->setBold(true);
+        $objPHPExcel->getActiveSheet()->SetCellValue('B2', 'EMployee Code')->getStyle('B2')->getFont()->setBold(true);
+		$alphacounter = 3;
+		for($i=1;$i<=$columns;$i++){	
+			if($alphacounter > 25){
+				$temp = $alphacounter - 26;
+				$objPHPExcel->getActiveSheet()->SetCellValue($alphabet[0].$alphabet[$temp].'2', $i)->getStyle($alphabet[0].$alphabet[$temp].'2')->getFont()->setBold(true);
+			} else {
+				$objPHPExcel->getActiveSheet()->SetCellValue($alphabet[$alphacounter].'2', $i)->getStyle($alphabet[$alphacounter].'2')->getFont()->setBold(true);
+			}
+			$alphacounter++;
+		}
+        // set Row
+        $rowCount = 4;
+        foreach ($mobiledata as $val){
+            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $val['uname']);
+            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $val['ecode']);
+			$shift = explode(',',$val['shift']);
+			
+			$alphacounter = 3;
+			for($i=0;$i<$columns;$i++){	
+				if($alphacounter > 25){
+					$temp = $alphacounter - 26;
+					$objPHPExcel->getActiveSheet()->SetCellValue($alphabet[0].$alphabet[$temp].$rowCount, $shift[$i]);
+				} else {
+					$objPHPExcel->getActiveSheet()->SetCellValue($alphabet[$alphacounter].$rowCount, $shift[$i]);
+				}
+				$alphacounter++;
+			}
+		$rowCount++;
+        }
+
+        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+        $objWriter->save($fileName,'.shifts/');
+		
+		// download file
+        // header("Content-Type: application/vnd.ms-excel");
+        // redirect(site_url().$fileName);              
+		
+		echo json_encode(array('data'=>$tempfile,'status'=>200));
 	}
 	
 	function get_attendance(){
@@ -116,13 +211,23 @@ class Shift_ctrl extends CI_Controller {
 	function get_department_attendance(){
 		$dept_id = $this->input->post('dept_id');
 		$month = $this->input->post('month');
-		
+		$data['users'] = $this->Emp_model->get_employee($this->session->userdata('ecode'));
+		if(count($data['users'])>0){
+			$user_ids = array();
+			foreach($data['users'] as $user){
+				$user_ids[] = $user['ecode'];
+			}
+		}
 		if($month == 'p'){
 			$this->db->select('ta.*,u.name as uname,GROUP_CONCAT(shift_attendance) as shift');
 			$this->db->where('ta.atten_date >=',date("Y-m-01", strtotime("first day of previous month")));
 			$this->db->where('ta.atten_date <=',date("Y-m-t", strtotime("first day of previous month")));
 			$this->db->join('users u','u.ecode = ta.ecode','left');
-			$this->db->having('shift<>','NULL'); 
+			$this->db->having('shift<>','NULL');
+			$this->db->order_by('ta.atten_date','ASC');
+			if(count($data['users'])>0){
+				$this->db->where_in('u.ecode',$user_ids);
+			}
 			$this->db->group_by('ta.ecode');
 			$result = $this->db->get_where('temp_attendance ta',array('ta.department_id'=>$dept_id))->result_array();
 			if(count($result)>0){
@@ -138,6 +243,9 @@ class Shift_ctrl extends CI_Controller {
 			$this->db->join('users u','u.ecode = ta.ecode','left');
 			$this->db->having('shift<>','NULL');
 			$this->db->order_by('ta.atten_date','ASC');
+			if(count($data['users'])>0){
+				$this->db->where_in('u.ecode',$user_ids);
+			}
 			$this->db->group_by('ta.ecode');
 			$result = $this->db->get_where('temp_attendance ta',array('ta.department_id'=>$dept_id))->result_array();
 			if(count($result)>0){

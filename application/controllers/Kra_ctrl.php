@@ -1,6 +1,5 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
 class Kra_ctrl extends CI_Controller {
 	
 	public function __construct(){
@@ -24,32 +23,66 @@ class Kra_ctrl extends CI_Controller {
 	        $this->form_validation->set_rules('key_result_area2','Key Result Area','trim|required');
 	        $this->form_validation->set_rules('key_result_area3','Key Result Area','trim|required');
 	        $this->form_validation->set_rules('key_result_area4','Key Result Area','trim|required');
-	        $this->form_validation->set_rules('key_result_area5','Key Result Area','trim|required');
-	        $this->form_validation->set_rules('key_result_area6','Key Result Area','trim|required');
+			if($this->input->post('weightage5') != ''){
+				if($this->input->post('weightage5') != '0'){ 
+					$this->form_validation->set_rules('key_result_area5','Key Result Area','trim|required');
+				} else {
+					$this->form_validation->set_rules('key_result_area5','Key Result Area','trim');
+				}
+			} else{
+				$this->form_validation->set_rules('key_result_area5','Key Result Area5','trim');
+			}
+	        
+			if($this->input->post('weightage6') != ''){
+				if($this->input->post('weightage6') != '0'){
+					$this->form_validation->set_rules('key_result_area6','Key Result Area6','trim|required');
+				} else {
+					$this->form_validation->set_rules('key_result_area6','Key Result Area6','trim');
+					}
+			} else {
+					$this->form_validation->set_rules('key_result_area6','Key Result Area6','trim');
+				}
 	        $this->form_validation->set_rules('key_performance_indicator1','key performance Indicator','trim|required');
 	        $this->form_validation->set_rules('key_performance_indicator2','key performance Indicator','trim|required');
 	        $this->form_validation->set_rules('key_performance_indicator3','key performance Indicator','trim|required');
 	        $this->form_validation->set_rules('key_performance_indicator4','key performance Indicator','trim|required');
-	        $this->form_validation->set_rules('key_performance_indicator5','key performance Indicator','trim|required');
-	        $this->form_validation->set_rules('key_performance_indicator6','key performance Indicator','trim|required');
+			if($this->input->post('weightage5') != ''){
+				if($this->input->post('weightage5') != '0'){
+					$this->form_validation->set_rules('key_performance_indicator5','key performance Indicator5','trim|required');
+				} else {
+					$this->form_validation->set_rules('key_performance_indicator5','key performance Indicator5','trim');
+				}
+			} else{
+				$this->form_validation->set_rules('key_performance_indicator5','key performance Indicator5','trim');
+			}
+			
+			if($this->input->post('weightage6') != ''){
+				if($this->input->post('weightage6') != '0'){ 
+					$this->form_validation->set_rules('key_performance_indicator6','key performance Indicator','trim|required');
+				} else {
+					$this->form_validation->set_rules('key_performance_indicator6','key performance Indicator','trim');
+				}
+			} else{
+				$this->form_validation->set_rules('key_performance_indicator6','key performance Indicator','trim');
+			}
 	        $this->form_validation->set_rules('weightage1','Weightage','trim|required');
 	        $this->form_validation->set_rules('weightage2','Weightage','trim|required');
 	        $this->form_validation->set_rules('weightage3','Weightage','trim|required');
 	        $this->form_validation->set_rules('weightage4','Weightage','trim|required');
-	        $this->form_validation->set_rules('weightage5','Weightage','trim|required');
-	        $this->form_validation->set_rules('weightage6','Weightage','trim|required');
+	        $this->form_validation->set_rules('weightage5','Weightage','trim');
+	        $this->form_validation->set_rules('weightage6','Weightage','trim');
 	        $this->form_validation->set_rules('target1','Target','trim|required');
 	        $this->form_validation->set_rules('target2','Target','trim|required');
 	        $this->form_validation->set_rules('target3','Target','trim|required');
 	        $this->form_validation->set_rules('target4','Target','trim|required');
-	        $this->form_validation->set_rules('target5','Target','trim|required');
-	        $this->form_validation->set_rules('target6','Target','trim|required');
+	        $this->form_validation->set_rules('target5','Target','trim');
+	        $this->form_validation->set_rules('target6','Target','trim');
 	        $this->form_validation->set_rules('acheived1','Acheived','trim|required');
 	        $this->form_validation->set_rules('acheived2','Acheived','trim|required');
 	        $this->form_validation->set_rules('acheived3','Acheived','trim|required');
 	        $this->form_validation->set_rules('acheived4','Acheived','trim|required');
-	        $this->form_validation->set_rules('acheived5','Acheived','trim|required');
-	        $this->form_validation->set_rules('acheived6','Acheived','trim|required');
+	        $this->form_validation->set_rules('acheived5','Acheived','trim');
+	        $this->form_validation->set_rules('acheived6','Acheived','trim');
 	        $this->form_validation->set_rules('weighted_score1','Weighted score','trim');
 	        $this->form_validation->set_rules('weighted_score2','Weighted score','trim');
 	        $this->form_validation->set_rules('weighted_score3','Weighted score','trim');
@@ -64,6 +97,7 @@ class Kra_ctrl extends CI_Controller {
 	        
 	        $this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
 	        if ($this->form_validation->run() == FALSE){
+				//print_r(validation_errors()); die;
 	            $data = array();
 	            $this->db->select('*');
 	            $data['session'] = $this->db->get_where('session',array('status'=>1))->result_array();
@@ -79,6 +113,7 @@ class Kra_ctrl extends CI_Controller {
 	            $data['footer'] = $this->load->view('common/footer',$data,true);
 	            $this->load->view('pages/es/kra',$data);
 	        } else {
+				
 	            $session_id = $this->input->post('session');
 	            $ecode = base64_decode($ecode);
 	            $data['key_result_area1'] = $this->input->post('key_result_area1');
@@ -98,7 +133,7 @@ class Kra_ctrl extends CI_Controller {
 	            $data['weightage3'] = $this->input->post('weightage3');
 	            $data['weightage4'] = $this->input->post('weightage4');
 	            $data['weightage5'] = $this->input->post('weightage5');
-	            $data['weightage6'] = $this->input->post('weightage6');
+				$data['weightage6'] = $this->input->post('weightage6');
 	            $data['target1'] = $this->input->post('target1');
 	            $data['target2'] = $this->input->post('target2');
 	            $data['target3'] = $this->input->post('target3');
@@ -122,24 +157,43 @@ class Kra_ctrl extends CI_Controller {
 	            $data['develop_need2'] = $this->input->post('develop_need2');
 	            $data['develop_plan'] = $this->input->post('develop_plan');
 				
+				if($data['weightage5'] == '' || $data['weightage5'] == '0.00'){
+					$data['weightage5'] = NULL;
+					$data['key_result_area5'] = NULL;
+					$data['key_performance_indicator5'] = NULL;
+					$data['target5'] = NULL;
+					$data['acheived5'] = NULL;
+					$data['weighted_score5'] = NULL;
+				}
+	            $data['weightage6'] = $this->input->post('weightage6');
+				if($data['weightage6'] == '' || $data['weightage6'] == '0.00'){
+					$data['weightage6'] = NULL;
+					$data['key_result_area6'] = NULL;
+					$data['key_performance_indicator6'] = NULL;
+					$data['target6'] = NULL;
+					$data['acheived6'] = NULL;
+					$data['weighted_score6'] = NULL;
+				}
 	            $this->Kra_model->kra_submit($data,$session_id,$ecode);
-				
 				
 				$data = array();
 				$this->session->set_flashdata('msg', '<h3 class="text-center bg-success">KRA Updated successfully.</h3>');
+				
 	            $this->db->select('*');
-	            $data['session'] = $this->db->get_where('session',array('status'=>1))->result_array();
+	            $data['session'] = $this->db->get_where('session',array('s_id'=>$session_id,'status'=>1))->result_array();
+				
+				redirect('es/KRA/'.base64_encode($data['session'][0]['name']).'/'.base64_encode($ecode));
 	            
-	            $this->db->select('s_id');
-	            $session = $this->db->get_where('session',array('is_active'=>'curr','status'=>1))->result_array();
-	            $this->Kra_model->set_detail($ecode);
-	            $data['user_detail'] = $this->Kra_model->get_detail($ecode);
-	            $data['kra_feeds'] = $this->Kra_model->kra_feed($ecode,$session[0]['s_id']);
+	            // $this->db->select('s_id');
+	            // $session = $this->db->get_where('session',array('is_active'=>'curr','status'=>1))->result_array();
+	            // $this->Kra_model->set_detail($ecode);
+	            // $data['user_detail'] = $this->Kra_model->get_detail($ecode);
+	            // $data['kra_feeds'] = $this->Kra_model->kra_feed($ecode,$session[0]['s_id']);
 	            
-	            $data['title'] = $this->config->item('project_title').' |KRA';
-	            $data['head'] = $this->load->view('common/head',$data,true);
-	            $data['footer'] = $this->load->view('common/footer',$data,true);
-	            $this->load->view('pages/es/kra',$data);
+	            // $data['title'] = $this->config->item('project_title').' |KRA';
+	            // $data['head'] = $this->load->view('common/head',$data,true);
+	            // $data['footer'] = $this->load->view('common/footer',$data,true);
+	            // $this->load->view('pages/es/kra_old',$data);
 	        }
 	    } else {
 			if($ecode == null){
