@@ -13,7 +13,7 @@ class Auth extends CI_Controller {
 		if($this->session->userdata('ecode')){
 			return true;
 		} else {
-			return false;
+			return false ;
 		}
 	}
 	
