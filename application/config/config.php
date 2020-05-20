@@ -23,8 +23,10 @@ date_default_timezone_set('Asia/Kolkata');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://emp2.ibc24.in/kra/';
-//$config['base_url'] = 'http://localhost:82/emp/trunk/';
+// production url
+//$config['base_url'] = 'http://emp2.ibc24.in/kra/';
+// staging url
+$config['base_url'] = 'http://192.168.25.237/kra/';
 
 ////////////////////////////*************************************/////////////////////
 $config['img_url'] = 'https://employee.ibc24.in/OLAppraisal/EmpImage/';
