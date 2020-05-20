@@ -1,6 +1,6 @@
 <?php
 /**
- * CodeIgniter staging
+ * CodeIgniter staging local m/s
  *
  * An open source application development framework for PHP
  *
