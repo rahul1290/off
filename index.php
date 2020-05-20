@@ -1,7 +1,7 @@
 <?php
 /**
  * 1846
- * local
+ * server
  *
  * An open source application development framework for PHP
  *
