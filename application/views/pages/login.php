@@ -20,7 +20,7 @@
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p class="login-box-msg">Login to Employee Portal</p>
+      <p class="login-box-msg">Login to Employee Portal123</p>
 	  <?php echo $this->session->flashdata('msg');	?>
       <form action="<?php echo base_url('Auth/login');?>" method="POST" class="mb-2">
         <div class="input-group mb-3">
