@@ -83,7 +83,7 @@ class Auth extends CI_Controller {
 					}
 				}
 			}	
-			$data['title'] = 'Login | Emp-Portal';
+			$data['title'] = $this->config->item('project_title').' | Login';
 			$data['head'] = $this->load->view('common/head',$data,true);
 			$data['footer'] = $this->load->view('common/footer',$data,true);
 			$this->load->view('pages/login',$data);

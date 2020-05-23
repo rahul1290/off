@@ -16,7 +16,7 @@ class Authctrl extends REST_Controller {
 		$data['password'] = base64_encode(trim($this->post('password')));
 		
 		$login_result = $this->Auth_model->login($data);
-		if(count($login_result)>0){
+		if(count($login_result) > 0){
 			$jwt['id'] = $login_result[0]['id'];
 			$jwt['ecode'] = $login_result[0]['ecode'];
 			$jwt['time'] = time();
@@ -28,6 +28,24 @@ class Authctrl extends REST_Controller {
 		        'message' => 'No such user found'
 		    ], 404 );
 		}
+	}
+	
+	
+	function userDetail_post(){
+	    $is_valid_token = $this->authorization_token->validateToken();
+	    if(!empty($is_valid_token) && $is_valid_token['status'] === true){
+	        $data['ecode'] = $this->post('identity');
+	        $user_detail = $this->Auth_model->userDetail($data);
+	        if(count($user_detail) > 0){
+	            $this->response($user_detail,200);
+	        } else {
+	            $message = ['status' => FALSE,'message' => 'Employee inactive' ];
+	            $this->response($message, 404);
+	        }
+	    } else {
+	        $message = ['status' => FALSE,'message' => $is_valid_token['message'] ];
+	        $this->response($message, 404);
+	    }
 	}
 	
 	function attendance_post(){
