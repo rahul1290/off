@@ -101,7 +101,7 @@ class Emp_model extends CI_Model {
                 FROM users_leave_requests p
                 WHERE p.request_type = "LEAVE"
                 AND p.ecode = "'.$ecode.'"
-                AND p.status = 1 order by p.created_at,date_from desc')->result_array();
+                AND p.status = 1 order by refrence_id desc')->result_array();
 	}
 	
 	function pl_summary_report($data){

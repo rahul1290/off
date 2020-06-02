@@ -13,6 +13,7 @@ $ulink = array();
 foreach($user_links as $user_link){
 	array_push($ulink,$user_link['link_id']);
 }
+
 ?>
 <div class="content-wrapper">	
 	<div class="content-header bg-light mb-3">
@@ -39,17 +40,18 @@ foreach($user_links as $user_link){
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
                 <span class="card-title"></span>
-				<span class="float-right">
-					<input type="button" id="add_more" value="Add More" class="btn btn-success">
-				</span>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
 				<form name="f1" id="f1" method="POST" action="<?php echo base_url('master/employee/privileges/').$this->uri->segment(4);?>">
 				<table class="table table-bordered">
 					<tr>
+						<td>Default Permission</td>
+						<td><input type="checkbox" /></td>
+					</tr>
+					<tr>
 						<td>Name</td>
-						<td>Rahul Sinha</td>
+						<td><?php echo $user_detail[0]['name']; ?></td>
 					</tr>
 					<tr>
 						<td>Department</td>

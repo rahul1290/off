@@ -329,9 +329,9 @@ class Employee_ctrl extends CI_Controller {
 			$path = base_url('master/employee/privileges/').$ecode;
 			redirect($path);
 			
-		} else{ 
+		} else{
 			$data = array();
-			$data['results'] = $this->Department_model->get_department();
+			$data['user_detail'] = $this->Employee_model->employees($ecode);
 			$data['departments'] = $this->Department_model->get_department();
 			$data['user_departments'] = $this->Department_model->get_employee_department($ecode);
 			$data['users'] = $this->Employee_model->departments_users($ecode);
@@ -353,12 +353,13 @@ class Employee_ctrl extends CI_Controller {
 			//$data['notepad'] = $this->load->view('include/shift_timing','',true);
 			$data['body'] = $this->load->view('pages/master/privileges',$data,true);
 			//===============common===============//
-			$data['title'] = 'IBC24 | Department Master';
+			$data['title'] = $this->config->item('project_title').' | Employee privileges';
 			$data['head'] = $this->load->view('common/head',$data,true);
 			$data['footer'] = $this->load->view('common/footer',$data,true);
 			$this->load->view('layout_master',$data);
 		}
 	}
+	
 	
 	function is_unique_ecode(){
 		$ecode = $this->input->post('ecode');

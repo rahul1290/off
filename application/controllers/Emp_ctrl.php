@@ -166,14 +166,13 @@ class Emp_ctrl extends CI_Controller {
 			if(count($data['pls'])>0){
     		  $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
     		}
-    		
 
     		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
     		$data['footer'] = $this->load->view('include/footer','',true);
     		$data['top_nav'] = $this->load->view('include/top_nav','',true);
     		$data['aside'] = $this->load->view('include/aside',$data,true);
     		$data['notepad'] = $this->load->view('include/shift_timing','',true);
-    		$data['requests'] = $this->Emp_model->leave_requests($this->session->userdata('ecode'));
+    		$data['requests'] = $this->Emp_model->leave_requests($this->session->userdata('ecode'));      //leaver request list
     		$data['body'] = $this->load->view('pages/es/leave_request',$data,true);
     		$data['title'] = $this->config->item('project_title').' | Leave Request';
     		$data['head'] = $this->load->view('common/head',$data,true);

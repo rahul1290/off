@@ -35,6 +35,8 @@ class Etl_ctrl extends CI_Controller {
 	
 	
 	function employee(){
+	    $this->db->trans_begin();
+	    
 		$result = $this->fetch_emp_detail();
 		$insert_data = array();
 		foreach($result as $r){
@@ -48,7 +50,7 @@ class Etl_ctrl extends CI_Controller {
 			$data['grade_id'] = $r['Grade'];
 			$data['gender'] = $r['Gender'];
 			$data['dob'] = $r['BDay'];
-			$data['report_to'] = $this->session->userdata('ecode');
+			$data['report_to_desg'] = $this->session->userdata('ecode');
 			$data['jdate'] = $r['JDate'];
 			$data['company_id'] = $r['Company'];
 			$data['created_at'] = date('Y-m-d H:i:s');
@@ -56,9 +58,38 @@ class Etl_ctrl extends CI_Controller {
 			$data['code_id'] = $r['Code'];
 			$insert_data[] = $data;
 		}
-		
 		if($this->db->insert_batch('users',$insert_data)){
-			echo "data inserted";
+		    $insert_data = array();
+		    foreach($result as $r){
+		        $data = array();
+		        $data['ecode'] = $r['EmpCode'];
+		        $data['contact_no'] = $r['contact_no'];
+		        $data['company_mailid'] = $r['EmailID'];
+		        $data['address'] = $r['address'];
+		        $data['father_name'] = $r['father_name'];
+		        $data['fdob'] = $r['fdob'];
+		        $data['mother_name'] = $r['mother_name'];
+		        $data['mdob'] = $r['mdob'];
+		        $data['marital_status'] = $r['marital_status'];
+		        $data['anniversary'] = $r['anniversary'];
+		        $data['spouse_name'] = $r['spouse_name'];
+		        $insert_data[] = $data;
+		    }
+		    if($this->db->insert_batch('user_info',$insert_data)){
+		        foreach($result as $r){
+		            if($this->import_records($r['EmpCode'])){
+		                continue;
+		            }
+		        }
+		    }
+		}
+		
+		if ($this->db->trans_status() === FALSE){
+		    $this->db->trans_rollback();
+		    echo "something wrong";
+		} else {
+		    $this->db->trans_commit();
+		    echo "record submitted";
 		}
 	}
 	
@@ -285,8 +316,16 @@ class Etl_ctrl extends CI_Controller {
 									ReportTo,
 									JDate,
 									Code,
-									(case when (Company ='S. B. MULTIMEDIA PVT. LTD.') then '1' else 'NULL' END) as Company
-									FROM [NEWZ36].[dbo].[LoginKRA] where Code <> 'NA'")->result_array();
+									(case when (Company ='S. B. MULTIMEDIA PVT. LTD.') then '1' else 'NULL' END) as Company,
+                                    PImg as image,
+                                    CntNo as contact_no,
+                                    EmailID,address,FatherName as father_name,FDOB as fdob,MotherName as mother_name,MDOB as mdob,
+                                    MaritalStatus as marital_status,
+                                    Anniversary as anniversary,
+                                    AlternateContact as alternet_no,
+                                    NoOfKids as children,
+                                    SpouseName as spouse_name
+									FROM [NEWZ36].[dbo].[LoginKRA] where Code <> 'NA' AND EmpCode like 'SB%' ")->result_array();
 		return $result;
 	}
 	
@@ -378,171 +417,189 @@ class Etl_ctrl extends CI_Controller {
 		$this->db2 = $this->load->database('sqlsrv',TRUE);	
 		$results = $this->db2->query("SELECT * FROM [NEWZ36].[dbo].[OffTbl] where EmpCode = '".$ecode."'")->result_array();
 		
-		$insert_record = array();
-		foreach($results as $result){
-			$temp = array();
-			$temp['request_type'] = 'OFF_DAY';
-			$temp['refrence_id'] = $result['ID'];
-			$temp['ecode'] = $result['EmpCode'];
-			$temp['requirment'] = $result['Requirement'];
-			$temp['date_from'] = $result['Date1'];
-			$temp['date_to'] = $result['Date1'];
-			$temp['hod_remark'] = $result['HODRemarks'];
-			$temp['hod_status'] = $result['HODApp'];
-			$temp['hod_id'] = '';
-			$temp['hod_remark_date'] = '';
-			$temp['hr_remark'] = '';
-			$temp['hr_status'] = $result['HRStatus'];
-			$temp['hr_id'] = '';
-			$temp['hr_remark_date'] = '';
-			$temp['created_at'] = $result['AppDate'];
-			$insert_record[] = $temp;
+		if(count($results)>0){
+    		$insert_record = array();
+    		foreach($results as $result){
+    			$temp = array();
+    			$temp['request_type'] = 'OFF_DAY';
+    			$temp['refrence_id'] = $result['ID'];
+    			$temp['ecode'] = $result['EmpCode'];
+    			$temp['requirment'] = $result['Requirement'];
+    			$temp['date_from'] = $result['Date1'];
+    			$temp['date_to'] = $result['Date1'];
+    			$temp['hod_remark'] = $result['HODRemarks'];
+    			$temp['hod_status'] = $result['HODApp'];
+    			$temp['hod_id'] = '';
+    			$temp['hod_remark_date'] = '';
+    			$temp['hr_remark'] = '';
+    			$temp['hr_status'] = $result['HRStatus'];
+    			$temp['hr_id'] = '';
+    			$temp['hr_remark_date'] = '';
+    			$temp['created_at'] = $result['AppDate'];
+    			$insert_record[] = $temp;
+    		}
+    		
+    		if($this->db->insert_batch('users_leave_requests',$insert_record))
+    			return true;
+    		else 
+    			return false;
+		} else {
+		    return true;
 		}
-		
-		if($this->db->insert_batch('users_leave_requests',$insert_record))
-			return true;
-		else 
-			return false;
 	}
 	
 	function leave_requests($ecode){
 		$this->db2 = $this->load->database('sqlsrv',TRUE);
 		$results = $this->db2->query("SELECT * FROM [NEWZ36].[dbo].[ITDLeaveRequest] where Emp_Code = '".$ecode."' order by App_Date desc")->result_array();
-		$insert_record = array();
-		foreach($results as $result){
-			$temp = array();
-			$temp['request_type'] = 'LEAVE';
-			$temp['refrence_id'] = $result['Emp_Req_No'];
-			$temp['ecode'] = $result['Emp_Code'];
-			$temp['requirment'] = $result['LReason'];
-			$temp['date_from'] = $result['Leave_From'];
-			$temp['date_to'] = $result['Leave_to'];
-			$temp['hod_remark'] = $result['HOD_Remarks'];
-			$temp['hod_status'] = $result['HOD_Approval'];
-			$temp['hod_id'] = '';
-			$string = $result['OFF_Taken'];
-			
-			if (strpos($string, 'NH/FH') !== false) {	
-			$x = explode('NH/FH',$string);
-				$nhfh = '';
-				$c = (int)strlen($x[1]);
-				for($i=0;$i<$c;$i++){
-					$c = ord($x[1][$i]);
-					if(($c>64 && $c<91) || ($c>96 && $c<123)){
-						break;
-					}
-					$nhfh.=$x[1][$i];
-				}
-				$nhfhs = explode(',',rtrim(ltrim(str_replace(' ', '', $nhfh),':'),','));
-				foreach($nhfhs as $nhfh){
-					$var = $nhfh;
-					$date = str_replace('/', '-', $var);
-					$this->db->where(array('ecode'=>$ecode,'request_type'=>'NH_FH','date_from'=>date('Y-m-d', strtotime($date)),'status'=>1));
-					$this->db->update('users_leave_requests',array('request_id'=>$result['Emp_Req_No']));
-				}
-			}
-			
-			if (strpos($string, 'Comp OFFs') !== false) {
-			$x = explode('Comp OFFs',$string);
-				$coff = '';
-				for($i=0;$i<strlen($x[1]);$i++){
-					$c = ord($x[1][$i]);
-					if(($c>64 && $c<91) || ($c>96 && $c<123)){
-						break;
-					}
-					$coff.=$x[1][$i];
-				}
-				$coffs = explode(',',rtrim(ltrim(str_replace(' ', '', $coff),':'),','));
-				foreach($coffs as $coff){
-					$this->db->where(array('ecode'=>$ecode,'request_type'=>'OFF_DAY','date_from'=>date('Y-d-m',strtotime($coff)),'status'=>1));
-					$this->db->update('users_leave_requests',array('request_id'=>$result['Emp_Req_No']));
-				}
-			}
-			
-			$temp['hod_remark_date'] = $result['Approval_Date'];
-			$temp['hr_remark'] = $result['HR_Remarks'];
-			$temp['hr_status'] = $result['HR_Approval'];
-			$temp['hr_id'] = '';
-			$temp['hr_remark_date'] = $result['HR_Approval_Date'];
-			$temp['created_at'] = $result['App_Date'];
-			$temp['wod'] = $result['WODay'];
-			$temp['request_id'] = '';
-			$temp['pl'] = $result['PLTaken'];
-			$temp['lop'] = '';
-			$temp['status'] = 1;
-			
-			$insert_record[] = $temp;
+		
+		if(count($results)>0){
+    		$insert_record = array();
+    		foreach($results as $result){
+    			$temp = array();
+    			$temp['request_type'] = 'LEAVE';
+    			$temp['refrence_id'] = $result['Emp_Req_No'];
+    			$temp['ecode'] = $result['Emp_Code'];
+    			$temp['requirment'] = $result['LReason'];
+    			$temp['date_from'] = $result['Leave_From'];
+    			$temp['date_to'] = $result['Leave_to'];
+    			$temp['hod_remark'] = $result['HOD_Remarks'];
+    			$temp['hod_status'] = $result['HOD_Approval'];
+    			$temp['hod_id'] = '';
+    			$string = $result['OFF_Taken'];
+    			
+    			if (strpos($string, 'NH/FH') !== false) {	
+    			$x = explode('NH/FH',$string);
+    				$nhfh = '';
+    				$c = (int)strlen($x[1]);
+    				for($i=0;$i<$c;$i++){
+    					$c = ord($x[1][$i]);
+    					if(($c>64 && $c<91) || ($c>96 && $c<123)){
+    						break;
+    					}
+    					$nhfh.=$x[1][$i];
+    				}
+    				$nhfhs = explode(',',rtrim(ltrim(str_replace(' ', '', $nhfh),':'),','));
+    				foreach($nhfhs as $nhfh){
+    					$var = $nhfh;
+    					$date = str_replace('/', '-', $var);
+    					$this->db->where(array('ecode'=>$ecode,'request_type'=>'NH_FH','date_from'=>date('Y-m-d', strtotime($date)),'status'=>1));
+    					$this->db->update('users_leave_requests',array('request_id'=>$result['Emp_Req_No']));
+    				}
+    			}
+    			
+    			if (strpos($string, 'Comp OFFs') !== false) {
+    			$x = explode('Comp OFFs',$string);
+    				$coff = '';
+    				for($i=0;$i<strlen($x[1]);$i++){
+    					$c = ord($x[1][$i]);
+    					if(($c>64 && $c<91) || ($c>96 && $c<123)){
+    						break;
+    					}
+    					$coff.=$x[1][$i];
+    				}
+    				$coffs = explode(',',rtrim(ltrim(str_replace(' ', '', $coff),':'),','));
+    				foreach($coffs as $coff){
+    					$this->db->where(array('ecode'=>$ecode,'request_type'=>'OFF_DAY','date_from'=>date('Y-d-m',strtotime($coff)),'status'=>1));
+    					$this->db->update('users_leave_requests',array('request_id'=>$result['Emp_Req_No']));
+    				}
+    			}
+    			
+    			$temp['hod_remark_date'] = $result['Approval_Date'];
+    			$temp['hr_remark'] = $result['HR_Remarks'];
+    			$temp['hr_status'] = $result['HR_Approval'];
+    			$temp['hr_id'] = '';
+    			$temp['hr_remark_date'] = $result['HR_Approval_Date'];
+    			$temp['created_at'] = $result['App_Date'];
+    			$temp['wod'] = $result['WODay'];
+    			$temp['request_id'] = '';
+    			$temp['pl'] = $result['PLTaken'];
+    			$temp['lop'] = '';
+    			$temp['status'] = 1;
+    			
+    			$insert_record[] = $temp;
+    		}
+    		if($this->db->insert_batch('users_leave_requests',$insert_record))
+    			return true;
+    		else	
+    			return false;
+		} else {
+		    return true;
 		}
-		if($this->db->insert_batch('users_leave_requests',$insert_record))
-			return true;
-		else	
-			return false;
 	}
 	
 	function hf_requests($ecode){
 	$this->db2 = $this->load->database('sqlsrv',TRUE);
 	$results = $this->db2->query("SELECT * FROM [NEWZ36].[dbo].[HalfDayLeave] where EmpCode = '".$ecode."'")->result_array();
-	$insert_record = array();
-		foreach($results as $result){
-			$temp['request_type'] = 'HALF';
-			$temp['refrence_id'] = $result['ID'];
-			$temp['ecode'] = $result['EmpCode'];
-			$temp['requirment'] = $result['Reason'];
-			$temp['date_from'] = $result['RDate'];
-			$temp['date_to'] = $result['RDate'];
-			$temp['hod_remark'] = $result['Remarks'];
-			$temp['hod_status'] = $result['AppStatus'];
-			$temp['hod_id'] = NULL;
-			$temp['hod_remark_date'] = NULL;
-			$temp['hr_remark'] = $result['HRRemarks'];
-			$temp['hr_status'] = $result['HRStatus'];
-			$temp['hr_id'] = '';
-			$temp['hr_remark_date'] = NULL;
-			$temp['created_at'] = $result['UDate'];
-			$temp['wod'] = NULL;
-			$temp['request_id'] = '';
-			$temp['pl'] = NULL;
-			$temp['lop'] = '';
-			$temp['status'] = 1;
-			$insert_record[] = $temp;
-		}
-		if($this->db->insert_batch('users_leave_requests',$insert_record))
-			return true;
-		else 
-			return false;
+    	if(count($results)>0){ 
+        	$insert_record = array();
+    		foreach($results as $result){
+    			$temp['request_type'] = 'HALF';
+    			$temp['refrence_id'] = $result['ID'];
+    			$temp['ecode'] = $result['EmpCode'];
+    			$temp['requirment'] = $result['Reason'];
+    			$temp['date_from'] = $result['RDate'];
+    			$temp['date_to'] = $result['RDate'];
+    			$temp['hod_remark'] = $result['Remarks'];
+    			$temp['hod_status'] = $result['AppStatus'];
+    			$temp['hod_id'] = NULL;
+    			$temp['hod_remark_date'] = NULL;
+    			$temp['hr_remark'] = $result['HRRemarks'];
+    			$temp['hr_status'] = $result['HRStatus'];
+    			$temp['hr_id'] = '';
+    			$temp['hr_remark_date'] = NULL;
+    			$temp['created_at'] = $result['UDate'];
+    			$temp['wod'] = NULL;
+    			$temp['request_id'] = '';
+    			$temp['pl'] = NULL;
+    			$temp['lop'] = '';
+    			$temp['status'] = 1;
+    			$insert_record[] = $temp;
+    		}
+    		if($this->db->insert_batch('users_leave_requests',$insert_record))
+    			return true;
+    		else 
+    			return false;
+    	} else {
+    	    return true;
+    	}
 	}
 	
 	function nhfh_day_duty($ecode){
 		$this->db2 = $this->load->database('sqlsrv',TRUE);
 		$results = $this->db2->query("SELECT * FROM [NEWZ36].[dbo].[NHFHDetail] where EmpCode = '".$ecode."'")->result_array();
-		$insert_record = array();
-		foreach($results as $result){
-			$temp['request_type'] = 'NH_FH';
-			$temp['refrence_id'] = $result['ID'];
-			$temp['ecode'] = $result['EmpCode'];
-			$temp['requirment'] = $result['Requirement'];
-			$temp['date_from'] = $result['Date1'];
-			$temp['date_to'] = $result['Date1'];
-			$temp['hod_remark'] = $result['HODRemarks'];
-			$temp['hod_status'] = $result['HODApp'];
-			$temp['hod_id'] = NULL;
-			$temp['hod_remark_date'] = NULL;
-			$temp['hr_remark'] = '';
-			$temp['hr_status'] = $result['HRStatus'];
-			$temp['hr_id'] = '';
-			$temp['hr_remark_date'] = NULL;
-			$temp['created_at'] = $result['AppDate'];
-			$temp['wod'] = NULL;
-			$temp['request_id'] = '';
-			$temp['pl'] = NULL;
-			$temp['lop'] = '';
-			$temp['status'] = 1;
-			$insert_record[] = $temp;
+		
+		if(count($results)>0){ 
+    		$insert_record = array();
+    		foreach($results as $result){
+    			$temp['request_type'] = 'NH_FH';
+    			$temp['refrence_id'] = $result['ID'];
+    			$temp['ecode'] = $result['EmpCode'];
+    			$temp['requirment'] = $result['Requirement'];
+    			$temp['date_from'] = $result['Date1'];
+    			$temp['date_to'] = $result['Date1'];
+    			$temp['hod_remark'] = $result['HODRemarks'];
+    			$temp['hod_status'] = $result['HODApp'];
+    			$temp['hod_id'] = NULL;
+    			$temp['hod_remark_date'] = NULL;
+    			$temp['hr_remark'] = '';
+    			$temp['hr_status'] = $result['HRStatus'];
+    			$temp['hr_id'] = '';
+    			$temp['hr_remark_date'] = NULL;
+    			$temp['created_at'] = $result['AppDate'];
+    			$temp['wod'] = NULL;
+    			$temp['request_id'] = '';
+    			$temp['pl'] = NULL;
+    			$temp['lop'] = '';
+    			$temp['status'] = 1;
+    			$insert_record[] = $temp;
+    		}
+    		if($this->db->insert_batch('users_leave_requests',$insert_record))
+    			return true;
+    		else 
+    			return false;
+		} else {
+		    return true;
 		}
-		if($this->db->insert_batch('users_leave_requests',$insert_record))
-			return true;
-		else 
-			return false;
 	}
 	
 	
@@ -550,62 +607,72 @@ class Etl_ctrl extends CI_Controller {
 	    $this->db2 = $this->load->database('sqlsrv',TRUE);
 	    $results = $this->db2->query("SELECT t1.*,t2.* FROM [NEWZ36].[dbo].[CABFormTbl] as t1 join [NEWZ36].[dbo].[CABTransaction] as t2 on t1.ReqID = t2.ReqID where t1.EmpCode = '".$ecode."'")->result_array();
 	    
-	    $insert_data = array();
-	    foreach($results as $result){
-	        $temp = array();
-	        
-	        $this->db->select('id');
-	        $times = $this->db->get_where('cab_pickup_drop_time',array('time'=>date('H:i:s',strtotime($result['Time'])),'status'=>1))->result_array();
-	        
-	        $this->db->select('*');
-	        $areas = $this->db->get_where('cabzone_master',array('location_name'=>$result['Area'],'parent_id'=>0))->result_array();
-	        $temp['ecode'] = $result['EmpCode'];
-	        $temp['request_date'] = $result['Date'];
-	        $temp['from_date'] = $result['Date1']; 
-	        $temp['to_date'] = $result['Date2'];
-	        if($result['PDType'] == 'DROPING'){ 
-	           $temp['type'] = 'drop';
-	        } else {
-	            $temp['type'] = 'pick';
-	        }
-	        $temp['time'] = $times[0]['id'];
-	        $temp['area'] = $areas[0]['id'];
-	        $temp['reqest_id'] = $result['ReqID'];
-	        $temp['remark'] = $result['Remarks'];
-	        $temp['is_active'] = 1;
-	        $temp['last_update_user'] = '';
-	        $temp['cab_status'] = $result['Status'];
-	        $temp['action_taken_by'] = '';
-	        $temp['vehicle_no'] = $result['VehicleNo'];
-	        $temp['drivername'] = $result['Drivername'];
-	        $temp['action_taken_date'] = $result['Date'];
-	        $insert_data[] = $temp;
+	    if(count($results)>0){ 
+    	    $insert_data = array();
+    	    foreach($results as $result){
+    	        $temp = array();
+    	        
+    	        $this->db->select('id');
+    	        $times = $this->db->get_where('cab_pickup_drop_time',array('time'=>date('H:i:s',strtotime($result['Time'])),'status'=>1))->result_array();
+    	        
+    	        $this->db->select('*');
+    	        $areas = $this->db->get_where('cabzone_master',array('location_name'=>$result['Area'],'parent_id'=>0))->result_array();
+    	        $temp['ecode'] = $result['EmpCode'];
+    	        $temp['request_date'] = $result['Date'];
+    	        $temp['from_date'] = $result['Date1']; 
+    	        $temp['to_date'] = $result['Date2'];
+    	        if($result['PDType'] == 'DROPING'){ 
+    	           $temp['type'] = 'drop';
+    	        } else {
+    	            $temp['type'] = 'pick';
+    	        }
+    	        $temp['time'] = $times[0]['id'];
+    	        $temp['area'] = $areas[0]['id'];
+    	        $temp['reqest_id'] = $result['ReqID'];
+    	        $temp['remark'] = $result['Remarks'];
+    	        $temp['is_active'] = 1;
+    	        $temp['last_update_user'] = '';
+    	        $temp['cab_status'] = $result['Status'];
+    	        $temp['action_taken_by'] = '';
+    	        $temp['vehicle_no'] = $result['VehicleNo'];
+    	        $temp['drivername'] = $result['Drivername'];
+    	        $temp['action_taken_date'] = $result['Date'];
+    	        $insert_data[] = $temp;
+    	    }
+    	    $this->db->insert_batch('car_transection',$insert_data);
+	    } else {
+	        return true;
 	    }
-	    $this->db->insert_batch('car_transection',$insert_data);
 	}
 	
 	
 	function import_records($ecode){
-		$this->db->trans_begin();
-		
 			if($this->coff_requests($ecode)){
 				if($this->nhfh_day_duty($ecode)){
 					if($this->hf_requests($ecode)){
 						if($this->leave_requests($ecode)){
 							if($this->fetch_plrecord($ecode)){
+							    return true;
+							} else {
+							    echo "fetch pl- ".$ecode;
+							    return false;
 							}
+						} else {
+						    echo "leave-request -".$ecode;
+						    return false;
 						}
+					} else {
+					    echo "hf_request- ".$ecode;
+					    return false;
 					}
+				} else {
+				    echo "nhfh- ".$ecode;
+				    return false;
 				}
+			} else{
+			    echo "coff- ".$ecode;
+			    return false;
 			}
-			
-		if ($this->db->trans_status() === FALSE){
-			$this->db->trans_rollback();
-			echo $ecode." Something went wrong."; 
-		} else {
-			$this->db->trans_commit();
-			echo $ecode." Record imported successfully."; 
-		}
 	}
 	
 	function delete_record($ecode){
