@@ -80,7 +80,7 @@
 					<div class="icon">
 						<i class="fa fa-car" aria-hidden="true"></i>
 					</div>
-					<a href="#" class="small-box-footer">
+					<a href="<?php echo base_url('es/cab'); ?>" class="small-box-footer">
 						More info <i class="fas fa-arrow-circle-right"></i>
 					</a>
 				</div>

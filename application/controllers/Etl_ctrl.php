@@ -546,6 +546,45 @@ class Etl_ctrl extends CI_Controller {
 	}
 	
 	
+	function cab_mng($ecode){
+	    $this->db2 = $this->load->database('sqlsrv',TRUE);
+	    $results = $this->db2->query("SELECT t1.*,t2.* FROM [NEWZ36].[dbo].[CABFormTbl] as t1 join [NEWZ36].[dbo].[CABTransaction] as t2 on t1.ReqID = t2.ReqID where t1.EmpCode = '".$ecode."'")->result_array();
+	    
+	    $insert_data = array();
+	    foreach($results as $result){
+	        $temp = array();
+	        
+	        $this->db->select('id');
+	        $times = $this->db->get_where('cab_pickup_drop_time',array('time'=>date('H:i:s',strtotime($result['Time'])),'status'=>1))->result_array();
+	        
+	        $this->db->select('*');
+	        $areas = $this->db->get_where('cabzone_master',array('location_name'=>$result['Area'],'parent_id'=>0))->result_array();
+	        $temp['ecode'] = $result['EmpCode'];
+	        $temp['request_date'] = $result['Date'];
+	        $temp['from_date'] = $result['Date1']; 
+	        $temp['to_date'] = $result['Date2'];
+	        if($result['PDType'] == 'DROPING'){ 
+	           $temp['type'] = 'drop';
+	        } else {
+	            $temp['type'] = 'pick';
+	        }
+	        $temp['time'] = $times[0]['id'];
+	        $temp['area'] = $areas[0]['id'];
+	        $temp['reqest_id'] = $result['ReqID'];
+	        $temp['remark'] = $result['Remarks'];
+	        $temp['is_active'] = 1;
+	        $temp['last_update_user'] = '';
+	        $temp['cab_status'] = $result['Status'];
+	        $temp['action_taken_by'] = '';
+	        $temp['vehicle_no'] = $result['VehicleNo'];
+	        $temp['drivername'] = $result['Drivername'];
+	        $temp['action_taken_date'] = $result['Date'];
+	        $insert_data[] = $temp;
+	    }
+	    $this->db->insert_batch('car_transection',$insert_data);
+	}
+	
+	
 	function import_records($ecode){
 		$this->db->trans_begin();
 		

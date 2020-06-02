@@ -48,6 +48,45 @@ class Authctrl extends REST_Controller {
 	    }
 	}
 	
+	
+	function plsummary_post(){
+	    $is_valid_token = $this->authorization_token->validateToken();
+	    if(!empty($is_valid_token) && $is_valid_token['status'] === true) {
+	        
+	        if($this->post('department') != ''){
+    	        $data['department'] = $this->post('department');
+    	        $data['paycode'] = $this->post('ecode');	
+    	        $pl_result = $this->Emp_model->pl_summary_report($data);
+	        } else {
+	            $this->db->select('department_id');
+	            $userdepartment = $this->db->get_where('users',array('ecode'=>$is_valid_token['data']->ecode,'status'=>1))->result_array();
+	            
+	            $data['department'] = $userdepartment[0]['department_id'];
+	            $data['paycode'] = $is_valid_token['data']->ecode;
+	            $pl_result = $this->Emp_model->pl_summary_report($data);
+	        }
+	        if(count($pl_result) > 0){
+	            $plrecord = array();
+	            foreach($pl_result as $plr){
+	                $temp = array();
+	                $temp['Date'] = date('d/m/Y',strtotime($plr['date']));
+	                $temp['ADD'] = $plr['credit'];
+	                $temp['DEDUCT'] = $plr['debit'];
+	                $temp['BALANCE'] = $plr['balance'];
+	                $plrecord[] = $temp;
+	            }
+	            $this->response($plrecord,200);
+	        } else {
+	            $message = ['status' => FALSE,'message' => 'No record found.' ];
+	            $this->response($message, 404);
+	        }
+	        
+	    } else {
+	        $message = ['status' => FALSE,'message' => $is_valid_token['message'] ];
+	        $this->response($message, 404);
+	    }
+	}
+	
 	function attendance_post(){
 		$is_valid_token = $this->authorization_token->validateToken();
 		if(!empty($is_valid_token) && $is_valid_token['status'] === true){
@@ -116,5 +155,15 @@ class Authctrl extends REST_Controller {
 		        'message' => 'No such user found'
 		    ], 404 );
 		}	
+	}
+	
+	function currentDate_post(){
+	    $is_valid_token = $this->authorization_token->validateToken();
+	    if(!empty($is_valid_token) && $is_valid_token['status'] === true){
+    	    $date['date'] = date('d');
+    	    $data['month'] = date('m');
+    	    $data['year'] = date('Y');
+	    }
+	    $this->response($data, 200);
 	}
 }
