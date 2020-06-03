@@ -6,7 +6,7 @@ class Emp_ctrl extends CI_Controller {
 	public function __construct(){
         parent::__construct();
         $this->load->database();
-		$this->load->model(array('Auth_model','master/Department_model','Emp_model','master/Nh_fh_model'));
+		$this->load->model(array('Auth_model','master/Department_model','Emp_model','master/Nh_fh_model','master/Employee_model'));
 		$this->is_login();
     }
 	
@@ -35,7 +35,8 @@ class Emp_ctrl extends CI_Controller {
 	
 	function dotnet_dashboard(){
 	    $data = array();
-	    $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+	    $data['links'] = $this->Employee_model->links();
+	    $data['ulinks'] = $this->my_library->links($this->session->userdata('ecode'));
 	    $data['footer'] = $this->load->view('include/footer','',true);
 	    $data['top_nav'] = $this->load->view('include/top_nav','',true);
 	    $data['aside'] = $this->load->view('include/aside',$data,true);
