@@ -28,7 +28,7 @@ date_default_timezone_set('Asia/Kolkata');
 // staging url
 $config['base_url'] = 'http://192.168.25.237/kra/';
 // local url
-//$config['base_url'] = 'http://192.168.25.184:82/kra/';
+//$config['base_url'] = 'http://192.168.25.184:82/off/';
 
 
 $config['sql_entry'] = true;
