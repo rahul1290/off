@@ -47,7 +47,7 @@ foreach($user_links as $user_link){
 				<table class="table table-bordered">
 					<tr>
 						<td>Default Permission</td>
-						<td><input type="checkbox" /></td>
+						<td><input type="checkbox" id="default_permission" /></td>
 					</tr>
 					<tr>
 						<td>Name</td>
@@ -194,6 +194,19 @@ $(document).ready(function(){
 				console.log(response);
 			}
 		});
+	});
+
+
+	$(document).on('click','#default_permission',function(){
+		if($(this).prop("checked") == true){
+			$.ajax({
+				type:'POST',
+				url: baseUrl + 
+			});
+		} 
+		else if($(this).prop("checked") == false){
+			console.log('un-checked');
+		}
 	});
 });
 </script>

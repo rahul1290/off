@@ -5,7 +5,9 @@ $route['default_controller'] = 'auth';
 $route['404_override'] = '';
 
 ///emp///////////
-$route['dashboard'] = 'Emp_ctrl/index/';
+$route['dashboard1'] = 'Emp_ctrl/index/';
+$route['dashboard'] = 'Emp_ctrl/dotnet_dashboard/';
+
 
 $route['es/IT-Policies'] = 'Emp_ctrl/it_policies/';
 $route['es/HR-Policies'] = 'Emp_ctrl/hr_policies/';

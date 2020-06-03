@@ -33,6 +33,22 @@ class Emp_ctrl extends CI_Controller {
 	}
 	
 	
+	function dotnet_dashboard(){
+	    $data = array();
+	    $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+	    $data['footer'] = $this->load->view('include/footer','',true);
+	    $data['top_nav'] = $this->load->view('include/top_nav','',true);
+	    $data['aside'] = $this->load->view('include/aside',$data,true);
+	    $data['notepad'] = $this->load->view('include/shift_timing','',true);
+	    $data['body'] = $this->load->view('pages/emp_dotnet_dashboard',$data,true);
+	    //===============common===============//
+	    $data['title'] = $this->config->item('project_title').' | Dashboard';
+	    $data['head'] = $this->load->view('common/head',$data,true);
+	    $data['footer'] = $this->load->view('common/footer',$data,true);
+	    $this->load->view('layout_master',$data);
+	}
+	
+	
 	function attendance(){
 		$data = array();
 		if($_SERVER['REQUEST_METHOD'] === 'POST'){
