@@ -30,6 +30,7 @@ date_default_timezone_set('Asia/Kolkata');
 // local url
 $config['base_url'] = 'http://192.168.25.184:82/off/';
 
+
 $config['sql_entry'] = true;
 ////////////////////////////*************************************/////////////////////
 $config['img_url'] = 'https://employee.ibc24.in/OLAppraisal/EmpImage/';

@@ -118,7 +118,7 @@
 			</div>
 			<div class="col-sm-2">
 				<!-- small card -->
-				<div class="small-box bg-primary">
+				<div class="small-box bg-info">
 					<div class="inner">
 						<h3>KRA</h3>
 						<p>2020</p>
@@ -127,6 +127,22 @@
 						<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 					</div>
 					<a href="#" class="small-box-footer">
+						More info <i class="fas fa-arrow-circle-right"></i>
+					</a>
+				</div>
+			</div>
+			
+			<div class="col-sm-2">
+				<!-- small card -->
+				<div class="small-box bg-secondary">
+					<div class="inner">
+						<h3>PCR</h3>
+						<p>MANAGEMENT</p>
+					</div>
+					<div class="icon">
+						<i class="fas fa-pencil-alt" aria-hidden="true"></i>
+					</div>
+					<a href="http://192.168.25.34/EmployeePortal/PCR/Message.aspx?emp_id=<?php echo $this->session->userdata('ecode'); ?>" class="small-box-footer">
 						More info <i class="fas fa-arrow-circle-right"></i>
 					</a>
 				</div>
