@@ -84,7 +84,7 @@ class Hr_ctrl extends CI_Controller {
 			//$data['notepad'] = $this->load->view('include/notepad','',true);
 			$data['body'] = $this->load->view('pages/hradmin/roaster',$data,true);
 			//===============common===============//
-			$data['title'] = 'Home | Emp-Portal';
+			$data['title'] = $this->config->item('project_title').' | Roaster';
 			$data['head'] = $this->load->view('common/head',$data,true);
 			$data['footer'] = $this->load->view('common/footer',$data,true);
 			$this->load->view('layout_master',$data);
@@ -382,5 +382,19 @@ class Hr_ctrl extends CI_Controller {
 		$this->db->where('id',$id);
 		$this->db->update('policies',array('status'=>0));
 		echo json_encode(array('msg'=>'policies deleted.','status'=>200));
+	}
+	
+	function pl_deduction(){
+	    $data = array();
+	    $data['footer'] = $this->load->view('include/footer','',true);
+	    $data['top_nav'] = $this->load->view('include/top_nav','',true);
+	    $data['aside'] = $this->load->view('include/aside','',true);
+	    //$data['notepad'] = $this->load->view('include/notepad','',true);
+	    $data['body'] = $this->load->view('pages/hradmin/roaster',$data,true);
+	    //===============common===============//
+	    $data['title'] = $this->config->item('project_title').' | PL-review';
+	    $data['head'] = $this->load->view('common/head',$data,true);
+	    $data['footer'] = $this->load->view('common/footer',$data,true);
+	    $this->load->view('layout_master',$data);
 	}
 }
