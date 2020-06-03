@@ -675,6 +675,47 @@ class Etl_ctrl extends CI_Controller {
 			}
 	}
 	
+	
+	function permission($ecode){
+	    $this->db2 = $this->load->database('sqlsrv',TRUE);
+	    $results = $this->db2->query("SELECT * FROM ".$this->config->item('NEWZ36')."Permission where EmpCode = '".$ecode."'")->result_array();
+	    print_r($results); die;
+	    if(count($results)>0){
+	        $permission = array();
+	        if($results[0]['Leave']){
+	            $temp = array('link_id'=>1,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>2,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>3,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>4,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>5,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>6,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>7,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>8,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>9,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>10,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>28,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	       }
+	       
+	       if($results[0]['Sales']){
+	           $temp = array('link_id'=>11,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	    
+	       print_r($permission); die;
+	    }
+	}
+	
 	function delete_record($ecode){
 		$this->db->where('ecode',$ecode);
 		$this->db->delete('users_leave_requests');

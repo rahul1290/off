@@ -15,7 +15,7 @@ class Employee_ctrl extends CI_Controller {
         }
     }
 	
-	function index(){
+	function index(){ 
 		$data = array();
 		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		$data['employees'] = $this->Employee_model->employees();
@@ -358,6 +358,84 @@ class Employee_ctrl extends CI_Controller {
 			$data['footer'] = $this->load->view('common/footer',$data,true);
 			$this->load->view('layout_master',$data);
 		}
+	}
+	
+	
+	function default_permission_grant($ecode){
+	    
+	    $this->db->trans_begin();
+	    
+	    $dep_id = $this->my_library->get_employee_department($ecode);
+	    ///delete previous entry and insert new on user department table
+	    $this->db->where('ecode',$ecode);
+	    $this->db->delete('user_department');
+	    
+	    $this->db->insert('user_department',array(
+	          'ecode' => $ecode,
+	          'dep_id' => $dep_id,
+	        'created_at' => date('Y-m-d H:i:s'),
+	        'created_by' => $this->session->userdata('ecode')
+	    ));
+	    ///delete previous entry and insert new on user rules table
+	    $this->db->where('ecode',$ecode);
+	    $this->db->delete('user_rules');
+	    
+	    $this->db->insert('user_rules',array('ecode'=>$ecode,'r_ecode'=>$ecode));
+	    
+	    $this->db->where('ecode',$ecode);
+	    $this->db->delete('user_links');
+	    
+	    ///set default permission
+	    $permission = array(
+	        array('link_id'=>1,'ecode'=>$ecode),
+    	    array('link_id'=>2,'ecode'=>$ecode),
+    	    array('link_id'=>3,'ecode'=>$ecode),
+    	    array('link_id'=>4,'ecode'=>$ecode),
+    	    array('link_id'=>5,'ecode'=>$ecode),
+    	    array('link_id'=>6,'ecode'=>$ecode),
+    	    array('link_id'=>7,'ecode'=>$ecode),
+    	    array('link_id'=>8,'ecode'=>$ecode),
+    	    array('link_id'=>9,'ecode'=>$ecode),
+    	    array('link_id'=>10,'ecode'=>$ecode),
+    	    array('link_id'=>28,'ecode'=>$ecode)
+	    );
+	    
+	    $this->db->insert_batch('user_links',$permission);
+	    
+	    if ($this->db->trans_status() === FALSE){
+	        $this->db->trans_rollback();
+	        echo json_encode(array('msg'=>'Something went wrong.','status'=>'500'));
+	    } else {
+	        $this->db->trans_commit();
+	        echo json_encode(array('msg'=>'Default permission set.','status'=>'200'));
+	    }
+	}
+	
+	
+	function default_permission_revoke($ecode){
+	    
+	    $this->db->trans_begin();
+	    
+	    $dep_id = $this->my_library->get_employee_department($ecode);
+	    ///delete previous entry and insert new on user department table
+	    $this->db->where('ecode',$ecode);
+	    $this->db->delete('user_department');
+	  
+	    ///delete previous entry and insert new on user rules table
+	    $this->db->where('ecode',$ecode);
+	    $this->db->delete('user_rules');
+	    
+	    $this->db->where('ecode',$ecode);
+	    $this->db->delete('user_links');
+	    
+	    if ($this->db->trans_status() === FALSE){
+	        $this->db->trans_rollback();
+	        echo json_encode(array('msg'=>'Something went wrong.','status'=>'500'));
+	    } else {
+	        $this->db->trans_commit();
+	        echo json_encode(array('msg'=>'Default permission revoked.','status'=>'200'));
+	    }
+	    
 	}
 	
 	
