@@ -5,10 +5,10 @@ foreach($links as $link){
 	array_push($display,$link['link_name']);
 }}
 
-$ulink = array();
-foreach($ulinks as $user_link){
-    array_push($ulink,$user_link['link_name']);
-}
+// $ulink = array();
+// foreach($ulinks as $user_link){
+//     array_push($ulink,$user_link['link_name']);
+// }
 
 ?>
 
