@@ -54,7 +54,7 @@ class My_library {
 	}
 	
 	function links($ecode){
-		$this->CI->db->select('sl.id,sl.link_name,type,parent_id');
+		$this->CI->db->select('sl.id,sl.link_name,type,parent_id,sl.url');
 		$this->CI->db->join('system-links sl','sl.id = ul.link_id');
 		$result = $this->CI->db->get_where('user_links ul',array('ul.ecode'=>$ecode,'ul.status'=>1))->result_array();
 		if(count($result)>0){

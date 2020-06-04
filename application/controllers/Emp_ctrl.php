@@ -35,8 +35,9 @@ class Emp_ctrl extends CI_Controller {
 	
 	function dotnet_dashboard(){
 	    $data = array();
-	    $data['links'] = $this->Employee_model->links();
-	    $data['ulinks'] = $this->my_library->links($this->session->userdata('ecode'));
+	    //$data['links'] = $this->Employee_model->links();
+	    $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+	    //print_r($data['links']); die;
 	    $data['footer'] = $this->load->view('include/footer','',true);
 	    $data['top_nav'] = $this->load->view('include/top_nav','',true);
 	    $data['aside'] = $this->load->view('include/aside',$data,true);

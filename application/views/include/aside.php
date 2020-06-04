@@ -4,7 +4,6 @@ if(isset($links)){
 foreach($links as $link){
 	array_push($display,$link['link_name']);
 }}
-
 // $ulink = array();
 // foreach($ulinks as $user_link){
 //     array_push($ulink,$user_link['link_name']);
@@ -139,7 +138,7 @@ foreach($links as $link){
 		  
 		  <li class="nav-item has-treeview
 			<?php if($this->uri->segment('1') == 'hr'){ echo "menu-open"; } else { echo "menu-close"; }?>
-		  " style="display: <?php if(isset($links)){ if(in_array('HR MANAGEMENT',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+		  " style="display: <?php if(isset($links)){ if(in_array('HR MANAGEMENT',$display) || in_array('HR ADMIN',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
 			<a href="#" class="nav-link
 				<?php if($this->uri->segment('1') == 'hr'){ echo "active"; } ?>
 			">
