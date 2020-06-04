@@ -142,7 +142,7 @@
 					<div class="icon">
 						<i class="fas fa-pencil-alt" aria-hidden="true"></i>
 					</div>
-					<a href="http://192.168.25.34/EmployeePortal/PCR/Message.aspx?emp_id=<?php echo $this->session->userdata('ecode'); ?>" class="small-box-footer">
+					<a href="http://192.168.25.34/EmployeePortal/PCR/Message.aspx?emp_id=<?php echo base64_encode($this->session->userdata('ecode')); ?>" class="small-box-footer">
 						More info <i class="fas fa-arrow-circle-right"></i>
 					</a>
 				</div>
