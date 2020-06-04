@@ -73,6 +73,7 @@ class Etl_ctrl extends CI_Controller {
 		        $data['marital_status'] = $r['marital_status'];
 		        $data['anniversary'] = $r['anniversary'];
 		        $data['spouse_name'] = $r['spouse_name'];
+		        $data['image'] = $r['image'];
 		        $insert_data[] = $data;
 		    }
 		    if($this->db->insert_batch('user_info',$insert_data)){
@@ -652,7 +653,12 @@ class Etl_ctrl extends CI_Controller {
 					if($this->hf_requests($ecode)){
 						if($this->leave_requests($ecode)){
 							if($this->fetch_plrecord($ecode)){
-							    return true;
+							    if($this->permission($ecode)){
+							     return true;
+							    } else {
+							        echo "permission -".$ecode;
+							        return false;
+							    }
 							} else {
 							    echo "fetch pl- ".$ecode;
 							    return false;
@@ -673,6 +679,170 @@ class Etl_ctrl extends CI_Controller {
 			    echo "coff- ".$ecode;
 			    return false;
 			}
+	}
+	
+	
+	function permission($ecode){
+	    $this->db2 = $this->load->database('sqlsrv',TRUE);
+	    $results = $this->db2->query("SELECT * FROM ".$this->config->item('NEWZ36')."Permission where EmpCode = '".$ecode."'")->result_array();
+	    
+	    
+	    $dep_id = $this->my_library->get_employee_department($ecode);
+	    
+	    $this->db->insert('user_department',array(
+	        'ecode' => $ecode,
+	        'dep_id' => $dep_id,
+	        'created_at' => date('Y-m-d H:i:s'),
+	        'created_by' => $this->session->userdata('ecode')
+	    ));
+	    
+	    $this->db->insert('user_rules',array('ecode'=>$ecode,'r_ecode'=>$ecode));
+	    
+	   
+	    if(count($results)>0){
+	        $this->db->where('ecode',$ecode);
+	        $this->db->delete('user_links');
+	        
+	        $permission = array();
+	        if($results[0]['Leave']){
+	            $temp = array('link_id'=>1,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>2,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>3,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>4,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>5,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>6,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>7,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>8,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>9,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>10,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>44,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>28,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	       }
+	       
+	       if($results[0]['Sales']){
+	           $temp = array('link_id'=>38,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['Library']){
+	           $temp = array('link_id'=>39,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['Appraisal']){
+	           $temp = array('link_id'=>40,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['NoticeBoard']){
+	           
+	       }
+	       if($results[0]['NewEvents']){
+	           
+	       }
+	       if($results[0]['Shoot']){
+	           $temp = array('link_id'=>41,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['Graphics']){
+	           
+	       }
+	       if($results[0]['HR']){
+	           $temp = array('link_id'=>44,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['Monitoring']){
+	           $temp = array('link_id'=>45,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['PCR']){
+	           $temp = array('link_id'=>46,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['Stringer']){
+	           $temp = array('link_id'=>47,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['CAB']){
+	           $temp = array('link_id'=>48,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['Property']){
+	           $temp = array('link_id'=>49,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['SMS']){
+	           $temp = array('link_id'=>50,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['Vendor']){
+	           $temp = array('link_id'=>51,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['Store']){
+	           $temp = array('link_id'=>52,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['IPL']){
+	           $temp = array('link_id'=>53,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['MPLM']){
+	           $temp = array('link_id'=>54,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['Stationary']){
+	           $temp = array('link_id'=>55,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['Reporting']){
+	           $temp = array('link_id'=>56,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['MCR']){
+	           $temp = array('link_id'=>57,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['ITPOLICY']){
+	           $temp = array('link_id'=>58,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['Distribution']){
+	           $temp = array('link_id'=>59,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['HRAdmin']){
+	           $temp = array('link_id'=>60,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['Stock']){
+	           $temp = array('link_id'=>61,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['livespr']){
+	           $temp = array('link_id'=>62,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['channel_distribution']){
+	           $temp = array('link_id'=>42,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       if($results[0]['social_media']){
+	           $temp = array('link_id'=>43,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	       }
+	       $this->db->insert_batch('user_links',$permission);
+	    }
+	    return true;
 	}
 	
 	function delete_record($ecode){

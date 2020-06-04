@@ -74,6 +74,7 @@ class Auth extends CI_Controller {
 							'username'  => $login_result[0]['name'],
 							'ecode'     => $login_result[0]['ecode'],
 							'department_id' => $login_result[0]['department_id'],
+						    'image' => $login_result[0]['image'],
 							'logged_in' => TRUE
 						);
 						$this->session->set_userdata($portaldata);

@@ -1,3 +1,9 @@
+<?php 
+    $ulink = array();
+    foreach($ulinks as $user_link){
+    	array_push($ulink,$user_link['link_name']);
+    }
+?>
 <body class="hold-transition sidebar-mini layout-navbar-fixed">
 <div class="wrapper">
 	<!--.navbar -->
@@ -37,119 +43,52 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-        <div class="row">
-			<div class="col-sm-2">
-				<!-- small card -->
-				<div class="small-box bg-info">
-					<div class="inner">
-						<h3>LEAVE</h3>
-						<p>MANAGEMENT</p>
-					</div>
-					<div class="icon">
-						<i class="fas fa-calendar-check"></i>
-					</div>
-					<a href="<?php echo base_url('es/Attendance-Record'); ?>" class="small-box-footer">
-						More info <i class="fas fa-arrow-circle-right"></i>
-					</a>
-				</div>
-			</div>
-			<!-- ./col -->
-			<div class="col-sm-2">
-				<!-- small card -->
-				<div class="small-box bg-success">
-					<div class="inner">
-						<h3>IT</h3>
-						<p>POLICIES</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-desktop" aria-hidden="true"></i>
-					</div>
-					<a href="<?php echo base_url('es/IT-Policies'); ?>" class="small-box-footer">
-						More info <i class="fas fa-arrow-circle-right"></i>
-					</a>
-				</div>
-			</div>
-			<!-- ./col -->
-			<div class="col-sm-2">
-				<!-- small card -->
-				<div class="small-box bg-warning">
-					<div class="inner">
-						<h3>CAB</h3>
-						<p>MANAGEMENT</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-car" aria-hidden="true"></i>
-					</div>
-					<a href="<?php echo base_url('es/cab'); ?>" class="small-box-footer">
-						More info <i class="fas fa-arrow-circle-right"></i>
-					</a>
-				</div>
-			</div>
-			<!-- ./col -->
-			<div class="col-sm-2">
-				<!-- small card -->
-				<div class="small-box bg-danger">
-					<div class="inner">
-						<h3>HR</h3>
-						<p>POLICIES</p>
-					</div>
-					<div class="icon">
-						<i class="fa fa-user" aria-hidden="true"></i>
-					</div>
-					<a href="<?php echo base_url('es/HR-Policies');?>" class="small-box-footer">
-						More info <i class="fas fa-arrow-circle-right"></i>
-					</a>
-				</div>
-			</div>
-			<div class="col-sm-2">
-				<!-- small card -->
-				<div class="small-box bg-primary">
-					<div class="inner">
-						<h3>STATIONARY</h3>
-						<p>DEPT</p>
-					</div>
-					<div class="icon">
-						<i class="fas fa-pencil-alt" aria-hidden="true"></i>
-					</div>
-					<a href="#" class="small-box-footer">
-						More info <i class="fas fa-arrow-circle-right"></i>
-					</a>
-				</div>
-			</div>
-			<div class="col-sm-2">
-				<!-- small card -->
-				<div class="small-box bg-info">
-					<div class="inner">
-						<h3>KRA</h3>
-						<p>2020</p>
-					</div>
-					<div class="icon">
-						<i class="fas fa-pencil-alt" aria-hidden="true"></i>
-					</div>
-					<a href="#" class="small-box-footer">
-						More info <i class="fas fa-arrow-circle-right"></i>
-					</a>
-				</div>
-			</div>
-			
-			<div class="col-sm-2">
-				<!-- small card -->
-				<div class="small-box bg-secondary">
-					<div class="inner">
-						<h3>PCR</h3>
-						<p>MANAGEMENT</p>
-					</div>
-					<div class="icon">
-						<i class="fas fa-pencil-alt" aria-hidden="true"></i>
-					</div>
-					<a href="http://192.168.25.34/EmployeePortal/PCR/Message.aspx?emp_id=<?php echo base64_encode($this->session->userdata('ecode')); ?>" class="small-box-footer">
-						More info <i class="fas fa-arrow-circle-right"></i>
-					</a>
-				</div>
-			</div>
-			
-			<!-- ./col -->
-		</div>
+      <?php if(count($links)>0){
+					$c = 1;
+					foreach($links as $link){
+					    if(!$link['parent_id']){
+					        if($link['link_name'] == 'HR MANAGEMENT' || $link['link_name'] == 'MASTER' || $link['link_name'] == 'LOG-OUT'|| $link['link_name'] == 'HOD SECTION'){
+					            continue;
+					        }
+					        
+					        if(!in_array($link['link_name'], $ulink)){
+					            continue;
+					        }
+					        
+					        
+					        $url = str_replace("{{baseurl}}",base_url(),$link["url"]);
+					        $url = str_replace("{{empportal_url}}",'http://192.168.25.34/EmployeePortal/PCR/Message.aspx?',$url);
+					        $url = str_replace("{{userId}}",base64_encode($this->session->userdata('ecode')),$url);
+					        
+    						if($c == 1){
+    							echo '<div class="row">';
+    						}
+    						echo '<div class="small-box bg-success col-2 ml-2">'.
+                					'<div class="inner">'.
+                						'<h3></h3>'.
+                						'<p>'.$link['link_name'].'</p>'.
+                					'</div>'.
+                					'<div class="icon">'.
+                						'<i class="fa fa-desktop" aria-hidden="true"></i>'.
+                					'</div>'.
+                					'<a href="'.$url.'" class="small-box-footer">'.
+                						'More info <i class="fas fa-arrow-circle-right"></i>'.
+                					'</a>'.
+                				'</div>';
+    						if($c%4 == 0){
+    							echo '</div>';
+    							if($c < count($links)){
+    								echo '<div class="row">';
+    							}
+    						}
+    						if($c == count($links)){
+    							echo '</div>';
+    						}
+    					$c++;
+					}
+				}
+        }?>
+      </div>
         
       </div><!-- /.container-fluid -->
     </div>
