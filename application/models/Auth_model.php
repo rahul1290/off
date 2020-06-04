@@ -5,8 +5,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Auth_model extends CI_Model {
 	
 	function login($data){
-		$this->db->select('ecode,id,name,password,department_id');
-		$result = $this->db->get_where('users',array('ecode'=>$data['identity'],'password'=>$data['password'],'status'=>1))->result_array();
+		$this->db->select('u.ecode,u.id,u.name,u.password,u.department_id,ui.image');
+		$this->db->join('user_info ui','ui.ecode = u.ecode');
+		$result = $this->db->get_where('users u',array('u.ecode'=>$data['identity'],'u.password'=>$data['password'],'u.status'=>1))->result_array();
 		return $result;
 	}
 	

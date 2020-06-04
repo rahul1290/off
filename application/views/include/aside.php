@@ -5,6 +5,11 @@ foreach($links as $link){
 	array_push($display,$link['link_name']);
 }}
 
+$ulink = array();
+foreach($ulinks as $user_link){
+    array_push($ulink,$user_link['link_name']);
+}
+
 ?>
 
 <aside class="main-sidebar sidebar-dark-warning elevation-4">
@@ -20,7 +25,7 @@ foreach($links as $link){
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="<?php echo $this->config->item('img_url').$this->session->userdata('ecode').'.jpg'; ?>" class="img-circle elevation-4" alt="User Image">
+          <img src="<?php echo $this->config->item('img_url').$this->session->userdata('image'); ?>" class="img-circle elevation-4" alt="User Image">
         </div>
         <div class="info">
           <a href="<?php echo base_url('dashboard'); ?>" class="d-block"><?php echo $this->session->userdata('username'); ?></a>

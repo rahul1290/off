@@ -73,6 +73,7 @@ class Etl_ctrl extends CI_Controller {
 		        $data['marital_status'] = $r['marital_status'];
 		        $data['anniversary'] = $r['anniversary'];
 		        $data['spouse_name'] = $r['spouse_name'];
+		        $data['image'] = $r['image'];
 		        $insert_data[] = $data;
 		    }
 		    if($this->db->insert_batch('user_info',$insert_data)){
@@ -685,6 +686,19 @@ class Etl_ctrl extends CI_Controller {
 	    $this->db2 = $this->load->database('sqlsrv',TRUE);
 	    $results = $this->db2->query("SELECT * FROM ".$this->config->item('NEWZ36')."Permission where EmpCode = '".$ecode."'")->result_array();
 	    
+	    
+	    $dep_id = $this->my_library->get_employee_department($ecode);
+	    
+	    $this->db->insert('user_department',array(
+	        'ecode' => $ecode,
+	        'dep_id' => $dep_id,
+	        'created_at' => date('Y-m-d H:i:s'),
+	        'created_by' => $this->session->userdata('ecode')
+	    ));
+	    
+	    $this->db->insert('user_rules',array('ecode'=>$ecode,'r_ecode'=>$ecode));
+	    
+	   
 	    if(count($results)>0){
 	        $this->db->where('ecode',$ecode);
 	        $this->db->delete('user_links');
@@ -710,6 +724,8 @@ class Etl_ctrl extends CI_Controller {
 	            $temp = array('link_id'=>9,'ecode'=>$ecode);
 	            array_push($permission, $temp);
 	            $temp = array('link_id'=>10,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>44,'ecode'=>$ecode);
 	            array_push($permission, $temp);
 	            $temp = array('link_id'=>28,'ecode'=>$ecode);
 	            array_push($permission, $temp);
@@ -826,6 +842,7 @@ class Etl_ctrl extends CI_Controller {
 	       }
 	       $this->db->insert_batch('user_links',$permission);
 	    }
+	    return true;
 	}
 	
 	function delete_record($ecode){

@@ -59,7 +59,7 @@
 					        
 					        $url = str_replace("{{baseurl}}",base_url(),$link["url"]);
 					        $url = str_replace("{{empportal_url}}",'http://192.168.25.34/EmployeePortal/PCR/Message.aspx?',$url);
-					        $url = str_replace("{{userId}}",$this->session->userdata('ecode'),$url);
+					        $url = str_replace("{{userId}}",base64_encode($this->session->userdata('ecode')),$url);
 					        
     						if($c == 1){
     							echo '<div class="row">';
