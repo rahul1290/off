@@ -189,7 +189,6 @@
 					
 					<div class="customFile mb-2 ml-2 mr-2">
 					  <input type="file" class="" name="customFile" id="customFile">
-					  <label class="custom-file-label" for="customFile">Choose file</label>
 					</div>
 				</div>
 				

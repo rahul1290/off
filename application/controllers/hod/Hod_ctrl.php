@@ -18,6 +18,7 @@ class Hod_ctrl extends CI_Controller {
 	}
 
 	function leave_request($ref_id = null){
+	    
 	    $data = array();
 	    $data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
 	    $users = $this->Emp_model->get_employee($this->session->userdata('ecode'));
@@ -33,13 +34,14 @@ class Hod_ctrl extends CI_Controller {
 	    //$data['open'] = 'true';
 	    $data['notepad'] = $this->load->view('include/shift_timing','',true);
 	    $data['pending_requests'] = $this->Hod_model->leave_pending_request($ulist,$ref_id);
+	    
 	    $data['requests'] = $this->Hod_model->leave_request($ulist,$ref_id);
 	    $data['body'] = $this->load->view('pages/hod/leave_requests',$data,true);
 	    //===============common===============//
 	    $data['title'] = $this->config->item('project_title').' | Leave Requests';
 	    $data['head'] = $this->load->view('common/head',$data,true);
 	    $data['footer'] = $this->load->view('common/footer',$data,true);
-	    
+	   
 	    $this->load->view('layout_master',$data);
 	}
 	

@@ -23,21 +23,21 @@
     <!-- Main content -->
     <div class="content bg">
       <div class="container-fluid">
-		<div class="col-12 offset-3">
+		<div class="col-12">
 				<?php if(count($policies)>0){
 					$c = 1;
 					foreach($policies as $policy){
 						if($c == 1){
 							echo '<div class="row">';
 						}
-						echo '<div class="info-box col-3 col-xs-12" style="margin-left: 5px;">'.
+						echo '<div class="info-box col" style="padding:50px; max-width: 450px;">'.
 								'<span class="info-box-icon bg-warning"><i class="far fa-file-pdf"></i></span>'.
-								'<div class="info-box-content">'.
+								'<div class="info-box-content ml-4">'.
 									'<a target="_blank" href="'.base_url().'policies/'.$policy['file_name'].'"><span class="info-box-text">'.$policy['title'].'</span>'.
 									'<i class="fas fa-download"></i></a>'.
 								'</div>'.
 							'</div>';
-						if($c%2 == 0){
+						if($c%3 == 0){
 							echo '</div>';
 							if($c < count($policies)){
 								echo '<div class="row">';

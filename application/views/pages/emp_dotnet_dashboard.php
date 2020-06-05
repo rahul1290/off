@@ -44,7 +44,8 @@ $colors = array('#ff6347','#ff6347','#1e90ff','#3cb371','#808080','#6a5acd','#ee
 
     <!-- Main content -->
     <div class="content">
-      <div class="container-fluid">  
+      <div class="container-fluid">
+        
       <?php if(count($links)>0){
 					$c = 1;
 					foreach($links as $link){
@@ -64,27 +65,23 @@ $colors = array('#ff6347','#ff6347','#1e90ff','#3cb371','#808080','#6a5acd','#ee
 					        
 					        
     						if($c == 1){
-    							echo '<div class="row">';
+    							echo '<div class="row text-center text-lg-left">';
     						}
-    						
-    						echo '<div class="small-box col ml-3 mr-3" style="padding:30px;background-color: '.$colors[rand(7,0)].'">'.
-                					'<div class="inner">'.
-                						'<h3></h3>'.
-                						'<p>'.$link['link_name'].'</p>'.
-                					'</div>'.
+    						$img_url = 'https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg';
+    						echo '<a href="'.$url.'"><div class="small-box col-lg-3 col-sm-4 col-md-4 col-12">'.
                 					'<div class="icon">'.
-                						'<i class="fa fa-desktop" aria-hidden="true"></i>'.
-                					'</div></br>'.
+                					     '<img src="'.$img_url.'" width="100%" height="250" />'.
+                					'</div><br/>'.
                 					'<a href="'.$url.'" class="small-box-footer">'.
-                						'More info <i class="fas fa-arrow-circle-right"></i>'.
+                					$link['link_name'] .'<i class="ml-2 fas fa-arrow-circle-right"></i>'.
                 					'</a>'.
-                				'</div>';
-    						if($c%4 == 0){
-    							echo '</div>';
-    							if($c < count($links)){
-    								echo '<div class="row">';
-    							}
-    						}
+                				'</div></a>';
+//     						if($c%4 == 0){
+//     							echo '</div>';
+//     							if($c < count($links)){
+//     								echo '<div class="row">';
+//     							}
+//     						}
     						if($c == count($links)){
     							echo '</div>';
     						}

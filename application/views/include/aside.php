@@ -4,11 +4,8 @@ if(isset($links)){
 foreach($links as $link){
 	array_push($display,$link['link_name']);
 }}
-// $ulink = array();
-// foreach($ulinks as $user_link){
-//     array_push($ulink,$user_link['link_name']);
-// }
 
+//print_r($display); die;
 ?>
 
 <aside class="main-sidebar sidebar-dark-warning elevation-4">
@@ -135,6 +132,41 @@ foreach($links as $link){
             </ul>
           </li>
 		  
+		  
+		  <li class="nav-item has-treeview
+			<?php if($this->uri->segment('1') == 'policy'){ echo "menu-open"; } else { echo "menu-close"; }?>
+		  " style="display: <?php if(isset($links)){ if(in_array('HR POLICIES',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+			<a href="#" class="nav-link
+				<?php if($this->uri->segment('1') == 'policy'){ echo "active"; } ?>
+			">
+			  <i class="fas fa-bezier-curve"></i>
+              <p>
+                &nbsp;&nbsp;POLICIES
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+			<ul class="nav nav-treeview">
+              <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('HR POLICIES',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+                <a href="<?php echo base_url('policy/HR-Policies');?>" class="nav-link ml-3
+					<?php if($this->uri->segment('2') == 'HR-Policies'){ echo "active"; } ?>
+				">
+				  <i class="far fa-file-pdf"></i>
+                  <p>&nbsp;HR POLICIES</p>
+                </a>
+              </li>
+              
+              <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('HR POLICIES',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+                <a href="<?php echo base_url('policy/IT-Policies');?>" class="nav-link ml-3
+					<?php if($this->uri->segment('2') == 'IT-Policies'){ echo "active"; } ?>
+				">
+				  <i class="far fa-file-pdf"></i>
+                  <p>&nbsp;IT POLICIES</p>
+                </a>
+              </li>
+              
+            </ul>            
+
+          </li>
 		  
 		  <li class="nav-item has-treeview
 			<?php if($this->uri->segment('1') == 'hr'){ echo "menu-open"; } else { echo "menu-close"; }?>

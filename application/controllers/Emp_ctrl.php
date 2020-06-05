@@ -412,12 +412,15 @@ class Emp_ctrl extends CI_Controller {
 	
 	function hr_policies(){
 		$data = array();
+		
 		$this->db->select('*');
 		$this->db->order_by('sort','ASC');
 		$data['policies'] = $this->db->get_where('policies',array('parent_id'=>1,'status'=>1))->result_array();
+		
+		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside','',true);
+		$data['aside'] = $this->load->view('include/aside',$data,true);
 		$data['body'] = $this->load->view('pages/es/hr_policies',$data,true);
 		//===============common===============//
 		$data['title'] = $this->config->item('project_title').' | HR-policies';
@@ -431,9 +434,11 @@ class Emp_ctrl extends CI_Controller {
 		$this->db->select('*');
 		$this->db->order_by('sort','ASC');
 		$data['policies'] = $this->db->get_where('policies',array('parent_id'=>2,'status'=>1))->result_array();
+		
+		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside','',true);
+		$data['aside'] = $this->load->view('include/aside',$data,true);
 		$data['body'] = $this->load->view('pages/es/it_policies',$data,true);
 		//===============common===============//
 		$data['title'] = $this->config->item('project_title').' | IT-policies';

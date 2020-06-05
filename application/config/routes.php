@@ -9,8 +9,11 @@ $route['dashboard1'] = 'Emp_ctrl/index/';
 $route['dashboard'] = 'Emp_ctrl/dotnet_dashboard/';
 
 
-$route['es/IT-Policies'] = 'Emp_ctrl/it_policies/';
-$route['es/HR-Policies'] = 'Emp_ctrl/hr_policies/';
+$route['policy/IT-Policies'] = 'Emp_ctrl/it_policies/';
+$route['policy/HR-Policies'] = 'Emp_ctrl/hr_policies/';
+
+// $route['es/IT-Policies'] = 'Emp_ctrl/it_policies/';
+// $route['es/HR-Policies'] = 'Emp_ctrl/hr_policies/';
 
 $route['es/leave-request'] = 'Emp_ctrl/leave_request/';
 $route['es/hf-leave-request'] = 'Emp_ctrl/hf_leave_request/';
