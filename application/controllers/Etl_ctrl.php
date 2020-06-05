@@ -50,6 +50,7 @@ class Etl_ctrl extends CI_Controller {
 			$data['grade_id'] = $r['Grade'];
 			$data['gender'] = $r['Gender'];
 			$data['dob'] = $r['BDay'];
+			$data['location_id'] = $r['Location'];
 			$data['report_to_desg'] = $this->session->userdata('ecode');
 			$data['jdate'] = $r['JDate'];
 			$data['company_id'] = $r['Company'];
@@ -299,20 +300,24 @@ class Etl_ctrl extends CI_Controller {
 										when (Grade = 'M-1') then '3'
 										when (Grade = 'S') then '4'
 										when (Grade = 'M-2') then '5'
-										when (Grade = 'M 1') then '6'
-										when (Grade = 'M1') then '7'
+										when (Grade = 'M 1') then '3'
+										when (Grade = 'M1') then '3'
 										when (Grade = 'M-3') then '8'
 										when (Grade = 'M-4') then '9'
 										when (Grade = 'M-5') then '10'
-										when (Grade = 'M2') then '11'
-										when (Grade = 'M4') then '12'
+										when (Grade = 'M2') then '5'
+										when (Grade = 'M4') then '9'
 										when (Grade = 'M-6') then '13'
-										when (Grade = 'M5') then '14'
+										when (Grade = 'M5') then '10'
 									END) as Grade,
 									Gender,
 									(case when (Gender = 'Male') then 'MALE' 
 										  when (Gender = 'Female') then 'FEMALE'	
 									END) as Gender,
+                                    (case when (Location = 'RAIPUR') then '1'
+                                          when (LOcation = 'INDOR') then '3'
+                                          when (Location = 'BHOPAL') then '4'
+                                    END ) as Location,
 									BDay,
 									ReportTo,
 									JDate,
@@ -725,6 +730,8 @@ class Etl_ctrl extends CI_Controller {
 	            array_push($permission, $temp);
 	            $temp = array('link_id'=>10,'ecode'=>$ecode);
 	            array_push($permission, $temp);
+	            $temp = array('link_id'=>11,'ecode'=>$ecode);
+	            array_push($permission, $temp);
 	            $temp = array('link_id'=>44,'ecode'=>$ecode);
 	            array_push($permission, $temp);
 	            $temp = array('link_id'=>28,'ecode'=>$ecode);
@@ -844,6 +851,31 @@ class Etl_ctrl extends CI_Controller {
 	    }
 	    return true;
 	}
+	
+	
+	function reporting_to(){	    
+	    $result = $this->fetch_emp_detail();
+	    $insert_data = array();
+	    print_r($result); die;
+	    foreach($result as $r){
+	        $this->db2 = $this->load->database('sqlsrv',TRUE);
+    	    $results = $this->db2->query("SELECT * FROM ".$this->config->item('NEWZ36')."LoginKRA where EmpCode = '".$r['EmpCode']."'")->result_array();
+    	    
+    	    if(count($results)>0){
+    	        $this->db->select('*');
+    	        $result = $this->db->get_where('users',array('ecode'=>$results[0]['Report1']))->result_array();
+    	        if(count($result)>0){
+        	        $this->db->where('ecode',$r['EmpCode']);
+        	        $this->db->update('users',array('report_to_dept'=>$result[0]['department_id'],'report_to_desg'=>$result[0]['designation_id']));
+    	        } else {
+    	            print_r($this->db->last_query()); die;
+    	            echo "query fail";
+    	            die;
+    	        }
+    	    }
+	    }
+	}
+	
 	
 	function delete_record($ecode){
 		$this->db->where('ecode',$ecode);

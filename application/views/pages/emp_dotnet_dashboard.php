@@ -1,8 +1,10 @@
 <?php 
     $ulink = array();
-    foreach($ulinks as $user_link){
+    foreach($links as $user_link){
     	array_push($ulink,$user_link['link_name']);
     }
+    
+$colors = array('#ff6347','#ff6347','#1e90ff','#3cb371','#808080','#6a5acd','#ee82ee','#d3d3d3');
 ?>
 <body class="hold-transition sidebar-mini layout-navbar-fixed">
 <div class="wrapper">
@@ -60,17 +62,19 @@
 					        $url = str_replace("{{empportal_url}}",'http://192.168.25.34/EmployeePortal/PCR/Message.aspx?',$url);
 					        $url = str_replace("{{userId}}",base64_encode($this->session->userdata('ecode')),$url);
 					        
+					        
     						if($c == 1){
     							echo '<div class="row">';
     						}
-    						echo '<div class="small-box bg-success col-2 ml-2">'.
+    						
+    						echo '<div class="small-box col ml-3 mr-3" style="padding:30px;background-color: '.$colors[rand(7,0)].'">'.
                 					'<div class="inner">'.
                 						'<h3></h3>'.
                 						'<p>'.$link['link_name'].'</p>'.
                 					'</div>'.
                 					'<div class="icon">'.
                 						'<i class="fa fa-desktop" aria-hidden="true"></i>'.
-                					'</div>'.
+                					'</div></br>'.
                 					'<a href="'.$url.'" class="small-box-footer">'.
                 						'More info <i class="fas fa-arrow-circle-right"></i>'.
                 					'</a>'.
