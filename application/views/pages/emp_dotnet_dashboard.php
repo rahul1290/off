@@ -6,6 +6,13 @@
     
 $colors = array('#ff6347','#ff6347','#1e90ff','#3cb371','#808080','#6a5acd','#ee82ee','#d3d3d3');
 ?>
+
+<style>
+    .icon-box:hover{
+        #box-shadow: 5px 5px 7px #fb8a8afb;
+        background-color: #fb8a8a3b;
+    }
+</style>
 <body class="hold-transition sidebar-mini layout-navbar-fixed">
 <div class="wrapper">
 	<!--.navbar -->
@@ -66,25 +73,24 @@ $colors = array('#ff6347','#ff6347','#1e90ff','#3cb371','#808080','#6a5acd','#ee
     						if($c == 1){
     							echo '<div class="row">';
     						}
-    						
-    						echo '<div class="small-box col ml-3 mr-3" style="padding:30px;background-color: '.$colors[rand(7,0)].'">'.
-                					'<div class="inner">'.
-                						'<h3></h3>'.
-                						'<p>'.$link['link_name'].'</p>'.
-                					'</div>'.
-                					'<div class="icon">'.
-                						'<i class="fa fa-desktop" aria-hidden="true"></i>'.
-                					'</div></br>'.
-                					'<a href="'.$url.'" class="small-box-footer">'.
-                						'More info <i class="fas fa-arrow-circle-right"></i>'.
-                					'</a>'.
-                				'</div>';
-    						if($c%4 == 0){
-    							echo '</div>';
-    							if($c < count($links)){
-    								echo '<div class="row">';
-    							}
+    						$img_url = str_replace("{{baseurl}}",base_url(),$link["icon"]);
+    						if($img_url == ''){
+    						    $img_url = base_url('assets/images/').'WATERMARK.PNG';
     						}
+    						echo '<a href="'.$url.'">'.
+        						    '<div class="col-md-3 col-xs-6 col-lg-2 col-sm-3 mb-3">'.
+                					   '<div class="icon icon-box pl-3 pr-3 pt-3" style="border: solid black 0px;border-radius: 6px;">'.
+                					     '<img src="'.$img_url.'" width="100%" height="250" />'.
+                					     '<div class="text-center"><a href="'.$url.'" class="">'.$link['link_name'] .'<i class="ml-2 fas fa-arrow-circle-right"></i>'.'</a></div>'.
+                					   '</div>'.
+                				    '</div>'.
+    						      '</a>';
+//     						if($c%4 == 0){
+//     							echo '</div>';
+//     							if($c < count($links)){
+//     								echo '<div class="row">';
+//     							}
+//     						}
     						if($c == count($links)){
     							echo '</div>';
     						}

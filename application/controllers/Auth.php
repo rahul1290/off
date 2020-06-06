@@ -24,8 +24,8 @@ class Auth extends CI_Controller {
 	
 	function index(){
 		if($this->is_login()){
-			//redirect('dashboard');
-		    redirect('es/Attendance-Record','refresh');
+		    //redirect('es/Attendance-Record','refresh');
+		    redirect('dashboard','refresh');
 		} else {
 			redirect('Auth/login');
 		}

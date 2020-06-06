@@ -12,25 +12,28 @@ class Etl_ctrl extends CI_Controller {
         $db2 = $this->load->database('sqlsrv', TRUE);
         $db2->select("*");
         $results = $db2->get_where($this->config->item('NEWZ36').'PLManagement',array('EmpCode'=>$ecode))->result_array();
-        
-        $insert_data = array();
-        foreach($results as $result){
-            $temp = array();
-            $temp['type'] = 'PL';
-            $temp['refrence_no']= $result['Reference'];
-            $temp['ecode'] = $result['EmpCode'];
-            $temp['credit'] = $result['Credit'];
-            $temp['debit'] = $result['Debit'];
-            $temp['balance'] = $result['Balance'];
-            $temp['date'] = $result['Date'];
-            $temp['created_at'] = date('Y-m-d H:i:s');
-            $temp['created_by'] = $this->session->userdata('ecode');
-            $insert_data[] = $temp;
+        if(count($results)>0){ 
+            $insert_data = array();
+            foreach($results as $result){
+                $temp = array();
+                $temp['type'] = 'PL';
+                $temp['refrence_no']= $result['Reference'];
+                $temp['ecode'] = $result['EmpCode'];
+                $temp['credit'] = $result['Credit'];
+                $temp['debit'] = $result['Debit'];
+                $temp['balance'] = $result['Balance'];
+                $temp['date'] = $result['Date'];
+                $temp['created_at'] = date('Y-m-d H:i:s');
+                $temp['created_by'] = $this->session->userdata('ecode');
+                $insert_data[] = $temp;
+            }
+            if($this->db->insert_batch('pl_management',$insert_data))
+    			return true;
+    		else 
+    			return false;
+        } else {
+            return true;
         }
-        if($this->db->insert_batch('pl_management',$insert_data))
-			return true;
-		else 
-			return false;
     }
 	
 	
@@ -652,16 +655,43 @@ class Etl_ctrl extends CI_Controller {
 	}
 	
 	
+	function reporting_to($ecode){
+	    $this->db2 = $this->load->database('sqlsrv',TRUE);
+	    $results = $this->db2->query("select * from ".$this->config->item('NEWZ36')." LoginKRA where EmpCode = (SELECT Report1 FROM ".$this->config->item('NEWZ36')."LoginKRA where EmpCode = '".$ecode."') AND Code <> 'NA'")->result_array();
+	    
+	    if(count($results)>0){
+	        $this->db->select('id');
+	        $userdept = $this->db->get_where('department_master',array('dept_name'=>$results[0]['Dept'],'status'=>1))->result_array();
+	        
+	        
+	        $this->db->select('id');
+	        $userdesig = $this->db->get_where('designation_master',array('desg_name'=>$results[0]['Designation'],'status'=>1))->result_array();
+	        
+	        $this->db->where('ecode',$ecode);
+	        $this->db->update('users',array('report_to_dept'=>$userdept[0]['id'],'report_to_desg'=>$userdesig[0]['id']));
+	        
+	        $result = $this->db2->query("SELECT Report1 FROM ".$this->config->item('NEWZ36')."LoginKRA where EmpCode = '".$ecode."'")->result_array();
+	        $this->db->insert('user_rules',array('ecode'=>$result[0]['Report1'],'r_ecode'=>$ecode));
+	    }
+	    return true;
+	}
+	
+	
 	function import_records($ecode){
 			if($this->coff_requests($ecode)){
 				if($this->nhfh_day_duty($ecode)){
 					if($this->hf_requests($ecode)){
 						if($this->leave_requests($ecode)){
 							if($this->fetch_plrecord($ecode)){
-							    if($this->permission($ecode)){
-							     return true;
+							    if($this->reporting_to($ecode)){
+							        if($this->permission($ecode)){
+							            return true;
+							        } else {
+							            echo "permission -".$ecode;
+							            return false;
+							        }
 							    } else {
-							        echo "permission -".$ecode;
+							        echo "reporting to -".$ecode;
 							        return false;
 							    }
 							} else {
@@ -689,26 +719,36 @@ class Etl_ctrl extends CI_Controller {
 	
 	function permission($ecode){
 	    $this->db2 = $this->load->database('sqlsrv',TRUE);
-	    $results = $this->db2->query("SELECT * FROM ".$this->config->item('NEWZ36')."Permission where EmpCode = '".$ecode."'")->result_array();
-	    
-	    
-	    $dep_id = $this->my_library->get_employee_department($ecode);
-	    
-	    $this->db->insert('user_department',array(
-	        'ecode' => $ecode,
-	        'dep_id' => $dep_id,
-	        'created_at' => date('Y-m-d H:i:s'),
-	        'created_by' => $this->session->userdata('ecode')
-	    ));
-	    
-	    $this->db->insert('user_rules',array('ecode'=>$ecode,'r_ecode'=>$ecode));
-	    
+	    $results = $this->db2->query("SELECT p.*,u.Code FROM ".$this->config->item('NEWZ36')."Permission p join ".$this->config->item('NEWZ36')." LoginKRA u on u.EmpCode = p.EmpCode where p.EmpCode = '".$ecode."'")->result_array();
 	   
-	    if(count($results)>0){
-	        $this->db->where('ecode',$ecode);
-	        $this->db->delete('user_links');
+	    if(count($results)>0){     
+	        $dep_id = $this->my_library->get_employee_department($ecode);
 	        
+    	    $this->db->insert('user_department',array(
+    	        'ecode' => $ecode,
+    	        'dep_id' => $dep_id,
+    	        'created_at' => date('Y-m-d H:i:s'),
+    	        'created_by' => $this->session->userdata('ecode')
+    	    ));
+    	    
+    	    $this->db->insert('user_rules',array('ecode'=>$ecode,'r_ecode'=>$ecode));
+    	    
 	        $permission = array();
+	        if($results[0]['Code'] == 'H'){
+	            $temp = array('link_id'=>29,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>30,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>31,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>32,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>33,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	            $temp = array('link_id'=>34,'ecode'=>$ecode);
+	            array_push($permission, $temp);
+	        }
+	        
 	        if($results[0]['Leave']){
 	            $temp = array('link_id'=>1,'ecode'=>$ecode);
 	            array_push($permission, $temp);
@@ -729,8 +769,8 @@ class Etl_ctrl extends CI_Controller {
 	            $temp = array('link_id'=>9,'ecode'=>$ecode);
 	            array_push($permission, $temp);
 	            $temp = array('link_id'=>10,'ecode'=>$ecode);
-	            array_push($permission, $temp);
-	            $temp = array('link_id'=>11,'ecode'=>$ecode);
+// 	            array_push($permission, $temp);
+// 	            $temp = array('link_id'=>11,'ecode'=>$ecode);
 	            array_push($permission, $temp);
 	            $temp = array('link_id'=>44,'ecode'=>$ecode);
 	            array_push($permission, $temp);
@@ -764,8 +804,7 @@ class Etl_ctrl extends CI_Controller {
 	           
 	       }
 	       if($results[0]['HR']){
-	           $temp = array('link_id'=>44,'ecode'=>$ecode);
-	           array_push($permission, $temp);
+	           
 	       }
 	       if($results[0]['Monitoring']){
 	           $temp = array('link_id'=>45,'ecode'=>$ecode);
@@ -828,7 +867,15 @@ class Etl_ctrl extends CI_Controller {
 	           array_push($permission, $temp);
 	       }
 	       if($results[0]['HRAdmin']){
-	           $temp = array('link_id'=>60,'ecode'=>$ecode);
+	           $temp = array('link_id'=>11,'ecode'=>$ecode);       // HR management
+	           array_push($permission, $temp);
+	           $temp = array('link_id'=>12,'ecode'=>$ecode);       // ROSTER
+	           array_push($permission, $temp);
+	           $temp = array('link_id'=>14,'ecode'=>$ecode);       // EMPLOYEE INFORMATION
+	           array_push($permission, $temp);
+	           $temp = array('link_id'=>15,'ecode'=>$ecode);       // SALARY SLIP
+	           array_push($permission, $temp);
+	           $temp = array('link_id'=>16,'ecode'=>$ecode);       // HOLIDAY LIST
 	           array_push($permission, $temp);
 	       }
 	       if($results[0]['Stock']){
@@ -848,31 +895,7 @@ class Etl_ctrl extends CI_Controller {
 	           array_push($permission, $temp);
 	       }
 	       $this->db->insert_batch('user_links',$permission);
-	    }
-	    return true;
-	}
-	
-	
-	function reporting_to(){	    
-	    $result = $this->fetch_emp_detail();
-	    $insert_data = array();
-	    print_r($result); die;
-	    foreach($result as $r){
-	        $this->db2 = $this->load->database('sqlsrv',TRUE);
-    	    $results = $this->db2->query("SELECT * FROM ".$this->config->item('NEWZ36')."LoginKRA where EmpCode = '".$r['EmpCode']."'")->result_array();
-    	    
-    	    if(count($results)>0){
-    	        $this->db->select('*');
-    	        $result = $this->db->get_where('users',array('ecode'=>$results[0]['Report1']))->result_array();
-    	        if(count($result)>0){
-        	        $this->db->where('ecode',$r['EmpCode']);
-        	        $this->db->update('users',array('report_to_dept'=>$result[0]['department_id'],'report_to_desg'=>$result[0]['designation_id']));
-    	        } else {
-    	            print_r($this->db->last_query()); die;
-    	            echo "query fail";
-    	            die;
-    	        }
-    	    }
+	       return true;
 	    }
 	}
 	

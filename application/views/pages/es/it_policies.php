@@ -11,7 +11,7 @@
 			</div><!-- /.col -->
 			<div class="col-sm-6">
 				<ol class="breadcrumb float-sm-right">
-					<li class="breadcrumb-item"><a href="<?php echo base_url('dashboard');?>">Home</a></li>
+					<li class="breadcrumb-item"><a href="<?php echo base_url();?>">Home</a></li>
 					<li class="breadcrumb-item active">IT POLICIES</li>
 				</ol>
 			</div><!-- /.col -->
@@ -23,21 +23,21 @@
     <!-- Main content -->
     <div class="content bg">
       <div class="container-fluid">
-		<div class="col-12 offset-3">
+		<div class="col-12">
 				<?php if(count($policies)>0){
 					$c = 1;
 					foreach($policies as $policy){
 						if($c == 1){
 							echo '<div class="row">';
 						}
-						echo '<div class="info-box col-3 col-xs-12" style="margin-left: 5px;">'.
+						echo '<div class="info-box col" style="padding:50px; max-width: 450px;">'.
 								'<span class="info-box-icon bg-warning"><i class="far fa-file-pdf"></i></span>'.
 								'<div class="info-box-content">'.
 									'<span class="info-box-text">'.$policy['title'].'</span>'.
 									'<a target="_blank" href="'.base_url().'policies/'.$policy['file_name'].'"><i class="fas fa-download"></i></a>'.
 								'</div>'.
 							'</div>';
-						if($c%2 == 0){
+						if($c%3 == 0){
 							echo '</div>';
 							if($c < count($policies)){
 								echo '<div class="row">';

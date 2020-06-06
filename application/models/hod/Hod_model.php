@@ -27,6 +27,7 @@ class Hod_model extends CI_Model {
         if($ref_id != null){
             $this->db->where('ulr.refrence_id',$ref_id);
         }
+        $this->db->order_by('ulr.created_at','desc');
         $result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'LEAVE','ulr.hod_status'=>'PENDING','ulr.status'=>1))->result_array();
 		return $result;
     }
