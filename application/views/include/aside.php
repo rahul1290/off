@@ -4,13 +4,11 @@ if(isset($links)){
 foreach($links as $link){
 	array_push($display,$link['link_name']);
 }}
-
-//print_r($display); die;
 ?>
 
 <aside class="main-sidebar sidebar-dark-warning elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="<?php echo base_url();?>" class="brand-link">
       <img src="<?php echo base_url('assets');?>/dist/img/logoo.png" alt="AdminLTE Logo" class="brand-image /*img-circle*/ elevation-3"
            style="opacity: 1">
       <span class="brand-text font-weight-light">Ibc 24</span>
@@ -21,7 +19,7 @@ foreach($links as $link){
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="<?php echo $this->config->item('img_url').$this->session->userdata('image'); ?>" class="img-circle elevation-4" alt="User Image">
+          <img src="<?php echo base_url().$this->config->item('img_url').$this->session->userdata('image'); ?>" class="img-circle elevation-4" alt="User Image">
         </div>
         <div class="info">
           <a href="<?php echo base_url('dashboard'); ?>" class="d-block"><?php echo $this->session->userdata('username'); ?></a>

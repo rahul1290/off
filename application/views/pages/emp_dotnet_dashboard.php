@@ -6,6 +6,13 @@
     
 $colors = array('#ff6347','#ff6347','#1e90ff','#3cb371','#808080','#6a5acd','#ee82ee','#d3d3d3');
 ?>
+
+<style>
+    .icon-box:hover{
+        #box-shadow: 5px 5px 7px #fb8a8afb;
+        background-color: #fb8a8a3b;
+    }
+</style>
 <body class="hold-transition sidebar-mini layout-navbar-fixed">
 <div class="wrapper">
 	<!--.navbar -->
@@ -65,17 +72,20 @@ $colors = array('#ff6347','#ff6347','#1e90ff','#3cb371','#808080','#6a5acd','#ee
 					        
 					        
     						if($c == 1){
-    							echo '<div class="row text-center text-lg-left">';
+    							echo '<div class="row">';
     						}
-    						$img_url = 'https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg';
-    						echo '<a href="'.$url.'"><div class="small-box col-lg-3 col-sm-4 col-md-4 col-12">'.
-                					'<div class="icon">'.
+    						$img_url = str_replace("{{baseurl}}",base_url(),$link["icon"]);
+    						if($img_url == ''){
+    						    $img_url = base_url('assets/images/').'WATERMARK.PNG';
+    						}
+    						echo '<a href="'.$url.'">'.
+        						    '<div class="col-md-3 col-xs-6 col-lg-2 col-sm-3 mb-3">'.
+                					   '<div class="icon icon-box pl-3 pr-3 pt-3" style="border: solid black 0px;border-radius: 6px;">'.
                 					     '<img src="'.$img_url.'" width="100%" height="250" />'.
-                					'</div><br/>'.
-                					'<a href="'.$url.'" class="small-box-footer">'.
-                					$link['link_name'] .'<i class="ml-2 fas fa-arrow-circle-right"></i>'.
-                					'</a>'.
-                				'</div></a>';
+                					     '<div class="text-center"><a href="'.$url.'" class="">'.$link['link_name'] .'<i class="ml-2 fas fa-arrow-circle-right"></i>'.'</a></div>'.
+                					   '</div>'.
+                				    '</div>'.
+    						      '</a>';
 //     						if($c%4 == 0){
 //     							echo '</div>';
 //     							if($c < count($links)){

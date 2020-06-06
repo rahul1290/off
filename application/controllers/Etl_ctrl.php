@@ -657,28 +657,23 @@ class Etl_ctrl extends CI_Controller {
 	
 	function reporting_to($ecode){
 	    $this->db2 = $this->load->database('sqlsrv',TRUE);
-	    $results = $this->db2->query("SELECT * FROM ".$this->config->item('NEWZ36')."LoginKRA where EmpCode = '".$ecode."'")->result_array();
+	    $results = $this->db2->query("select * from ".$this->config->item('NEWZ36')." LoginKRA where EmpCode = (SELECT Report1 FROM ".$this->config->item('NEWZ36')."LoginKRA where EmpCode = '".$ecode."') AND Code <> 'NA'")->result_array();
 	    
 	    if(count($results)>0){
-	        $this->db->select('*');
-	        $result = $this->db->get_where('users',array('ecode'=>$results[0]['Report1']))->result_array();
-	        if($ecode == 'SBMMPL-00090'){
-	           print_r($result);    
-	        }
+	        $this->db->select('id');
+	        $userdept = $this->db->get_where('department_master',array('dept_name'=>$results[0]['Dept'],'status'=>1))->result_array();
 	        
-	        if(count($result)>0){
-	            $this->db->select('*');
-	            $result = $this->db->get_where('users',array('report_to_dept'=>$result[0]['department_id'],'report_to_desg'=>$result[0]['designation_id']))->result_array();
-	            if($ecode == 'SBMMPL-00090'){
-	               print_r($this->db->last_query()); die;
-	            }
-	           
-	        } else {
-	            return true;
-	        }
-	        return true;
+	        
+	        $this->db->select('id');
+	        $userdesig = $this->db->get_where('designation_master',array('desg_name'=>$results[0]['Designation'],'status'=>1))->result_array();
+	        
+	        $this->db->where('ecode',$ecode);
+	        $this->db->update('users',array('report_to_dept'=>$userdept[0]['id'],'report_to_desg'=>$userdesig[0]['id']));
+	        
+	        $result = $this->db2->query("SELECT Report1 FROM ".$this->config->item('NEWZ36')."LoginKRA where EmpCode = '".$ecode."'")->result_array();
+	        $this->db->insert('user_rules',array('ecode'=>$result[0]['Report1'],'r_ecode'=>$ecode));
 	    }
-	    return false;
+	    return true;
 	}
 	
 	
@@ -724,11 +719,9 @@ class Etl_ctrl extends CI_Controller {
 	
 	function permission($ecode){
 	    $this->db2 = $this->load->database('sqlsrv',TRUE);
-	    $results = $this->db2->query("SELECT * FROM ".$this->config->item('NEWZ36')."Permission where EmpCode = '".$ecode."'")->result_array();
-	    
+	    $results = $this->db2->query("SELECT p.*,u.Code FROM ".$this->config->item('NEWZ36')."Permission p join ".$this->config->item('NEWZ36')." LoginKRA u on u.EmpCode = p.EmpCode where p.EmpCode = '".$ecode."'")->result_array();
 	   
-	    if(count($results)>0){
-	        
+	    if(count($results)>0){     
 	        $dep_id = $this->my_library->get_employee_department($ecode);
 	        
     	    $this->db->insert('user_department',array(
@@ -737,34 +730,11 @@ class Etl_ctrl extends CI_Controller {
     	        'created_at' => date('Y-m-d H:i:s'),
     	        'created_by' => $this->session->userdata('ecode')
     	    ));
-            $this->db->insert('user_rules',array('ecode'=>$ecode,'r_ecode'=>$ecode));
-	        
-	        $this->db->select('*');
-	        $this->db->limit(1);
-	        $employee_detail = $this->db->get_where('users',array('ecode'=>$ecode,'is_active'=>'YES'))->result_array();
-	        
-	        $this->db->select('ecode');
-	        $user_rules = $this->db->get_where('users',array('report_to_dept' => $employee_detail[0]['department_id'],'report_to_desg' => $employee_detail[0]['designation_id'],'is_active' => 'YES'))->result_array();
-// 	        print_r($this->db->last_query()); die;
-// 	        print_r($user_rules); die;
-	        if(count($user_rules) > 0){ 
-    	        $under_me = array();
-    	        foreach($user_rules as $user_rule){
-    	            $temp = array();
-    	            $temp['ecode'] = $ecode;
-    	            $temp['r_ecode'] = $user_rule['ecode'];
-    	            $under_me[] = $temp;
-    	        }
-    	        
-    	        $this->db->insert_batch('user_rules',$under_me);
-	        }
-	        
-	        $this->db->where('ecode',$ecode);
-	        $this->db->delete('user_links');
-	        
-	        
+    	    
+    	    $this->db->insert('user_rules',array('ecode'=>$ecode,'r_ecode'=>$ecode));
+    	    
 	        $permission = array();
-	        if($employee_detail[0]['code_id'] == 'H'){
+	        if($results[0]['Code'] == 'H'){
 	            $temp = array('link_id'=>29,'ecode'=>$ecode);
 	            array_push($permission, $temp);
 	            $temp = array('link_id'=>30,'ecode'=>$ecode);
@@ -799,8 +769,8 @@ class Etl_ctrl extends CI_Controller {
 	            $temp = array('link_id'=>9,'ecode'=>$ecode);
 	            array_push($permission, $temp);
 	            $temp = array('link_id'=>10,'ecode'=>$ecode);
-	            array_push($permission, $temp);
-	            $temp = array('link_id'=>11,'ecode'=>$ecode);
+// 	            array_push($permission, $temp);
+// 	            $temp = array('link_id'=>11,'ecode'=>$ecode);
 	            array_push($permission, $temp);
 	            $temp = array('link_id'=>44,'ecode'=>$ecode);
 	            array_push($permission, $temp);

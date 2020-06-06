@@ -569,6 +569,9 @@ class Emp_ctrl extends CI_Controller {
 	}
 	
 	function nh_fh_avail_form(){
+	    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+	        print_r($this->input->post()); die;
+	    }
 		$data = array();
 		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		$data['footer'] = $this->load->view('include/footer','',true);
@@ -579,9 +582,9 @@ class Emp_ctrl extends CI_Controller {
 		
 		//$data['open'] = 'true';
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
-		$data['body'] = $this->load->view('pages/es/nh_fh_day_duty_form',$data,true);
+		$data['body'] = $this->load->view('pages/es/nh_fh_avail_form',$data,true);
 		//===============common===============//
-		$data['title'] = 'Home | NH FH DAY DUTY FORM';
+		$data['title'] = $this->config->item('project_title').'| NH FH DAY DUTY FORM';
 		$data['head'] = $this->load->view('common/head',$data,true);
 		$data['footer'] = $this->load->view('common/footer',$data,true);
 		$this->load->view('layout_master',$data);
