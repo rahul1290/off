@@ -25,7 +25,7 @@
 		   <?php echo $this->session->flashdata('msg'); ?>
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
-                <h3 class="card-title">NH/FH DAY DUTY FORM</h3>
+                <h3 class="card-title">NH/FH AVAIL FORM</h3>
               </div>
               <div class="card-body">
 					<table class="table table-bordered">
@@ -46,6 +46,7 @@
 									<?php }
 									}?>
 								</select>
+								<div class="text-danger" style="display: none;" id="nhfh_date_error"></div>
 								<?php echo form_error('nhfh_date'); ?>
 							</td>
 						</tr>
@@ -67,11 +68,11 @@
 		  </form>
 		  <hr/>
 		  
-		  <?php if(count($nh_fh_requests)>0){ ?>
+		  <?php if(count($nh_fh_avail_requests)>0){ ?>
 			  <div class="col-md-12">
 				<div class="card card-info">
 				  <div class="card-header" style="border-radius:0px;">
-					<h3 class="card-title">NH/FH DAY DUTY REQUEST'S LIST</h3>
+					<h3 class="card-title">NH/FH AVAIL REQUEST'S LIST</h3>
 				  </div>
 				  <div class="card-body">
 					<div class="table-responsive">
@@ -88,10 +89,10 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php $c=1; foreach($nh_fh_requests as $request){ ?>
+								<?php $c=1; foreach($nh_fh_avail_requests as $request){ ?>
 									<tr class="text-center">
     									<td><?php echo $c++; ?></td>
-    									<td><?php echo $request['refrence_id']; ?></td>
+    									<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
     									<td><?php echo $request['created_at']; ?></td>
     									<td><?php echo $request['date']; ?></td>
     									<td><?php echo strlen($request['requirment']) > 50 ? substr($request['requirment'],0,50)."...<a href='#'>read more</a>" : $request['requirment']; ?></td>
@@ -142,10 +143,32 @@ var baseUrl = $('#baseUrl').val();
 
 $(document).ready(function(){
 	$('#example').DataTable();
-
+	form_validation();
+	
+	function form_validation(){
+		$('#nhfh_date').trigger('change');
+	}
+	
 	$(document).on('change','#nhfh_date',function(){
 		if($(this).val() != '0'){
-			$('#submit').prop('disabled', false);
+			$.ajax({
+				type: 'POST',
+				url: baseUrl+'Emp_ctrl/nh_fh_avail_ajax/',
+				data: {
+					'nhfh_date' : $(this).val() 
+				},
+				dataType: 'json',
+				beforeSend: function() {},
+				success: function(response){
+					if(response.status == 200){
+						$('#submit').prop('disabled', false);
+						$('#nhfh_date_error').html('').hide();		
+					} else {
+						$('#submit').prop('disabled', true);
+						$('#nhfh_date_error').html(response.msg).show();
+					}
+				}
+			});
 		} else {
 			$('#submit').prop('disabled', true);
 		}

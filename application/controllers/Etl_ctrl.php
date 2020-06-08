@@ -89,6 +89,13 @@ class Etl_ctrl extends CI_Controller {
 		    }
 		}
 		
+		$result = $this->fetch_emp_detail();
+		foreach($result as $r){
+		    if($this->under_me($r['EmpCode'])){
+		        continue;
+		    }
+		}
+		
 		if ($this->db->trans_status() === FALSE){
 		    $this->db->trans_rollback();
 		    echo "something wrong";
@@ -96,6 +103,27 @@ class Etl_ctrl extends CI_Controller {
 		    $this->db->trans_commit();
 		    echo "record submitted";
 		}
+	}
+	
+	
+	function underme(){
+	    $this->db->trans_begin();
+	    
+	    $result = $this->fetch_emp_detail();
+	    foreach($result as $r){
+	        if($this->under_me($r['EmpCode'])){
+	            continue;
+	        }
+	    }
+	    
+	    if ($this->db->trans_status() === FALSE){
+	        $this->db->trans_rollback();
+	        echo "something wrong";
+	    } else {
+	        $this->db->trans_commit();
+	        echo "record submitted";
+	    }
+	    
 	}
 	
 	function fetch_emp_detail(){
@@ -128,6 +156,7 @@ class Etl_ctrl extends CI_Controller {
 										  when (Dept = 'OUTPUT') then '24'
 										  when (Dept = 'SOCIAL MEDIA') then '25'
 										  when (Dept = 'TECHNICAL') then '26'
+                                          when (Dept = 'OTT') then '27'
 									END) as department,
 									Designation,
 									(case when (Designation = 'DEVELOPER') then '1'
@@ -334,7 +363,8 @@ class Etl_ctrl extends CI_Controller {
                                     AlternateContact as alternet_no,
                                     NoOfKids as children,
                                     SpouseName as spouse_name
-									FROM [NEWZ36].[dbo].[LoginKRA] where Code <> 'NA' AND EmpCode like 'SB%' ")->result_array();
+									FROM ".$this->config->item('NEWZ36')."LoginKRA where Code <> 'NA' AND EmpCode like 'SB%' ")->result_array();
+
 		return $result;
 	}
 	
@@ -423,9 +453,9 @@ class Etl_ctrl extends CI_Controller {
 	}
 	
 	function coff_requests($ecode){
-		$this->db2 = $this->load->database('sqlsrv',TRUE);	
-		$results = $this->db2->query("SELECT * FROM [NEWZ36].[dbo].[OffTbl] where EmpCode = '".$ecode."'")->result_array();
-		
+		$this->db2 = $this->load->database('sqlsrv',TRUE);
+		    
+		$results = $this->db2->query("SELECT * FROM ".$this->config->item('NEWZ36')."OffTbl where EmpCode = '".$ecode."'")->result_array();
 		if(count($results)>0){
     		$insert_record = array();
     		foreach($results as $result){
@@ -459,7 +489,7 @@ class Etl_ctrl extends CI_Controller {
 	
 	function leave_requests($ecode){
 		$this->db2 = $this->load->database('sqlsrv',TRUE);
-		$results = $this->db2->query("SELECT * FROM [NEWZ36].[dbo].[ITDLeaveRequest] where Emp_Code = '".$ecode."' order by App_Date desc")->result_array();
+		$results = $this->db2->query("SELECT * FROM ".$this->config->item('NEWZ36')."ITDLeaveRequest where Emp_Code = '".$ecode."' order by App_Date desc")->result_array();
 		
 		if(count($results)>0){
     		$insert_record = array();
@@ -538,7 +568,7 @@ class Etl_ctrl extends CI_Controller {
 	
 	function hf_requests($ecode){
 	$this->db2 = $this->load->database('sqlsrv',TRUE);
-	$results = $this->db2->query("SELECT * FROM [NEWZ36].[dbo].[HalfDayLeave] where EmpCode = '".$ecode."'")->result_array();
+	$results = $this->db2->query("SELECT * FROM ".$this->config->item('NEWZ36')."HalfDayLeave where EmpCode = '".$ecode."'")->result_array();
     	if(count($results)>0){ 
         	$insert_record = array();
     		foreach($results as $result){
@@ -575,7 +605,7 @@ class Etl_ctrl extends CI_Controller {
 	
 	function nhfh_day_duty($ecode){
 		$this->db2 = $this->load->database('sqlsrv',TRUE);
-		$results = $this->db2->query("SELECT * FROM [NEWZ36].[dbo].[NHFHDetail] where EmpCode = '".$ecode."'")->result_array();
+		$results = $this->db2->query("SELECT * FROM ".$this->config->item('NEWZ36')."NHFHDetail where EmpCode = '".$ecode."'")->result_array();
 		
 		if(count($results)>0){ 
     		$insert_record = array();
@@ -609,6 +639,36 @@ class Etl_ctrl extends CI_Controller {
 		} else {
 		    return true;
 		}
+	}
+	
+	
+	function nhfhavail($ecode){
+	    $this->db2 = $this->load->database('sqlsrv',TRUE);
+	    $results = $this->db2->query("SELECT * FROM ".$this->config->item('NEWZ36')."NHFHAvail where EmpCode = '".$ecode."'")->result_array();
+	    if(count($results)>0){
+	        $insert_data = array();
+	        foreach($results as $result){
+	            $temp = array();
+	            $temp['request_type'] = 'NH_FH_AVAIL';
+	            $temp['refrence_id'] = $result['ID'];
+	            $temp['ecode'] = $result['EmpCode'];
+	            $temp['requirment'] = $result['Requirement'];
+	            $temp['date_from'] = $this->my_library->mydate(substr($result['workoffday'], 0,10));
+	            $temp['date_to'] = $this->my_library->mydate(substr($result['workoffday'], 0,10));
+	            $temp['hod_remark'] = $result['HODRemarks'];
+	            
+	            if($result['HODApp'] == 'GRANTED'){
+	                $temp['hod_status'] = 'GRANTED';
+	            } else {
+	                $temp['hod_status'] = 'PENDING';
+	            }
+	            $temp['created_at'] = $result['AppDate'];
+	            $insert_data[] = $temp;
+	        }
+	        $this->db->insert_batch('users_leave_requests',$insert_data);
+	        return true;
+	    }
+	    return true;
 	}
 	
 	
@@ -662,7 +722,7 @@ class Etl_ctrl extends CI_Controller {
 	    if(count($results)>0){
 	        $this->db->select('id');
 	        $userdept = $this->db->get_where('department_master',array('dept_name'=>$results[0]['Dept'],'status'=>1))->result_array();
-	        
+	                
 	        
 	        $this->db->select('id');
 	        $userdesig = $this->db->get_where('designation_master',array('desg_name'=>$results[0]['Designation'],'status'=>1))->result_array();
@@ -671,9 +731,41 @@ class Etl_ctrl extends CI_Controller {
 	        $this->db->update('users',array('report_to_dept'=>$userdept[0]['id'],'report_to_desg'=>$userdesig[0]['id']));
 	        
 	        $result = $this->db2->query("SELECT Report1 FROM ".$this->config->item('NEWZ36')."LoginKRA where EmpCode = '".$ecode."'")->result_array();
+	        
 	        $this->db->insert('user_rules',array('ecode'=>$result[0]['Report1'],'r_ecode'=>$ecode));
 	    }
 	    return true;
+	}
+	
+	function under_me($ecode){
+	    $this->db2 = $this->load->database('sqlsrv',TRUE);
+	    $results = $this->db2->query("select * from ".$this->config->item('NEWZ36')." LoginKRA where EmpCode = (SELECT Report1 FROM ".$this->config->item('NEWZ36')."LoginKRA where EmpCode = '".$ecode."') AND Code <> 'NA'")->result_array();
+	    
+	    if(count($results)>0){
+	        $results = $this->db2->query("SELECT EmpCode FROM [NEWZ36].[dbo].[LoginKRA] where Report1 = '".$ecode."' AND Code <> 'NA'")->result_array();
+	        
+	        if(count($results)>0){
+	            $insert_data = array();
+	            foreach ($results as $result){
+	                if($result['EmpCode'] == 'assign'){
+	                    continue;
+	                } else {
+    	                $temp = array();
+    	                $temp['ecode'] = $ecode;
+    	                $temp['r_ecode'] = $result['EmpCode'];
+    	                $insert_data[] = $temp;
+	                }
+	            }
+	            $this->db->insert_batch('user_rules',$insert_data);
+	            $this->db->insert('user_rules',array('ecode'=>$ecode,'r_ecode'=>$ecode));
+	            return true;
+	        } else {
+	            $this->db->insert('user_rules',array('ecode'=>$ecode,'r_ecode'=>$ecode));
+	            return true;
+	        }
+	    } else {
+	        return true;
+	    }
 	}
 	
 	
@@ -683,13 +775,17 @@ class Etl_ctrl extends CI_Controller {
 					if($this->hf_requests($ecode)){
 						if($this->leave_requests($ecode)){
 							if($this->fetch_plrecord($ecode)){
-							    if($this->reporting_to($ecode)){
-							        if($this->permission($ecode)){
-							            return true;
-							        } else {
-							            echo "permission -".$ecode;
-							            return false;
-							        }
+							     if($this->permission($ecode)){
+							         //if($this->under_me($ecode)){
+							            if($this->nhfhavail($ecode)){
+							                return true;
+							            }else{
+							                echo "nhfhavail -".$ecode;
+							            }
+							        //} else {
+							          //  echo "permission -".$ecode;
+							          //  return false;
+							       // }
 							    } else {
 							        echo "reporting to -".$ecode;
 							        return false;
@@ -720,18 +816,87 @@ class Etl_ctrl extends CI_Controller {
 	function permission($ecode){
 	    $this->db2 = $this->load->database('sqlsrv',TRUE);
 	    $results = $this->db2->query("SELECT p.*,u.Code FROM ".$this->config->item('NEWZ36')."Permission p join ".$this->config->item('NEWZ36')." LoginKRA u on u.EmpCode = p.EmpCode where p.EmpCode = '".$ecode."'")->result_array();
-	   
-	    if(count($results)>0){     
-	        $dep_id = $this->my_library->get_employee_department($ecode);
+	    
+	    
+	    if(count($results)>0){
+	        $departs = $this->db2->query("SELECT distinct(Dept) as Dept FROM ".$this->config->item('NEWZ36')."LoginKRA where Report1 = '".$ecode."'")->result_array();
 	        
-    	    $this->db->insert('user_department',array(
-    	        'ecode' => $ecode,
-    	        'dep_id' => $dep_id,
-    	        'created_at' => date('Y-m-d H:i:s'),
-    	        'created_by' => $this->session->userdata('ecode')
-    	    ));
-    	    
-    	    $this->db->insert('user_rules',array('ecode'=>$ecode,'r_ecode'=>$ecode));
+	        if(count($departs)>0){ 
+    	        $inser_data = array();
+    	        foreach($departs as $dept){
+    	            $temp = array();
+    	            $temp['ecode'] = $ecode;
+    	           
+    	            if(trim($dept['Dept']) == ''){
+    	                continue;
+    	            }
+    	            if(trim($dept['Dept']) == 'ADMIN'){
+    	                $temp['dep_id'] = '1';
+    	            } else if(trim($dept['Dept']) == 'BMS'){
+    	                $temp['dep_id'] = '2';
+    	            } else if(trim($dept['Dept']) == 'CHAIRMAN'){
+    	                $temp['dep_id'] = '5';
+    	            } else if(trim($dept['Dept']) == 'CITY SALES'){
+    	                $temp['dep_id'] = '6';
+    	            } else if(trim($dept['Dept']) == 'COO'){
+    	                $temp['dep_id'] = '7';
+    	            } else if(trim($dept['Dept']) == 'COPY'){
+    	                $temp['dep_id'] = '8';
+    	            } else if(trim($dept['Dept']) == 'CORPORATE SALES'){
+    	                $temp['dep_id'] = '9';
+    	            } else if(trim($dept['Dept']) == 'DISTRIBUTION'){
+    	                $temp['dep_id'] = '10';
+    	            } else if(trim($dept['Dept']) == 'EDITORIAL'){
+    	                $temp['dep_id'] = '11';
+    	            } else if(trim($dept['Dept']) == 'EMERGING MARKETING'){
+    	                $temp['dep_id'] = '12';
+    	            } else if(trim($dept['Dept']) == 'FINANCE'){
+    	                $temp['dep_id'] = '13';
+    	            } else if(trim($dept['Dept']) == 'GOVT. SALES'){
+    	                $temp['dep_id'] = '14';
+    	            } else if(trim($dept['Dept']) == 'GRAPHICS/ PROMO'){
+    	                $temp['dep_id'] = '15';
+    	            } else if(trim($dept['Dept']) == 'HUMAN RESOURCE'){
+    	                $temp['dep_id'] = '16';
+    	            } else if(trim($dept['Dept']) == 'INFORMATION TECHNOLOGY'){
+    	                $temp['dep_id'] = '17';
+    	            } else if(trim($dept['Dept']) == 'INPUT'){
+    	                $temp['dep_id'] = '18';
+    	            } else if(trim($dept['Dept']) == 'MARKETING'){
+    	                $temp['dep_id'] = '19';
+    	            } else if(trim($dept['Dept']) == 'MD'){
+    	                $temp['dep_id'] = '20';
+    	            } else if(trim($dept['Dept']) == 'MEDIA MONITORING'){
+    	                $temp['dep_id'] = '21';
+    	            } else if(trim($dept['Dept']) == 'MP SALES'){
+    	                $temp['dep_id'] = '22';
+    	            } else if(trim($dept['Dept']) == 'OTHERS'){
+    	                $temp['dep_id'] = '23';
+    	            } else if(trim($dept['Dept']) == 'OUTPUT'){
+    	                $temp['dep_id'] = '24';
+    	            } else if(trim($dept['Dept']) == 'SOCIAL MEDIA'){
+    	                $temp['dep_id'] = '25';
+    	            } else if(trim($dept['Dept']) == 'TECHNICAL'){
+    	                $temp['dep_id'] = '26';
+    	            }
+    	            else if(trim($dept['Dept']) == 'OTT'){
+    	                $temp['dep_id'] = '27';
+    	            }
+    	            $temp['created_at'] = date('Y-m-d H:i:s');
+    	            $inser_data[] = $temp;
+    	        }
+    	        $this->db->insert_batch('user_department',$inser_data);
+    	        
+	        } else {
+	            $this->db->insert('user_department',array(
+	                'ecode' => $ecode,
+	                'dep_id' => $this->my_library->get_employee_department($ecode),
+	                'status' => 1,
+	                'created_at' => date('Y-m-d H:i:s')
+	            ));
+	        }
+	        
+    	    //$this->db->insert('user_rules',array('ecode'=>$ecode,'r_ecode'=>$ecode));
     	    
 	        $permission = array();
 	        if($results[0]['Code'] == 'H'){

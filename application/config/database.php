@@ -8,8 +8,12 @@ $query_builder = TRUE;
 $db['sqlsrv'] = array(
 	'dsn'	=> '',
 	'hostname' => '192.168.25.2,4050',
-	'username' => 'ibcportal',
-	'password' => 'portal@ibc24',
+    'username' => 'ibcportal',
+    'password' => 'portal@ibc24',
+    
+//     'hostname' => '192.168.25.13',
+//     'username' => 'sa',
+//     'password' => 'ibc24@123',
 	'database' => 'NEWZ36',
 	'dbdriver' => 'sqlsrv',
 	'dbprefix' => '',

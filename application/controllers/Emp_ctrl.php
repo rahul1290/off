@@ -570,7 +570,38 @@ class Emp_ctrl extends CI_Controller {
 	
 	function nh_fh_avail_form(){
 	    if($_SERVER['REQUEST_METHOD'] === 'POST'){
-	        print_r($this->input->post()); die;
+	        $this->form_validation->set_rules('nhfh_date', 'NH/FH Date', 'required');
+	        $this->form_validation->set_rules('requirment', 'Requirment', 'required|trim');
+	        
+	        $this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
+	        if ($this->form_validation->run() == FALSE){
+	            $data = array();
+	            $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+	            $data['footer'] = $this->load->view('include/footer','',true);
+	            $data['top_nav'] = $this->load->view('include/top_nav','',true);
+	            $data['aside'] = $this->load->view('include/aside',$data,true);
+	            $data['nhfh_days'] = $this->Nh_fh_model->get_nhfh();
+	            $data['nh_fh_requests'] = $this->Nh_fh_model->user_nhfh_requests($this->session->userdata('ecode'));
+	            
+	            $data['notepad'] = $this->load->view('include/shift_timing','',true);
+	            $data['body'] = $this->load->view('pages/es/nh_fh_avail_form',$data,true);
+	            //===============common===============//
+	            $data['title'] = $this->config->item('project_title').'| NH FH DAY DUTY FORM';
+	            $data['head'] = $this->load->view('common/head',$data,true);
+	            $data['footer'] = $this->load->view('common/footer',$data,true);
+	            $this->load->view('layout_master',$data);
+	        } else {
+	            $data['nhfh_date'] = $this->input->post('nhfh_date');
+	            $data['requirment'] = $this->input->post('requirment');
+	            if($this->Nh_fh_model->nh_fh_avail($data)){
+	                $this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your NH/FH AVAIL Request submitted successfully.</h3>');
+	                redirect(base_url('es/NH-FH-Avail-Form'),'refresh');
+	            } else {
+	                $this->session->set_flashdata('msg', '<h3 class="bg-warning p-2 text-center">Your NH/FH AVAIL Request not submitted.</h3>');
+	                redirect(base_url('es/NH-FH-Avail-Form'),'refresh');
+	            }
+	            
+	        }
 	    }
 		$data = array();
 		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
@@ -578,9 +609,8 @@ class Emp_ctrl extends CI_Controller {
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
 		$data['aside'] = $this->load->view('include/aside',$data,true);
 		$data['nhfh_days'] = $this->Nh_fh_model->get_nhfh();
-		$data['nh_fh_requests'] = $this->Nh_fh_model->user_nhfh_requests($this->session->userdata('ecode'));
+		$data['nh_fh_avail_requests'] = $this->Nh_fh_model->user_nhfh_avail_requests($this->session->userdata('ecode'));
 		
-		//$data['open'] = 'true';
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
 		$data['body'] = $this->load->view('pages/es/nh_fh_avail_form',$data,true);
 		//===============common===============//
@@ -588,6 +618,20 @@ class Emp_ctrl extends CI_Controller {
 		$data['head'] = $this->load->view('common/head',$data,true);
 		$data['footer'] = $this->load->view('common/footer',$data,true);
 		$this->load->view('layout_master',$data);
+	}
+	
+	
+	function nh_fh_avail_ajax(){
+	    $data['nhfh_date'] = $this->input->post('nhfh_date');
+	    $data['ecode'] = $this->session->userdata('ecode');
+	    $result = $this->Nh_fh_model->nh_fh_avail_ajax($data);
+	    if($result == '401'){
+	        echo json_encode(array('msg'=>'Nh Fh date not found.','status'=>'500'));
+	    } else if($result == '501'){
+	        echo json_encode(array('msg'=>'Already applied for this.','status'=>'500'));
+	    } else {
+	        echo json_encode(array('msg'=>'ok','status'=>'200'));
+	    }
 	}
 	
 	function pl_summary_report(){
