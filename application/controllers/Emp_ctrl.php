@@ -614,7 +614,7 @@ class Emp_ctrl extends CI_Controller {
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
 		$data['body'] = $this->load->view('pages/es/nh_fh_avail_form',$data,true);
 		//===============common===============//
-		$data['title'] = $this->config->item('project_title').'| NH FH DAY DUTY FORM';
+		$data['title'] = $this->config->item('project_title').'| NH FH AVAIL FORM';
 		$data['head'] = $this->load->view('common/head',$data,true);
 		$data['footer'] = $this->load->view('common/footer',$data,true);
 		$this->load->view('layout_master',$data);
@@ -625,6 +625,7 @@ class Emp_ctrl extends CI_Controller {
 	    $data['nhfh_date'] = $this->input->post('nhfh_date');
 	    $data['ecode'] = $this->session->userdata('ecode');
 	    $result = $this->Nh_fh_model->nh_fh_avail_ajax($data);
+	    
 	    if($result == '401'){
 	        echo json_encode(array('msg'=>'Nh Fh date not found.','status'=>'500'));
 	    } else if($result == '501'){

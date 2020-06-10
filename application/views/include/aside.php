@@ -377,7 +377,7 @@ foreach($links as $link){
 			
             <ul class="nav nav-treeview">
               <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('LEAVE REQUESTS',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('hod/leave-request');?>" class="nav-link
+                <a href="<?php echo base_url('hod/leave-request');?>" class="nav-link ml-3
 					<?php if($this->uri->segment('2') == 'leave-request'){ echo "active"; } ?>
 				">
 				  <i class="far fa-file-pdf"></i>
@@ -386,7 +386,7 @@ foreach($links as $link){
               </li>
 			  
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('HALF DAY LEAVE REQUESTS',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('hod/hf-leave-request');?>" class="nav-link
+                <a href="<?php echo base_url('hod/hf-leave-request');?>" class="nav-link ml-3
 					<?php if($this->uri->segment('2') == 'hf-leave-request'){ echo "active"; } ?>
 				">
 				  <i class="far fa-file-pdf"></i>
@@ -395,7 +395,7 @@ foreach($links as $link){
               </li>
 			  
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('OFF DAY DUTY REQUESTS',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('hod/off-day-duty-request');?>" class="nav-link
+                <a href="<?php echo base_url('hod/off-day-duty-request');?>" class="nav-link ml-3
 					<?php if($this->uri->segment('2') == 'off-day-duty-request'){ echo "active"; } ?>
 				">
 				  <i class="far fa-file-pdf"></i>
@@ -404,16 +404,34 @@ foreach($links as $link){
               </li>
 			  
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('NH/FH DAY DUTY REQUESTS',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('hod/nh-fh-day-duty-request');?>" class="nav-link
+                <a href="<?php echo base_url('hod/nh-fh-day-duty-request');?>" class="nav-link ml-3
 					<?php if($this->uri->segment('2') == 'nh-fh-day-duty-request'){ echo "active"; } ?>
 				">
 				  <i class="far fa-file-pdf"></i>
                   <p>&nbsp;NH/FH DAY DUTY REQUESTS</p>
                 </a>
               </li>
+              
+              <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('NH/FH DAY DUTY REQUESTS',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+                <a href="<?php echo base_url('hod/nh-fh-avail-request');?>" class="nav-link ml-3
+					<?php if($this->uri->segment('2') == 'nh-fh-avail-request'){ echo "active"; } ?>
+				">
+				  <i class="far fa-file-pdf"></i>
+                  <p>&nbsp;NH/FH AVAIL REQUESTS</p>
+                </a>
+              </li>
+              
+              <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('NH/FH DAY DUTY REQUESTS',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+                <a href="<?php echo base_url('hod/pl-record');?>" class="nav-link ml-3
+					<?php if($this->uri->segment('2') == 'pl-record'){ echo "active"; } ?>
+				">
+				  <i class="far fa-file-pdf"></i>
+                  <p>&nbsp;PL REQUESTS</p>
+                </a>
+              </li>
 			  
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('TOUR REQUESTS',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('master/employee');?>" class="nav-link
+                <a href="<?php echo base_url('master/employee');?>" class="nav-link ml-3
 					<?php if($this->uri->segment('2') == 'employee'){ echo "active"; } ?>
 				">
 				  <i class="fas fa-biking"></i>

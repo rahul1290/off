@@ -121,7 +121,7 @@ class Nh_fh_model extends CI_Model {
 	        if(count($result)>0){
 	            return '501';  //already applied 
 	        } else {
-	            return true;
+	            return '200';
 	        }
 	    } else {
 	       return '401'; //nhfh date not found   

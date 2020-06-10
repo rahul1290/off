@@ -94,6 +94,18 @@ class Hod_ctrl extends CI_Controller {
 		}
 	}
 	
+	
+	function nh_fh_avail_request_update(){
+	    $data['req_id'] = $this->input->post('req_id');
+	    $data['key'] = $this->input->post('key');
+	    $data['value'] = $this->input->post('value');
+	    $data['created_at'] = date('Y-m-d H:i:s');
+	    $data['hod_id'] = $this->session->userdata('ecode');
+	    if($this->Hod_model->nh_fh_avail_request_update($data)){
+	        echo json_encode(array('status'=>200));
+	    }
+	}
+	
 	///OFF DAY DUTY REQUEST
 	function off_day_duty_request($ref_id = null){		
 		$data = array();
@@ -149,9 +161,59 @@ class Hod_ctrl extends CI_Controller {
 	}
 	
 	
+	///NH FH AVAIL REQUEST
+	function nh_fh_avail_request($ref_id = null){
+	    $data = array();
+	    $data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
+	    
+	    $users = $this->Emp_model->get_employee($this->session->userdata('ecode'));
+	    $ulist = '';
+	    foreach($users as $user) {
+	        $ulist = $ulist.",'".$user['ecode']."'";
+	    }
+	    $ulist = ltrim($ulist,',');
+	    
+	    $data['links'] = $this->my_library->links($this->session->userdata('ecode')); 
+	    $data['footer'] = $this->load->view('include/footer','',true);
+	    $data['top_nav'] = $this->load->view('include/top_nav','',true);
+	    $data['aside'] = $this->load->view('include/aside',$data,true);
+	    $data['notepad'] = $this->load->view('include/shift_timing','',true);
+	    $data['pending_requests'] = $this->Hod_model->nh_fh_avail_pending_request($ulist,$ref_id);
+	    $data['requests'] = $this->Hod_model->nh_fh_avail_request($ulist,$ref_id);
+	    $data['body'] = $this->load->view('pages/hod/nh_fh_avail_request',$data,true);
+	    
+	    $data['title'] = $this->config->item('project_title').' | OFF Day Duty Requests';
+	    $data['head'] = $this->load->view('common/head',$data,true);
+	    $data['footer'] = $this->load->view('common/footer',$data,true);
+	    $this->load->view('layout_master',$data);
+	}
 	
-	
-	
+	//pl request
+	function pl_record($ref_id = null){
+	    $data = array();
+	    $data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
+	    $data['users'] = $this->Emp_model->get_employee($this->session->userdata('ecode'));
+	    
+	    $ulist = '';
+	    foreach($data['users'] as $user) {
+	        $ulist = $ulist.",'".$user['ecode']."'";
+	    }
+	    $ulist = ltrim($ulist,',');
+	    
+	    $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+	    $data['footer'] = $this->load->view('include/footer','',true);
+	    $data['top_nav'] = $this->load->view('include/top_nav','',true);
+	    $data['aside'] = $this->load->view('include/aside',$data,true);
+	    $data['notepad'] = $this->load->view('include/shift_timing','',true);
+	    $data['pending_requests'] = $this->Hod_model->nh_fh_avail_pending_request($ulist,$ref_id);
+	    $data['requests'] = $this->Hod_model->nh_fh_avail_request($ulist,$ref_id);
+	    $data['body'] = $this->load->view('pages/hod/pl_record',$data,true);
+	    
+	    $data['title'] = $this->config->item('project_title').' | PL records';
+	    $data['head'] = $this->load->view('common/head',$data,true);
+	    $data['footer'] = $this->load->view('common/footer',$data,true);
+	    $this->load->view('layout_master',$data);
+	}
 	
 	
 	
