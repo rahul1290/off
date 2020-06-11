@@ -236,13 +236,13 @@ $(document).ready(function(){
 	$('#example2').DataTable();
 	
 	var previous;
-
-    $(".hr_status").on('focus', function () {
-        previous = this.value;
+	var that;
+	$(document).on('focus','.hr_status',function(){
+        previous = $(this).val();
+        that = this;
     }).change(function() {
-		var req_id = $(this).data('rid');
-		var status = $(this).val();
-		var that = this;
+		var req_id = $(that).data('rid');
+		var status = $(that).val();
 		var c = confirm('Are you sure!');
 		if(c){
 			$.ajax({
@@ -257,7 +257,7 @@ $(document).ready(function(){
 				beforeSend: function() {},
 				success: function(response){
 					if(response.status == 200){
-						location.reload();
+						//location.reload();
 					} else {
 					}
 				}
@@ -265,7 +265,6 @@ $(document).ready(function(){
 		} else {
 			$(that).val(previous);
 		}
-        
     });
 	
 	$(document).on('blur','.hr_remark',function(){

@@ -67,6 +67,12 @@ class Hr_model extends CI_Model {
 	}
 	
 	function leave_request_update($data){
+	    if($data['value'] == 'REJECTED') {   
+	       $this->db->query("update pl_management set status = 0 where id = select id from pl_management where refrence_no = (select request_type from users_leave_requests where id = ".$data['req_id'].")")->result_array();
+	       
+	       $this->db->query("update users_leave_requests set request_id = 'NULL',pl = 0,lop = 0 where request_id = ".$this->my_library->leave_request_refno($data['req_id']));
+	    }
+	    
 	    $this->db->trans_begin();
 	    $this->db->where('id',$data['req_id']);
 	    $this->db->update('users_leave_requests',array(
@@ -78,42 +84,20 @@ class Hr_model extends CI_Model {
 	    //get employee code by refrence id
 	    $ecode = $this->my_library->leave_requester_ecode($data['req_id']);
 	    
-	    $this->db->select('*');
-	    $this->db->order_by('date','desc');
-	    $this->db->limit('1');
-	    $pl_result = $this->db->get_where('pl_management',array('ecode'=>$ecode,'type'=>'PL','status'=>1))->result_array();
-	    
-	    if(count($pl_result)>0){
-	        $this->db->select('*');
-	        $request_info = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id'],'status'=>1))->result_array();
-	        
-	        $this->db->insert('pl_management',array(
-	            'type' => 'PL',
-	            'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
-	            'ecode' => $ecode,
-	            'credit' => '',
-	            'debit' => $request_info[0]['pl'],
-	            'balance' => (float)$pl_result[0]['balance'] - $request_info[0]['pl'],
-	            'date' => date('Y-m-d H:i:s'),
-	            'created_at' => date('Y-m-d H:i:s'),
-	            'created_by' => $this->session->userdata('ecode')
-	        ));
-	    } else {
-	        $this->db->select('*');
-	        $request_info = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id'],'status'=>1))->result_array();
-	        
-	        $this->db->insert('pl_management',array(
-	            'type' => 'PL',
-	            'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
-	            'ecode' => $ecode,
-	            'credit' => '0',
-	            'debit' => $request_info[0]['pl'],
-	            'date' => date('Y-m-d H:i:s'),
-	            'balance' => '-'.$request_info[0]['pl'],
-	            'created_at' => date('Y-m-d H:i:s'),
-	            'created_by' => $this->session->userdata('ecode')
-	        ));
-	    }
+        $this->db->select('*');
+        $request_info = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id'],'status'=>1))->result_array();
+        
+        $this->db->insert('pl_management',array(
+            'type' => 'PL',
+            'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
+            'ecode' => $ecode,
+            'credit' => '0',
+            'debit' => $request_info[0]['pl'],
+            'date' => date('Y-m-d H:i:s'),
+            'balance' => '-'.$request_info[0]['pl'],
+            'created_at' => date('Y-m-d H:i:s'),
+            'created_by' => $this->session->userdata('ecode')
+        ));
 	    
 	    if ($this->db->trans_status() === FALSE){
 	        $this->db->trans_rollback();

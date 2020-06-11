@@ -13,8 +13,8 @@
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
 						<li class="breadcrumb-item"><a href="<?php echo base_url();?>">Home</a></li>
-						<li class="breadcrumb-item active">Employee Section</li>
-						<li class="breadcrumb-item active">Leave Request</li>
+						<li class="breadcrumb-item active">Employee section</li>
+						<li class="breadcrumb-item active">Leave request</li>
 					</ol>
 				</div><!-- /.col -->
 			</div><!-- /.row -->
@@ -24,7 +24,7 @@
 
     <!-- Main content -->
     <div class="content">
-      <div class="container-fluid">
+      <div class="container-fluid">  
 		<div class="col-12">
 			<form name="f1" method="POST" action="<?php echo base_url('es/leave-request');?>">
 			<input type="hidden" name="f1_pl" id="f1_pl" value="<?php echo $pls[0]['balance']; ?>" />
@@ -118,7 +118,7 @@
               </div>
             </div>
             	<div class="text-center">
-					<input type="submit" value="Submit" class="btn btn-warning" id="submit" />
+					<input type="submit" value="Submit" class="btn btn-warning" id="submit"/>
 					<input type="reset" value="Cancel" class="btn btn-secondary" />
 				</div>
 			</form>
@@ -248,6 +248,11 @@ $(document).ready(function(){
 
 	Difference_In_Days = 0;
 	leave_adjustment = 0;
+
+
+	$(document).on('click','#submit',function(){
+		$('#exampleModalCenter').modal({show:true});
+	});
 	
 	function date_convert(date){
 		v = date.split('/');

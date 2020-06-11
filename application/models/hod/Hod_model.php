@@ -46,15 +46,36 @@ class Hod_model extends CI_Model {
             
             $this->db->query("update pl_management set balance = balance + ".$leave_details[0]['pl']." where id = ".$pl_details[0]['id']);
             
-        } 
-            
+        } else {            ///leave granted
             $this->db->where('id',$data['req_id']);
             $this->db->update('users_leave_requests',array(
                             $data['key'] => $data['value'],
                             'hod_id' => $data['hod_id'],
                             'hod_remark_date' => $data['created_at']
                          ));
-
+            
+            $ecode = $this->my_library->leave_requester_ecode($data['req_id']);
+            
+            $this->db->select('*');
+            $request_info = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id'],'status'=>1))->result_array();
+            
+            $pls = $this->my_library->pl_calculator($ecode);
+            echo 'pl balance = '.$pls[0]['balance'];
+            echo 'req bala ='.$request_info[0]['pl'];
+            $this->db->insert('pl_management',array(
+                'type' => 'PL',
+                'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
+                'ecode' => $ecode,
+                'credit' => '0',
+                'debit' => $request_info[0]['pl'],
+                'date' => date('Y-m-d H:i:s'),
+                'balance' => $pls[0]['balance'].'-'.$request_info[0]['pl'],
+                'created_at' => date('Y-m-d H:i:s'),
+                'created_by' => $this->session->userdata('ecode')
+                ));
+            
+            print_r($this->db->last_query()); die;
+        }
             if ($this->db->trans_status() === FALSE){
                 $this->db->trans_rollback();
             } else {
