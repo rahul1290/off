@@ -102,13 +102,13 @@
 							<?php echo set_value('wod'); ?>
 							<td><b>WEEK OFF DAY</b></td>
 							<td>
-								<input type="radio" name="wod" value="1" class="wo ml-1">SUN
-								<input type="radio" name="wod" value="2" class="wo ml-1">MON
-								<input type="radio" name="wod" value="3" class="wo ml-1">TUE	
-								<input type="radio" name="wod" value="4" class="wo ml-1">WED
-								<input type="radio" name="wod" value="5" class="wo ml-1">THU
-								<input type="radio" name="wod" value="6" class="wo ml-1">FRI
-								<input type="radio" name="wod" value="7" class="wo ml-1">SAT
+								<input type="radio" name="wod" value="1" class="wo ml-1" <?php if(set_value('wod') == 1){ echo "checked"; } ?>>SUN
+								<input type="radio" name="wod" value="2" class="wo ml-1" <?php if(set_value('wod') == 2){ echo "checked"; } ?>>MON
+								<input type="radio" name="wod" value="3" class="wo ml-1" <?php if(set_value('wod') == 3){ echo "checked"; } ?>>TUE	
+								<input type="radio" name="wod" value="4" class="wo ml-1" <?php if(set_value('wod') == 4){ echo "checked"; } ?>>WED
+								<input type="radio" name="wod" value="5" class="wo ml-1" <?php if(set_value('wod') == 5){ echo "checked"; } ?>>THU
+								<input type="radio" name="wod" value="6" class="wo ml-1" <?php if(set_value('wod') == 6){ echo "checked"; } ?>>FRI
+								<input type="radio" name="wod" value="7" class="wo ml-1" <?php if(set_value('wod') == 7){ echo "checked"; } ?>>SAT
 								<?php echo form_error('wod'); ?>
 							</td>
 						</tr>
@@ -243,7 +243,9 @@ var baseUrl = $('#baseUrl').val();
 
 $(document).ready(function(){
 	$('#example').DataTable();
-	$('#to_date').trigger('change');
+
+	daycalculator();
+
 	Difference_In_Days = 0;
 	leave_adjustment = 0;
 	
@@ -253,6 +255,11 @@ $(document).ready(function(){
 	}
 
 	$(document).on('change','#from_date,#to_date',function(){
+		daycalculator();
+	});
+
+
+	function daycalculator(){
 		var date1 = new Date(date_convert($('#from_date').val()));
 		var date2 = new Date(date_convert($('#to_date').val()));
 		var Difference_In_Time = date2.getTime() - date1.getTime();
@@ -268,7 +275,7 @@ $(document).ready(function(){
 			$('#pl_deduct').text(Difference_In_Days);
 			$('#f1_pl').val(Difference_In_Days);
 		}
-	});
+	}
 
 	
 	function pl_deduct(){

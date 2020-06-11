@@ -45,14 +45,8 @@ class Hod_model extends CI_Model {
             $pl_details = $this->db->get_Where('pl_management',array('ecode'=>$leave_details[0]['ecode'],'status'=>1))->result_array();
             
             $this->db->query("update pl_management set balance = balance + ".$leave_details[0]['pl']." where id = ".$pl_details[0]['id']);
-            print_r($this->db->last_query()); die;
-            if ($this->db->trans_status() === FALSE){
-                $this->db->trans_rollback();
-            } else {
-                $this->db->trans_commit();
-            }
             
-        } else {
+        } 
             
             $this->db->where('id',$data['req_id']);
             $this->db->update('users_leave_requests',array(
@@ -60,7 +54,13 @@ class Hod_model extends CI_Model {
                             'hod_id' => $data['hod_id'],
                             'hod_remark_date' => $data['created_at']
                          ));
-        }
+
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+            } else {
+                $this->db->trans_commit();
+            }
+            
         return true;
     }
     

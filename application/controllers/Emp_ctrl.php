@@ -100,10 +100,22 @@ class Emp_ctrl extends CI_Controller {
 		}
 	}
 	
+	function compareDate() {
+	    $startDate = strtotime($_POST['from_date']);
+	    $endDate = strtotime($_POST['to_date']);
+	    
+	    if ($endDate >= $startDate)
+	        return True;
+	        else {
+	            $this->form_validation->set_message('compareDate', '%s should be greater than From Date.');
+	            return False;
+	        }
+	}
+	
 	function leave_request(){
 	    if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	        $this->form_validation->set_rules('from_date', 'From Date', 'required');
-	        $this->form_validation->set_rules('to_date', 'To Date', 'required');
+	        $this->form_validation->set_rules('to_date', 'To Date', 'required|callback_compareDate');
 	        $this->form_validation->set_rules('reason','Reason','required|trim');
 	        $this->form_validation->set_rules('wod','wod','required');
 			$this->form_validation->set_rules('coff[]','coff','trim');

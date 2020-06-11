@@ -505,7 +505,9 @@ class Etl_ctrl extends CI_Controller {
     			$temp['hod_status'] = $result['HOD_Approval'];
     			$temp['hod_id'] = '';
     			$string = $result['OFF_Taken'];
+    			$string2 = $result['HR_Remarks'];
     			
+    			///string  check start
     			if (strpos($string, 'NH/FH') !== false) {	
     			$x = explode('NH/FH',$string);
     				$nhfh = '';
@@ -537,11 +539,74 @@ class Etl_ctrl extends CI_Controller {
     					$coff.=$x[1][$i];
     				}
     				$coffs = explode(',',rtrim(ltrim(str_replace(' ', '', $coff),':'),','));
+    				
     				foreach($coffs as $coff){
-    					$this->db->where(array('ecode'=>$ecode,'request_type'=>'OFF_DAY','date_from'=>date('Y-d-m',strtotime($coff)),'status'=>1));
+    				    $coff = str_replace('/', '-', $coff);
+    				    $this->db->where(array('ecode'=>$ecode,'request_type'=>'OFF_DAY','date_from'=>date('Y-m-d',strtotime($coff)),'status'=>1));
     					$this->db->update('users_leave_requests',array('request_id'=>$result['Emp_Req_No']));
     				}
     			}
+    			///string check end
+    			
+    			///string2 check start
+    			if($string2 != ''){
+        			if (strpos($string2, 'NH/FH') !== false) {
+        			    $x = explode('NH/FH',$string2);
+        			    $nhfh = '';
+        			    $c = (int)strlen($x[1]);
+        			    for($i=0;$i<$c;$i++){
+        			        $c = ord($x[1][$i]);
+        			        if(($c>64 && $c<91) || ($c>96 && $c<123)){
+        			            break;
+        			        }
+        			        $nhfh.=$x[1][$i];
+        			    }
+        			    $nhfhs = explode(',',rtrim(ltrim(str_replace(' ', '', $nhfh),':'),','));
+        			    foreach($nhfhs as $nhfh){
+        			        $var = $nhfh;
+        			        $date = str_replace('/', '-', $var);
+        			        $this->db->where(array('ecode'=>$ecode,'request_type'=>'NH_FH','date_from'=>date('Y-m-d', strtotime($date)),'status'=>1));
+        			        $this->db->update('users_leave_requests',array('request_id'=>$result['Emp_Req_No']));
+        			    }
+        			}
+        			
+        			if (strpos($string2, 'Comp OFFs') !== false) {
+        			    $x = explode('Comp OFFs',$string2);
+        			    $coff = '';
+        			    for($i=0;$i<strlen($x[1]);$i++){
+        			        $c = ord($x[1][$i]);
+        			        if(($c>64 && $c<91) || ($c>96 && $c<123)){
+        			            break;
+        			        }
+        			        $coff.=$x[1][$i];
+        			    }
+        			    $coffs = explode(',',rtrim(ltrim(str_replace(' ', '', $coff),':'),','));
+        			    
+        			    foreach($coffs as $coff){
+        			        $coff = str_replace('/', '-', $coff);
+        			        $this->db->where(array('ecode'=>$ecode,'request_type'=>'OFF_DAY','date_from'=>date('Y-m-d',strtotime($coff)),'status'=>1));
+        			        $this->db->update('users_leave_requests',array('request_id'=>$result['Emp_Req_No']));
+        			    }
+        			}
+    			}
+    			/// string2 chek end 
+    			
+    			if($result['AvailCompOFF'] != ''){
+    			    $coffs = '';
+    			    $coffs = explode(',', $result['AvailCompOFF']);
+    			    
+    			    foreach($coffs as $coff){
+    			        if($coff != ''){ 
+        			        $coff = str_replace('/', '-', $coff);
+        			        $date = explode('-', $coff);
+        			        $coff = trim($date[1]).'-'.trim($date[0]).'-'.trim($date[2]);
+        			        
+        			        $this->db->where(array('ecode'=>$ecode,'request_type'=>'OFF_DAY','date_from'=>date('Y-m-d',strtotime($coff)),'status'=>1));
+        			        $this->db->update('users_leave_requests',array('request_id'=>$result['Emp_Req_No']));
+    			        }
+    			    }
+    			}
+    			
     			
     			$temp['hod_remark_date'] = $result['Approval_Date'];
     			$temp['hr_remark'] = $result['HR_Remarks'];

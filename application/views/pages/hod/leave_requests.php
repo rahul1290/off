@@ -29,7 +29,7 @@
 				  <div class="card-body">
 					<?php if(count($pending_requests)>0){?>
 					<div class="table-responsive">
-						<table class="table table-bordered text-center" id="example">
+						<table class="table table-bordered table-striped text-center" id="example">
 							<thead>	
 								<tr class="bg-dark">
 									<th>S.No.</th>
