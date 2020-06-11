@@ -18,7 +18,6 @@ class Hod_ctrl extends CI_Controller {
 	}
 
 	function leave_request($ref_id = null){
-	    
 	    $data = array();
 	    $data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
 	    $users = $this->Emp_model->get_employee($this->session->userdata('ecode'));
