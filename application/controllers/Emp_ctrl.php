@@ -105,12 +105,24 @@ class Emp_ctrl extends CI_Controller {
 	    $startDate = strtotime($_POST['from_date']);
 	    $endDate = strtotime($_POST['to_date']);
 	    
-	    if ($endDate >= $startDate)
+	    if ($endDate >= $startDate){
 	        return True;
-	        else {
+	    }else {
 	            $this->form_validation->set_message('compareDate', '%s should be greater than From Date.');
-	            return False;
+	            
+	            $x = $this->my_library->day_duration($_POST['from_date'],$_POST['to_date']);
+	            $x = explode(' ',$x);
+	            if($x[0]>0){
+	                return true;
+	            } else {
+	               return False;
+	            }
 	        }
+	}
+	
+	function validateDate($date, $format = 'Y-m-d H:i:s'){
+	    $d = DateTime::createFromFormat($format, $date);
+	    return $d && $d->format($format) == $date;
 	}
 	
 	function leave_request(){
@@ -120,29 +132,32 @@ class Emp_ctrl extends CI_Controller {
 	        $this->form_validation->set_rules('reason','Reason','required|trim');
 	        $this->form_validation->set_rules('wod','wod','required');
 			$this->form_validation->set_rules('coff[]','coff','trim');
+			$this->form_validation->set_rules('f1_pl','f1_pl', 'required|is_natural');
 	        
 	        $this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
 	        if ($this->form_validation->run() == FALSE) {
 	            $data = array();
-	            $data['coffs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'OFF_DAY' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
-				$data['nhfhs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'NH_FH' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
-				$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+	            $data['coffs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND date_from >= '".date('Y-m-d', strtotime('-3 month'))."' AND request_type = 'OFF_DAY' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
+	            $data['nhfhs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'NH_FH' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
+	            
+	            $data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
 	            $data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-				if(count($data['pls'])>0){
-				  $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-				}
+	            if(count($data['pls'])>0){
+	                $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+	            }
 	            
 	            $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 	            $data['footer'] = $this->load->view('include/footer','',true);
 	            $data['top_nav'] = $this->load->view('include/top_nav','',true);
 	            $data['aside'] = $this->load->view('include/aside',$data,true);
 	            $data['notepad'] = $this->load->view('include/shift_timing','',true);
-	            $data['requests'] = $this->Emp_model->leave_requests($this->session->userdata('ecode'));
+	            $data['requests'] = $this->Emp_model->leave_requests($this->session->userdata('ecode'));      //leaver request list
 	            $data['body'] = $this->load->view('pages/es/leave_request',$data,true);
 	            $data['title'] = $this->config->item('project_title').' | Leave Request';
 	            $data['head'] = $this->load->view('common/head',$data,true);
 	            $data['footer'] = $this->load->view('common/footer',$data,true);
-	            $this->load->view('layout_master',$data);
+	            $this->load->view('layout_master',$data); 
+	            
 	        }
 	        else {
                 $from_date = $this->my_library->mydate($this->input->post('from_date'));

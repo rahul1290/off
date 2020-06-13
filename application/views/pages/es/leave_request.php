@@ -202,7 +202,7 @@
                 </div>
                 <?php } ?>
                 
-<!--                 <div class="card card-info"> -->
+<!--                 <div class="card card-info">
                   <div class="card-header" style="border-radius:0px;">
 <!--                     <h3 class="card-title">LEAVE REQUESTS</h3> -->
 <!--                   </div> -->
@@ -263,10 +263,10 @@ var baseUrl = $('#baseUrl').val();
 $(document).ready(function(){
 	$('#example').DataTable();
 
-	daycalculator();
-
 	Difference_In_Days = 0;
 	leave_adjustment = 0;
+	
+	daycalculator();
 
 
 	$(document).on('click','#submit',function(){
@@ -293,11 +293,15 @@ $(document).ready(function(){
 		
 		$('.leave').prop("checked", false);
 		if(Difference_In_Days > $('#current_pl').val()){ 
-			$('#pl_deduct').text($('#current_pl').val()); 
+			$('#pl_deduct').text($('#current_pl').val());
 			$('#f1_pl').val($('#current_pl').val());
 		} else {
 			$('#pl_deduct').text(Difference_In_Days);
-			$('#f1_pl').val(Difference_In_Days);
+			if(isNaN(Difference_In_Days)){
+				$('#f1_pl').val(0);
+			} else {
+				$('#f1_pl').val(Difference_In_Days);
+			}
 		}
 	}
 
