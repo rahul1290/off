@@ -115,6 +115,7 @@ class Emp_ctrl extends CI_Controller {
 	            if($x[0]>0){
 	                return true;
 	            } else {
+	               $this->form_validation->set_message('compareDate', '%s should be greater than From Date.');
 	               return False;
 	            }
 	        }
