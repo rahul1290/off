@@ -27,7 +27,7 @@
       <div class="container-fluid">  
 		<div class="col-12">
 			<form name="f1" method="POST" action="<?php echo base_url('es/leave-request');?>">
-			<input type="hidden" name="f1_pl" id="f1_pl" value="<?php echo $pls[0]['balance']; ?>" />
+			<input type="text" name="f1_pl" id="f1_pl" value="<?php echo $pls[0]['balance']; ?>" />
 			<input type="hidden" name="f1_lop" id="f1_lop" value="0" />
 			  
 			<?php echo $this->session->flashdata('msg'); ?>
@@ -202,35 +202,36 @@
                 </div>
                 <?php } ?>
                 
-<!--                 <div class="card card-info">
+                 <div class="card card-info">
                   <div class="card-header" style="border-radius:0px;">
-<!--                     <h3 class="card-title">LEAVE REQUESTS</h3> -->
-<!--                   </div> -->
-<!--                 	<div class="card-body"> -->
-<!--     					<div class="table-responsive"> -->
-<!--     						<table class="table table-bordered table-striped text-center" id="leave_requests_head"> -->
-<!--     							<thead class="bg-dark"> -->
-<!--     								<tr> -->
-<!--             							<th>S.No.</th> -->
-<!--             							<th>REFERENCE No.</th> -->
-<!--             							<th>REQUEST SUBMIT DATE</th> -->
-<!--             							<th>LEAVE FROM</th> -->
-<!--             							<th>LEAVE TO</th> -->
-<!--             							<th>LEAVE DURATION</th> -->
-<!--     									<th>REASON</th> -->
-<!--             							<th>PL TAKEN</th> -->
-<!--             							<th>LEAVE ADJUSTMENT</th> -->
-<!--             							<th>HOD REMARK</th> -->
-<!--             							<th>HOD STATUS</th> -->
+                     <h3 class="card-title">LEAVE REQUESTS</h3>
+                  </div>
+                	<div class="card-body">
+    					<div class="table-responsive">
+    						<table class="table table-bordered table-striped text-center" id="leave_requests_head">
+    							<thead class="bg-dark">
+    								<tr>
+            							<th>S.No.</th>
+            							<th>REFERENCE No.</th>
+            							<th>REQUEST SUBMIT DATE</th>
+            							<th>LEAVE FROM</th>
+            							<th>LEAVE TO</th>
+            							<th>LEAVE DURATION</th>
+    									<th>REASON</th>
+            							<th>PL TAKEN</th>
+            							<th>LEAVE ADJUSTMENT</th>
+            							<th>HOD REMARK</th>
+            							<th>HOD STATUS</th>
             							<!--th>HR REMARK</th>
-<!--             							<th>HR STATUS</th--> -->
-<!--             						</tr> -->
-<!--     							</thead> -->
-<!--     							<tbody id="leave_requests_body"></tbody> -->
-<!--     						</table> -->
-<!--     					</div> -->
-<!--     				</div> -->
-<!--     			</div> -->
+<!--             							<th>HR STATUS</th-->
+            						</tr>
+    							</thead>
+    							<tbody id="leave_requests_body"></tbody>
+    						</table>
+    						<div class="text-center" id="leave_requests_links"></div>
+    					</div>
+    				</div>
+    			</div>
                 
             </div>
           <hr/>
@@ -361,38 +362,42 @@ $(document).ready(function(){
 		}
 	});
 
-// 	ajax_test();
-// 	function ajax_test(){
-//         $.ajax({
-//         	type: 'POST',
-//         	url: baseUrl+'Emp_ctrl/leave_request_ajax',
-//         	data: {},
-//         	dataType: 'json',
-//         	beforeSend: function() {},
-//         	success: function(response){
-//         		if(response.status == 200){
-//         			console.log(response);
-//         			var x = '';
-//         			$.each(response.data.final_array,function(key,value){
-//             			x = x + '<tr>'+
-//             						'<td>'+ parseInt(key+1) +'</td>'+
-//             						'<td>'+ value.refrence_id +'</td>'+
-//             						'<td>'+ value.created_at +'</td>'+
-//             						'<td>'+ value.date_from +'</td>'+
-//             						'<td>'+ value.date_to +'</td>'+
-//             						'<td>'+ value.duration +'</td>'+
-//             						'<td>'+ value.requirment +'</td>'+
-//             						'<td>'+ value.pl +'</td>'+
-//             						'<td>coff</td>'+
-//             						'<td>'+ value.hod_remark +'</td>'+
-//             						'<td>'+ value.hod_status +'</td>'+
-//             					'</tr>';
-//             		});
-//             		$('#leave_requests_body').html(x);
-//         		}
-//         	}
-//         });
-// 	}
+	ajax_test();
+	function ajax_test(){
+        $.ajax({
+        	type: 'POST',
+        	url: baseUrl+'Emp_ctrl/leave_request_ajax',
+        	data: {},
+        	dataType: 'json',
+        	beforeSend: function() {},
+        	success: function(response){
+        		if(response.status == 200){
+        			console.log(response);
+        			var x = '';
+        			$.each(response.data.final_array,function(key,value){
+            			x = x + '<tr>'+
+            						'<td>'+ parseInt(key+1) +'</td>'+
+            						'<td>'+ value.refrence_id +'</td>'+
+            						'<td>'+ value.created_at +'</td>'+
+            						'<td>'+ value.date_from +'</td>'+
+            						'<td>'+ value.date_to +'</td>'+
+            						'<td>'+ value.duration +'</td>'+
+            						'<td>'+ value.requirment +'</td>'+
+            						'<td>'+ value.pl +'</td>'+
+            						'<td>coff</td>'+
+            						'<td>'+ value.hod_remark +'</td>'+
+            						'<td>'+ value.hod_status +'</td>'+
+            					'</tr>';
+            		});
+
+					
+                	
+            		$('#leave_requests_body').html(x);
+            		$('#leave_requests_links').html(response.data.links);
+        		}
+        	}
+        });
+	}
 
 });
 </script>

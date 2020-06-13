@@ -94,6 +94,27 @@ class Emp_model extends CI_Model {
 	}
 	
 	
+	function total_leave_requests($ecode){
+	    $result = $this->db->query('SELECT count(*) as total
+                FROM users_leave_requests p
+                WHERE p.request_type = "LEAVE"
+                AND p.ecode = "'.$ecode.'"
+                AND p.status = 1 order by refrence_id desc')->result_array();
+	    return $result[0]['total'];
+	}
+	
+	function leave_requests_ajax($ecode,$offset,$limit){
+	    $result = $this->db->query('SELECT p.*, date_format(p.created_at, "%d/%m/%Y %H:%i:%s") as created_at, date_format(p.date_from, "%d/%m/%Y") as date_from, date_format(p.date_to, "%d/%m/%Y") as date_to,
+                			(select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = p.refrence_id and c.request_type in ("NH_FH")) as NHFH,
+                            (select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = p.refrence_id and c.request_type in ("OFF_DAY")) as COFF
+                FROM users_leave_requests p
+                WHERE p.request_type = "LEAVE"
+                AND p.ecode = "'.$ecode.'"
+                AND p.status = 1 order by refrence_id desc limit '.$limit.','.$offset.'')->result_array();
+	   
+	    return $result;
+	}
+	
 	function leave_requests($ecode){
         return $this->db->query('SELECT p.*, date_format(p.created_at, "%d/%m/%Y %H:%i:%s") as created_at, date_format(p.date_from, "%d/%m/%Y") as date_from, date_format(p.date_to, "%d/%m/%Y") as date_to,
                 			(select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = p.refrence_id and c.request_type in ("NH_FH")) as NHFH,

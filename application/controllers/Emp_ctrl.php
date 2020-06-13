@@ -141,6 +141,15 @@ class Emp_ctrl extends CI_Controller {
 	    }
 	}
 	
+	function validatePL($str){
+	    if($str >= 0){
+	        return true;
+	    } else {
+	        $this->form_validation->set_message('validatePL', '%s is not valid.');
+	        return false;
+	    }
+	}
+	
 	function leave_request(){
 	    if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	        $this->form_validation->set_rules('from_date', 'From Date', 'required|callback_compareDate|callback_validateDate');
@@ -148,10 +157,12 @@ class Emp_ctrl extends CI_Controller {
 	        $this->form_validation->set_rules('reason','Reason','required|trim');
 	        $this->form_validation->set_rules('wod','wod','required');
 			$this->form_validation->set_rules('coff[]','coff','trim');
-			$this->form_validation->set_rules('f1_pl','f1_pl', 'required|is_natural');
+			$this->form_validation->set_rules('f1_pl','f1_pl', 'required|callback_validatePL');
 	        
 	        $this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
 	        if ($this->form_validation->run() == FALSE) {
+	            //print_r(validation_errors()); die;
+	            
 	            $data = array();
 	            $data['coffs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND date_from >= '".date('Y-m-d', strtotime('-3 month'))."' AND request_type = 'OFF_DAY' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
 	            $data['nhfhs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'NH_FH' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
@@ -244,17 +255,18 @@ class Emp_ctrl extends CI_Controller {
 	}
 	
 	
-	function leave_request_ajax(){
+	function leave_request_ajax($page=0){
 	    $config = array();
 	    $config["base_url"] = "javascript:void(0)";
-	    $config["total_rows"] = 20;
+	    $config["total_rows"] = $this->Emp_model->total_leave_requests($this->session->userdata('ecode'));
 	    $config["per_page"] = 5;
-	    $config["uri_segment"] = 1;
+	    $config["uri_segment"] = $page;
+	    $config['attributes'] = array('class' => 'myLinks');
 	    $this->pagination->initialize($config);
 	    
 	    
 	    $data["links"] = $this->pagination->create_links();
-	    $records = $this->Emp_model->leave_requests($this->session->userdata('ecode'));
+	    $records = $this->Emp_model->leave_requests_ajax($this->session->userdata('ecode'),$config["per_page"],1);
 	    if(count($records)>0){
 	        $data['final_array'] = array();
 	        foreach($records as $record){
