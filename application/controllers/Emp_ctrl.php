@@ -122,8 +122,13 @@ class Emp_ctrl extends CI_Controller {
 	
 	function validateDate($str){
 	    $date = explode('/',$str);
-	    if(checkdate ( $date[1], $date[0], $date[2])){
-	        return true;
+	    if(strlen($date[2] == 4)){
+    	    if(checkdate ( $date[1], $date[0], $date[2])){
+    	        return true;
+    	    } else {
+    	        $this->form_validation->set_message('validateDate', '%s is not valid.');
+    	        return false;
+    	    }
 	    } else {
 	        $this->form_validation->set_message('validateDate', '%s is not valid.');
 	        return false;
