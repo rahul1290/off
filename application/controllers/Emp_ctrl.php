@@ -122,7 +122,7 @@ class Emp_ctrl extends CI_Controller {
 	
 	function validateDate($str){
 	    $date = explode('/',$str);
-	    if(strlen($date[2] == 4)){
+	    if(strlen($date[2]) == 4){
     	    if(checkdate ( $date[1], $date[0], $date[2])){
     	        return true;
     	    } else {
