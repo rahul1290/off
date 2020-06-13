@@ -102,13 +102,13 @@
 							<?php echo set_value('wod'); ?>
 							<td><b>WEEK OFF DAY</b></td>
 							<td>
-								<input type="radio" name="wod" value="1" class="wo ml-1" <?php if(set_value('wod') == 1){ echo "checked"; } ?>>SUN
-								<input type="radio" name="wod" value="2" class="wo ml-1" <?php if(set_value('wod') == 2){ echo "checked"; } ?>>MON
-								<input type="radio" name="wod" value="3" class="wo ml-1" <?php if(set_value('wod') == 3){ echo "checked"; } ?>>TUE	
-								<input type="radio" name="wod" value="4" class="wo ml-1" <?php if(set_value('wod') == 4){ echo "checked"; } ?>>WED
-								<input type="radio" name="wod" value="5" class="wo ml-1" <?php if(set_value('wod') == 5){ echo "checked"; } ?>>THU
-								<input type="radio" name="wod" value="6" class="wo ml-1" <?php if(set_value('wod') == 6){ echo "checked"; } ?>>FRI
-								<input type="radio" name="wod" value="7" class="wo ml-1" <?php if(set_value('wod') == 7){ echo "checked"; } ?>>SAT
+								<input type="radio" name="wod" value="1" class="wo ml-1" <?php if(set_value('wod') == 1){ echo "checked"; } ?>> SUN
+								<input type="radio" name="wod" value="2" class="wo ml-1" <?php if(set_value('wod') == 2){ echo "checked"; } ?>> MON
+								<input type="radio" name="wod" value="3" class="wo ml-1" <?php if(set_value('wod') == 3){ echo "checked"; } ?>> TUE	
+								<input type="radio" name="wod" value="4" class="wo ml-1" <?php if(set_value('wod') == 4){ echo "checked"; } ?>> WED
+								<input type="radio" name="wod" value="5" class="wo ml-1" <?php if(set_value('wod') == 5){ echo "checked"; } ?>> THU
+								<input type="radio" name="wod" value="6" class="wo ml-1" <?php if(set_value('wod') == 6){ echo "checked"; } ?>> FRI
+								<input type="radio" name="wod" value="7" class="wo ml-1" <?php if(set_value('wod') == 7){ echo "checked"; } ?>> SAT
 								<?php echo form_error('wod'); ?>
 							</td>
 						</tr>
@@ -145,8 +145,8 @@
         							<th>LEAVE ADJUSTMENT</th>
         							<th>HOD REMARK</th>
         							<th>HOD STATUS</th>
-        							<!--th>HR REMARK</th>
-        							<th>HR STATUS</th-->
+        							<th>HR REMARK</th>
+        							<th>HR STATUS</th>
         						</tr>
     						</thead>
     						<tbody>
@@ -182,16 +182,16 @@
 											} else {
 												echo "bg-success";
 											}?>"><?php echo $request['hod_status']; ?></td>
-											<?php /*
         								    <td><?php echo $request['hr_remark']; ?></td>
-        								    <td class="<?php if($request['hod_status'] == 'REJECTED'){ 
+        								    <td class="<?php if($request['hr_status'] == 'REJECTED'){ 
 													echo "bg-danger"; 
-											} else if($request['hod_status'] == 'PENDING'){
+											} else if($request['hr_status'] == 'PENDING'){
 													echo "bg-warning";
-											} else {
+											} else if($request['hr_status'] == 'GRANTED') {
 												echo "bg-success";
+											} else {
+											    
 											}?>"><?php echo $request['hr_status']; ?></td>
-											*/ ?>
     								    </tr>
     								<?php }?>
     							</tr>
@@ -202,35 +202,35 @@
                 </div>
                 <?php } ?>
                 
-                <div class="card card-info">
+<!--                 <div class="card card-info"> -->
                   <div class="card-header" style="border-radius:0px;">
-                    <h3 class="card-title">LEAVE REQUESTS</h3>
-                  </div>
-                	<div class="card-body">
-    					<div class="table-responsive">
-    						<table class="table table-bordered table-striped text-center" id="leave_requests_head">
-    							<thead class="bg-dark">
-    								<tr>
-            							<th>S.No.</th>
-            							<th>REFERENCE No.</th>
-            							<th>REQUEST SUBMIT DATE</th>
-            							<th>LEAVE FROM</th>
-            							<th>LEAVE TO</th>
-            							<th>LEAVE DURATION</th>
-    									<th>REASON</th>
-            							<th>PL TAKEN</th>
-            							<th>LEAVE ADJUSTMENT</th>
-            							<th>HOD REMARK</th>
-            							<th>HOD STATUS</th>
+<!--                     <h3 class="card-title">LEAVE REQUESTS</h3> -->
+<!--                   </div> -->
+<!--                 	<div class="card-body"> -->
+<!--     					<div class="table-responsive"> -->
+<!--     						<table class="table table-bordered table-striped text-center" id="leave_requests_head"> -->
+<!--     							<thead class="bg-dark"> -->
+<!--     								<tr> -->
+<!--             							<th>S.No.</th> -->
+<!--             							<th>REFERENCE No.</th> -->
+<!--             							<th>REQUEST SUBMIT DATE</th> -->
+<!--             							<th>LEAVE FROM</th> -->
+<!--             							<th>LEAVE TO</th> -->
+<!--             							<th>LEAVE DURATION</th> -->
+<!--     									<th>REASON</th> -->
+<!--             							<th>PL TAKEN</th> -->
+<!--             							<th>LEAVE ADJUSTMENT</th> -->
+<!--             							<th>HOD REMARK</th> -->
+<!--             							<th>HOD STATUS</th> -->
             							<!--th>HR REMARK</th>
-            							<th>HR STATUS</th-->
-            						</tr>
-    							</thead>
-    							<tbody id="leave_requests_body"></tbody>
-    						</table>
-    					</div>
-    				</div>
-    			</div>
+<!--             							<th>HR STATUS</th--> -->
+<!--             						</tr> -->
+<!--     							</thead> -->
+<!--     							<tbody id="leave_requests_body"></tbody> -->
+<!--     						</table> -->
+<!--     					</div> -->
+<!--     				</div> -->
+<!--     			</div> -->
                 
             </div>
           <hr/>

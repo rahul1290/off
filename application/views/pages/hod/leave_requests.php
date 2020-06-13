@@ -1,5 +1,4 @@
-  
-  <div class="content-wrapper">	
+    <div class="content-wrapper">	
 	<div class="content-header bg-light mb-3">
 		<div class="container-fluid">
 			<div class="row mb-2">

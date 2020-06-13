@@ -7,7 +7,7 @@
 				</div><!-- /.col -->
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="<?php echo base_url('dashboard');?>">Home</a></li>
+						<li class="breadcrumb-item"><a href="<?php echo base_url();?>">Home</a></li>
 						<li class="breadcrumb-item active">Employee Section</li>
 						<li class="breadcrumb-item active">HF Leave Request</li>
 					</ol>
@@ -160,7 +160,7 @@ $(document).ready(function(){
 
     $(".hod_status").on('focus', function () {
         previous = this.value;
-    }).change(function() {
+    }).change(function() { 
 		var req_id = $(this).data('rid');
 		var status = $(this).val();
 		var that = this;

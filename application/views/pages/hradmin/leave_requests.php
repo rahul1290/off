@@ -257,7 +257,7 @@ $(document).ready(function(){
 				beforeSend: function() {},
 				success: function(response){
 					if(response.status == 200){
-						//location.reload();
+						location.reload();
 					} else {
 					}
 				}

@@ -44,6 +44,7 @@ class Hod_model extends CI_Model {
             
             $this->db->where('request_id',$this->my_library->leave_request_refno($data['req_id']));
             $this->db->update('users_leave_requests',array('request_id'=>NULL));
+            
         } else {            ///leave granted
             $this->db->where('id',$data['req_id']);
             $this->db->update('users_leave_requests',array(
@@ -108,13 +109,22 @@ class Hod_model extends CI_Model {
 	}
 
 	function hf_leave_request_update($data){
-		$this->db->where('id',$data['req_id']);
-		$this->db->update('users_leave_requests',array(
-				$data['key'] => $data['value'],
-				'hod_id' => $data['hod_id'],
-				'hod_remark_date' => $data['created_at']
-				)
-		);
+	    $this->db->trans_begin();
+	       print_r($data); die;
+    		$this->db->where('id',$data['req_id']);
+    		$this->db->update('users_leave_requests',array(
+    				$data['key'] => $data['value'],
+    				'hod_id' => $data['hod_id'],
+    				'hod_remark_date' => $data['created_at']
+    				)
+    		);
+    		
+		if ($this->db->trans_status() === FALSE){
+		    $this->db->trans_rollback();
+		} else {
+		    $this->db->trans_commit();
+		    return true;
+		}
 		return true;
 	}
 	

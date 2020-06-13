@@ -67,37 +67,21 @@ class Hr_model extends CI_Model {
 	}
 	
 	function leave_request_update($data){
+	    $this->db->trans_begin();
 	    if($data['value'] == 'REJECTED') {   
-	       $this->db->query("update pl_management set status = 0 where id = select id from pl_management where refrence_no = (select request_type from users_leave_requests where id = ".$data['req_id'].")")->result_array();
+	        $this->db->query("UPDATE pl_management set status = 0 where refrence_no = '".$this->my_library->leave_request_refno($data['req_id'])."'");
+	       $this->db->query("update users_leave_requests set request_id = NULL,pl = 0,lop = 0 where refrence_id = '".$this->my_library->leave_request_refno($data['req_id'])."'");
 	       
-	       $this->db->query("update users_leave_requests set request_id = 'NULL',pl = 0,lop = 0 where request_id = ".$this->my_library->leave_request_refno($data['req_id']));
+	       $this->db->where('request_id',$this->my_library->leave_request_refno($data['req_id']));
+	       $this->db->update('users_leave_requests',array('request_id'=>NULL));
 	    }
 	    
-	    $this->db->trans_begin();
 	    $this->db->where('id',$data['req_id']);
 	    $this->db->update('users_leave_requests',array(
 	        $data['key'] => $data['value'],
 	        'hr_id' => $data['hr_id'],
 	        'hr_remark_date' => $data['created_at']
 	    ));
-	    
-	    //get employee code by refrence id
-	    $ecode = $this->my_library->leave_requester_ecode($data['req_id']);
-	    
-        $this->db->select('*');
-        $request_info = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id'],'status'=>1))->result_array();
-        
-        $this->db->insert('pl_management',array(
-            'type' => 'PL',
-            'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
-            'ecode' => $ecode,
-            'credit' => '0',
-            'debit' => $request_info[0]['pl'],
-            'date' => date('Y-m-d H:i:s'),
-            'balance' => '-'.$request_info[0]['pl'],
-            'created_at' => date('Y-m-d H:i:s'),
-            'created_by' => $this->session->userdata('ecode')
-        ));
 	    
 	    if ($this->db->trans_status() === FALSE){
 	        $this->db->trans_rollback();
