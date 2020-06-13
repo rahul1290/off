@@ -120,15 +120,20 @@ class Emp_ctrl extends CI_Controller {
 	        }
 	}
 	
-	function validateDate($date, $format = 'Y-m-d H:i:s'){
-	    $d = DateTime::createFromFormat($format, $date);
-	    return $d && $d->format($format) == $date;
+	function validateDate($str){
+	    $date = explode('/',$str);
+	    if(checkdate ( $date[1], $date[0], $date[2])){
+	        return true;
+	    } else {
+	        $this->form_validation->set_message('validateDate', '%s is not valid.');
+	        return false;
+	    }
 	}
 	
 	function leave_request(){
 	    if($_SERVER['REQUEST_METHOD'] == 'POST') {
-	        $this->form_validation->set_rules('from_date', 'From Date', 'required');
-	        $this->form_validation->set_rules('to_date', 'To Date', 'required|callback_compareDate');
+	        $this->form_validation->set_rules('from_date', 'From Date', 'required|callback_compareDate|callback_validateDate');
+	        $this->form_validation->set_rules('to_date', 'To Date', 'required|callback_compareDate|callback_validateDate');
 	        $this->form_validation->set_rules('reason','Reason','required|trim');
 	        $this->form_validation->set_rules('wod','wod','required');
 			$this->form_validation->set_rules('coff[]','coff','trim');
