@@ -157,18 +157,7 @@
         								    <td><?php echo $request['created_at']; ?></td>
         								    <td><?php echo $request['date_from']; ?></td>
         								    <td><?php echo $request['date_to']; ?></td>
-        								    <td><?php
-            								    $date1 = date_create($this->my_library->mydate($request['date_from']));
-            								    $date2 = date_create($this->my_library->mydate($request['date_to']));
-            								    $diff=date_diff($date1,$date2);
-            								    
-            								    echo $diff->format("%a") + 1;
-            								    if($diff->format("%a") > 0)
-            								        echo ' days';
-            								    else 
-            								        echo ' day';
-            								    
-                                            ?></td>
+                                            <td><?php echo $this->my_library->day_duration($request['date_from'],$request['date_to']); ?></td>
 											<td><?php echo $request['requirment']; ?></td>
                                             <td><?php echo $request['pl']; ?></td>
         								    <td>
@@ -212,8 +201,38 @@
                   </div>
                 </div>
                 <?php } ?>
+                
+                <div class="card card-info">
+                  <div class="card-header" style="border-radius:0px;">
+                    <h3 class="card-title">LEAVE REQUESTS</h3>
+                  </div>
+                	<div class="card-body">
+    					<div class="table-responsive">
+    						<table class="table table-bordered table-striped text-center" id="leave_requests_head">
+    							<thead class="bg-dark">
+    								<tr>
+            							<th>S.No.</th>
+            							<th>REFERENCE No.</th>
+            							<th>REQUEST SUBMIT DATE</th>
+            							<th>LEAVE FROM</th>
+            							<th>LEAVE TO</th>
+            							<th>LEAVE DURATION</th>
+    									<th>REASON</th>
+            							<th>PL TAKEN</th>
+            							<th>LEAVE ADJUSTMENT</th>
+            							<th>HOD REMARK</th>
+            							<th>HOD STATUS</th>
+            							<!--th>HR REMARK</th>
+            							<th>HR STATUS</th-->
+            						</tr>
+    							</thead>
+    							<tbody id="leave_requests_body"></tbody>
+    						</table>
+    					</div>
+    				</div>
+    			</div>
+                
             </div>
-		  
           <hr/>
 		  
 		  
@@ -333,6 +352,39 @@ $(document).ready(function(){
 			}
 		}
 	});
+
+	ajax_test();
+	function ajax_test(){
+        $.ajax({
+        	type: 'POST',
+        	url: baseUrl+'Emp_ctrl/leave_request_ajax',
+        	data: {},
+        	dataType: 'json',
+        	beforeSend: function() {},
+        	success: function(response){
+        		if(response.status == 200){
+        			console.log(response);
+        			var x = '';
+        			$.each(response.data.final_array,function(key,value){
+            			x = x + '<tr>'+
+            						'<td>'+ parseInt(key+1) +'</td>'+
+            						'<td>'+ value.refrence_id +'</td>'+
+            						'<td>'+ value.created_at +'</td>'+
+            						'<td>'+ value.date_from +'</td>'+
+            						'<td>'+ value.date_to +'</td>'+
+            						'<td>'+ value.duration +'</td>'+
+            						'<td>'+ value.requirment +'</td>'+
+            						'<td>'+ value.pl +'</td>'+
+            						'<td>coff</td>'+
+            						'<td>'+ value.hod_remark +'</td>'+
+            						'<td>'+ value.hod_status +'</td>'+
+            					'</tr>';
+            		});
+            		$('#leave_requests_body').html(x);
+        		}
+        	}
+        });
+	}
 
 });
 </script>

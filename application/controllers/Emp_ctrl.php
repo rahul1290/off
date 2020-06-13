@@ -8,6 +8,7 @@ class Emp_ctrl extends CI_Controller {
         $this->load->database();
 		$this->load->model(array('Auth_model','master/Department_model','Emp_model','master/Nh_fh_model','master/Employee_model'));
 		$this->is_login();
+		$this->load->library("pagination");
     }
 	
 	function is_login(){
@@ -196,8 +197,8 @@ class Emp_ctrl extends CI_Controller {
 			if(count($data['pls'])>0){
     		  $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
     		}
-
-    		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+    		
+            $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
     		$data['footer'] = $this->load->view('include/footer','',true);
     		$data['top_nav'] = $this->load->view('include/top_nav','',true);
     		$data['aside'] = $this->load->view('include/aside',$data,true);
@@ -207,8 +208,55 @@ class Emp_ctrl extends CI_Controller {
     		$data['title'] = $this->config->item('project_title').' | Leave Request';
     		$data['head'] = $this->load->view('common/head',$data,true);
     		$data['footer'] = $this->load->view('common/footer',$data,true);
-    		$this->load->view('layout_master',$data);
+    		$this->load->view('layout_master',$data);    		
 	    }
+	}
+	
+	
+	function leave_request_ajax(){
+	    $config = array();
+	    $config["base_url"] = "javascript:void(0)";
+	    $config["total_rows"] = 20;
+	    $config["per_page"] = 5;
+	    $config["uri_segment"] = 1;
+	    $this->pagination->initialize($config);
+	    
+	    
+	    $data["links"] = $this->pagination->create_links();
+	    $records = $this->Emp_model->leave_requests($this->session->userdata('ecode'));
+	    if(count($records)>0){
+	        $data['final_array'] = array();
+	        foreach($records as $record){
+	            $temp = array();
+	            $temp['id'] = $record['id'];
+	            $temp['request_type'] = $record['request_type'];
+	            $temp['refrence_id'] = $this->my_library->remove_hyphen($record['refrence_id']);
+	            $temp['ecode'] = $record['ecode'];
+	            $temp['duration'] = $this->my_library->day_duration($record['date_from'],$record['date_to']);
+	            $temp['requirment'] = $record['requirment'];
+	            $temp['date_from'] = $record['date_from'];
+	            $temp['date_to'] = $record['date_to'];
+	            $temp['hod_remark'] = $record['hod_remark'];
+	            $temp['hod_status'] = $record['hod_status'];
+                $temp['hod_id'] = $record['hod_id'];
+                $temp['hod_remark_date'] = $record['hod_remark_date'];
+                $temp['hr_remark'] = $record['hr_remark'];
+                $temp['hr_status'] = $record['hr_status'];
+                $temp['hr_id'] = $record['hr_id'];
+                $temp['hr_remark_date'] = $record['hr_remark_date'];
+                $temp['created_at'] = $record['created_at'];
+                $temp['wod'] = $record['wod'];
+                $temp['request_id'] = $record['request_id'];
+                $temp['pl'] = $record['pl'];
+                $temp['lop'] = $record['lop'];
+                $temp['status'] = $record['status'];
+                $temp['NHFH'] = $record['NHFH'];
+                $temp['COFF'] = $record['COFF'];
+                
+                $data['final_array'][] = $temp;
+	        }
+	    }
+	    echo json_encode(array('data'=>$data,'status'=>200));
 	}
 	
 	function hf_leave_request(){

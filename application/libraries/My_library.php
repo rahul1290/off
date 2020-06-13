@@ -20,6 +20,19 @@ class My_library {
 		return date("d/m/Y", strtotime($date));
 	}
 	
+	function day_duration($date1,$date2){
+	    $date1 = date_create($this->mydate($date1));
+	    $date2 = date_create($this->mydate($date2));
+	    $diff=date_diff($date1,$date2);
+	    
+	    $x = $diff->format("%a") + 1;
+	    if($diff->format("%a") > 0)
+	        $x .=' days';
+	    else
+	        $x .=' day';
+	    return $x;
+	}
+	
 	function department_code($ecode){
 		$this->CI->db->select('dm.dept_code');
 		$this->CI->db->join('department_master dm','dm.id = u.department_id');
@@ -72,7 +85,7 @@ class My_library {
 	
 	function pl_applied($ecode){
 	    $this->CI->db->select('ifnull(sum(pl),0) as total');
-	    $result = $this->CI->db->get_where('users_leave_requests',array('ecode'=>$ecode,'hr_Status'=>'PENDING','status'=>1))->result_array();
+	    $result = $this->CI->db->get_where('users_leave_requests',array('ecode'=>$ecode,'hod_Status'=>'PENDING','status'=>1))->result_array();
 	    return $result[0]['total'];
 	}
 	

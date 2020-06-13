@@ -33,19 +33,17 @@ class Hod_model extends CI_Model {
     }
     
     function leave_request_update($data){
+        $this->db->trans_begin();
         if($data['value'] == 'REJECTED'){
-            $this->db->trans_begin();
+            $this->db->where('id',$data['req_id']);
+            $this->db->update('users_leave_requests',array(
+                $data['key'] => $data['value'],
+                'hod_id' => $data['hod_id'],
+                'hod_remark_date' => $data['created_at']
+            ));
             
-            $this->db->select('*,IFNULL(pl,0) pl,IFNULL(lop,0) lop');
-            $leave_details = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id']))->result_array();
-            
-            $this->db->select('*');
-            $this->db->limit('1');
-            $this->db->order_by('id','desc');
-            $pl_details = $this->db->get_Where('pl_management',array('ecode'=>$leave_details[0]['ecode'],'status'=>1))->result_array();
-            
-            $this->db->query("update pl_management set balance = balance + ".$leave_details[0]['pl']." where id = ".$pl_details[0]['id']);
-            
+            $this->db->where('request_id',$this->my_library->leave_request_refno($data['req_id']));
+            $this->db->update('users_leave_requests',array('request_id'=>NULL));
         } else {            ///leave granted
             $this->db->where('id',$data['req_id']);
             $this->db->update('users_leave_requests',array(
@@ -60,8 +58,8 @@ class Hod_model extends CI_Model {
             $request_info = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id'],'status'=>1))->result_array();
             
             $pls = $this->my_library->pl_calculator($ecode);
-            echo 'pl balance = '.$pls[0]['balance'];
-            echo 'req bala ='.$request_info[0]['pl'];
+            $pls = $pls[0]['balance'] - $request_info[0]['pl'];
+            
             $this->db->insert('pl_management',array(
                 'type' => 'PL',
                 'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
@@ -69,20 +67,17 @@ class Hod_model extends CI_Model {
                 'credit' => '0',
                 'debit' => $request_info[0]['pl'],
                 'date' => date('Y-m-d H:i:s'),
-                'balance' => $pls[0]['balance'].'-'.$request_info[0]['pl'],
+                'balance' => $pls,
                 'created_at' => date('Y-m-d H:i:s'),
                 'created_by' => $this->session->userdata('ecode')
                 ));
-            
-            print_r($this->db->last_query()); die;
         }
-            if ($this->db->trans_status() === FALSE){
-                $this->db->trans_rollback();
-            } else {
-                $this->db->trans_commit();
-            }
-            
-        return true;
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
     }
     
     
