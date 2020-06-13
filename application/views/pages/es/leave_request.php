@@ -335,6 +335,10 @@ $(document).ready(function(){
 		}
 	}
 
+	$('#from_date,#to_date').keypress(function(e) {
+	    e.preventDefault();
+	}); 
+	
 	$(document).on('click','.leave',function(){
 		if(Difference_In_Days > leave_adjustment){ 
 			pl_deduct();
@@ -353,38 +357,38 @@ $(document).ready(function(){
 		}
 	});
 
-	ajax_test();
-	function ajax_test(){
-        $.ajax({
-        	type: 'POST',
-        	url: baseUrl+'Emp_ctrl/leave_request_ajax',
-        	data: {},
-        	dataType: 'json',
-        	beforeSend: function() {},
-        	success: function(response){
-        		if(response.status == 200){
-        			console.log(response);
-        			var x = '';
-        			$.each(response.data.final_array,function(key,value){
-            			x = x + '<tr>'+
-            						'<td>'+ parseInt(key+1) +'</td>'+
-            						'<td>'+ value.refrence_id +'</td>'+
-            						'<td>'+ value.created_at +'</td>'+
-            						'<td>'+ value.date_from +'</td>'+
-            						'<td>'+ value.date_to +'</td>'+
-            						'<td>'+ value.duration +'</td>'+
-            						'<td>'+ value.requirment +'</td>'+
-            						'<td>'+ value.pl +'</td>'+
-            						'<td>coff</td>'+
-            						'<td>'+ value.hod_remark +'</td>'+
-            						'<td>'+ value.hod_status +'</td>'+
-            					'</tr>';
-            		});
-            		$('#leave_requests_body').html(x);
-        		}
-        	}
-        });
-	}
+// 	ajax_test();
+// 	function ajax_test(){
+//         $.ajax({
+//         	type: 'POST',
+//         	url: baseUrl+'Emp_ctrl/leave_request_ajax',
+//         	data: {},
+//         	dataType: 'json',
+//         	beforeSend: function() {},
+//         	success: function(response){
+//         		if(response.status == 200){
+//         			console.log(response);
+//         			var x = '';
+//         			$.each(response.data.final_array,function(key,value){
+//             			x = x + '<tr>'+
+//             						'<td>'+ parseInt(key+1) +'</td>'+
+//             						'<td>'+ value.refrence_id +'</td>'+
+//             						'<td>'+ value.created_at +'</td>'+
+//             						'<td>'+ value.date_from +'</td>'+
+//             						'<td>'+ value.date_to +'</td>'+
+//             						'<td>'+ value.duration +'</td>'+
+//             						'<td>'+ value.requirment +'</td>'+
+//             						'<td>'+ value.pl +'</td>'+
+//             						'<td>coff</td>'+
+//             						'<td>'+ value.hod_remark +'</td>'+
+//             						'<td>'+ value.hod_status +'</td>'+
+//             					'</tr>';
+//             		});
+//             		$('#leave_requests_body').html(x);
+//         		}
+//         	}
+//         });
+// 	}
 
 });
 </script>
