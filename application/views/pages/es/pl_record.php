@@ -22,7 +22,8 @@
             <!-- general form elements disabled -->
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
-                <h3 class="card-title">PL SUMMARY REGISTER</h3>
+                <span class="card-title">PL SUMMARY REGISTER</span>
+                <span class="float-right">Current Remaining Pl's : <?php $pl = $this->my_library->pl_calculator($this->session->userdata('ecode')); echo $pl[0]['balance']; ?></span>
               </div>
               <!-- /.card-header -->
               <div class="card-body">

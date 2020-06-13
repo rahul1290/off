@@ -189,7 +189,7 @@ class Emp_ctrl extends CI_Controller {
 	        
 	    } else {
     		$data = array();
-			$data['coffs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'OFF_DAY' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
+			$data['coffs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND date_from >= '".date('Y-m-d', strtotime('-3 month'))."' AND request_type = 'OFF_DAY' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
 			$data['nhfhs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'NH_FH' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
 			
     		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
@@ -404,11 +404,11 @@ class Emp_ctrl extends CI_Controller {
 				$data['notepad'] = $this->load->view('include/shift_timing','',true);
 				
 				$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date');
+				$this->db->order_by('id','desc');
 				$data['requests'] = $this->db->get_where('users_leave_requests',array('ecode'=>$this->session->userdata('ecode'),'request_type'=>'OFF_DAY','status'=>1))->result_array();
-
 				$data['body'] = $this->load->view('pages/es/off_day_duty_form',$data,true);
 				//===============common===============//
-				$data['title'] = 'Home | OFF DAY DUTY FORM';
+				$data['title'] = $this->config->item('project_title').' | OFF DAY DUTY FORM';
 				$data['head'] = $this->load->view('common/head',$data,true);
 				$data['footer'] = $this->load->view('common/footer',$data,true);
 				$this->load->view('layout_master',$data);
@@ -442,6 +442,7 @@ class Emp_ctrl extends CI_Controller {
 		}
 		else if($type == "OFF_DAY"){
 			$this->db->select('*');
+			$this->db->where_not_in('hod_status',array('REJECTED'));
 			$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'date_from'=>$date,'request_type'=>$type,'status'=>1))->result_array();
 			if(count($result)>0) { 
 				echo json_encode(array('msg'=>'You already requested for this date.','status'=>500));
@@ -460,8 +461,9 @@ class Emp_ctrl extends CI_Controller {
 		} 
 		else if($type == "HALF"){
 			$this->db->select('*');
+			$this->db->where_not_in('hod_status',array('REJECTED'));
+			$this->db->order_by('created_at','desc');
 			$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'date_from'=>$date,'request_type'=>$type,'status'=>1))->result_array();
-			
 			if(count($result)>0){
 				echo json_encode(array('msg'=>'You already requested for this date.','status'=>500));
 			} else {

@@ -106,7 +106,7 @@ class Emp_model extends CI_Model {
 	
 	function pl_summary_report($data){
 		$this->db->select('*,IFNULL(credit," ") as credit,IFNULL(debit," ") as debit,IFNULL(balance," ") as balance');
-		$this->db->order_by('date','desc');
+		$this->db->order_by('id','desc');
 		$result = $this->db->get_where('pl_management',array('ecode'=>$data['paycode'],'status'=>1))->result_array();
 		return  $result;
 	} 

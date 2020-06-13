@@ -157,18 +157,19 @@ $(document).ready(function(){
 	$('#example2').DataTable();
 	
 	var previous;
-
-    $(".hod_status").on('focus', function () {
-        previous = this.value;
+	var that;
+	$(document).on('focus','.hod_status',function(){
+    //$(".hod_status").on('focus', function () {
+        previous = $(this).val();
+        that = this;
     }).change(function() {
-		var req_id = $(this).data('rid');
-		var status = $(this).val();
-		var that = this;
+		var req_id = $(that).data('rid');
+		var status = $(that).val();
 		var c = confirm('Are you sure!');
 		if(c){
 			$.ajax({
 				type: 'POST',
-				url: baseUrl+'hod/hf-leave-request-update/',
+				url: baseUrl+'hod/off-day-duty-update/',
 				data: { 
 					'req_id' : req_id,
 					'key' : 'hod_status',

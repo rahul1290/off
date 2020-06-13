@@ -37,7 +37,7 @@
 									<th>DEPARTMENT</th>
 									<th>EMPLOYEE NAME</th>
 									<th>REQUEST SUBMIT DATE</th>
-									<th>HALF TAKEN DATE</th>
+									<th>COFF DATE</th>
 									<th>REASON</th>
 									<th>HOD REMARK</th>
 									<th>HOD STATUS</th>

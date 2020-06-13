@@ -110,7 +110,6 @@ class Hod_model extends CI_Model {
 
 	function hf_leave_request_update($data){
 	    $this->db->trans_begin();
-	       print_r($data); die;
     		$this->db->where('id',$data['req_id']);
     		$this->db->update('users_leave_requests',array(
     				$data['key'] => $data['value'],
@@ -119,16 +118,56 @@ class Hod_model extends CI_Model {
     				)
     		);
     		
+    		if($data['value'] == 'GRANTED'){
+    		    $refrence_no = $this->my_library->leave_request_refno($data['req_id']);
+    		    
+    		    $this->db->select('ecode');
+    		    $ecode = $this->db->get_where('users_leave_requests',array('refrence_id'=>$refrence_no))->result_array();
+    		    
+    		    $pls = $this->my_library->pl_calculator($ecode[0]['ecode']);
+    		    
+    		    $this->db->insert('pl_management',array(
+    		              'type' => 'PL',
+    		              'refrence_no' =>  $refrence_no,
+    		              'ecode' => $ecode[0]['ecode'],
+    		              'credit' => '0',
+    		              'debit' => '0.5',
+    		              'balance' => $pls[0]['balance'] - '0.5',
+    		              'date' => date('Y-m-d H:i:s'),
+    		              'created_at'    => date('Y-m-d H:i:s'),
+    		              'created_by'    => $this->session->userdata('ecode')
+    		    ));
+    		}
+    		
 		if ($this->db->trans_status() === FALSE){
 		    $this->db->trans_rollback();
 		} else {
 		    $this->db->trans_commit();
 		    return true;
 		}
-		return true;
 	}
 	
 	////OFF DAY DUTY REQUEST
+	
+	function off_day_duty_request_update($data){
+	    $this->db->trans_begin();
+	    
+	    $this->db->where('id',$data['req_id']);
+	    $this->db->update('users_leave_requests',array(
+	        $data['key'] => $data['value'],
+	        'hod_id' => $data['hod_id'],
+	        'hod_remark_date' => $data['created_at']
+	     ));
+	   
+	    
+	    if ($this->db->trans_status() === FALSE){
+	        $this->db->trans_rollback();
+	    } else {
+	        $this->db->trans_commit();
+	        return true;
+	    }
+	}
+	
 	function off_day_duty_request($ulist,$ref_id){
 		$this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y %H:%i:%s") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y %H:%i:%s") as last_update');
 		$this->db->where_in('ulr.ecode',$ulist,false);

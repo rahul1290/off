@@ -56,7 +56,7 @@
 												<td><?php echo $request['date']; ?></td>
 												<td><?php echo strlen($request['requirment']) > 50 ? ucfirst(substr($request['requirment'],0,50))."...<a href='#'>read more</a>" : ucfirst($request['requirment']); ?></td>
 												<td><label><?php echo $request['hod_remark']; ?></label></td>
-												<td><label><?php echo $request['hod_status']; ?><hr/><?php //echo $request['hod_remark_date']; ?></label></td>
+												<td><label><?php echo $request['hod_status']; ?><?php //echo $request['hod_remark_date']; ?></label></td>
 												<td>
 													<textarea name="" id="" class="hr_remark form-control"></textarea>
 												</td>
@@ -167,13 +167,13 @@ $(document).ready(function(){
 	$('#example2').DataTable();
 	
 	var previous;
-
-    $(".hr_status").on('focus', function () {
+	var that;
+	$(document).on('focus','.hr_status',function(){
         previous = this.value;
+        that = this;
     }).change(function() {
-		var req_id = $(this).data('rid');
-		var status = $(this).val();
-		var that = this;
+		var req_id = $(that).data('rid');
+		var status = $(that).val();
 		var c = confirm('Are you sure!');
 		if(c){
 			$.ajax({

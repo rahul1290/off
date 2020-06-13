@@ -189,6 +189,7 @@ class Hr_ctrl extends CI_Controller {
 		$data['aside'] = $this->load->view('include/aside',$data,true);
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
 		$data['pending_requests'] = $this->Hr_model->hf_leave_pending_request($ulist,$ref_id);
+		//print_r($data['pending_requests']); die;
 		$data['requests'] = $this->Hr_model->hf_leave_request($ulist,$ref_id);
 		$data['body'] = $this->load->view('pages/hradmin/hf_leave_requests',$data,true);
 		//===============common===============//

@@ -25,7 +25,8 @@
 			<?php echo $this->session->flashdata('msg'); ?>
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
-                <h3 class="card-title">HALF DAY LEAVE REQUEST</h3>
+                <span class="card-title">HALF DAY LEAVE REQUEST</span>
+                <span class="float-right">Current Remaining Pl's : <?php $pl = $this->my_library->pl_calculator($this->session->userdata('ecode')); echo $pl[0]['balance']; ?></span>
               </div>
               <div class="card-body">
                 <table class="table table-bordered">
@@ -102,7 +103,7 @@
 											} else {
 												echo "bg-success";
 											}?>"
-										><?php echo $request['hod_status']; ?> <br/><?php echo $request['hod_remark_date']; ?></td>
+										><?php echo $request['hod_status']; ?><?php //echo $request['hod_remark_date']; ?></td>
 										<?php /*<td><?php echo $request['hr_remark']; ?></td>
 										<td class="
 											<?php if($request['hr_status'] == 'REJECTED'){ 
