@@ -93,6 +93,17 @@ class Hod_ctrl extends CI_Controller {
 		}
 	}
 	
+	function nh_fh_day_duty_request_update(){
+	    $data['req_id'] = $this->input->post('req_id');
+	    $data['key'] = $this->input->post('key');
+	    $data['value'] = $this->input->post('value');
+	    $data['created_at'] = date('Y-m-d H:i:s');
+	    $data['hod_id'] = $this->session->userdata('ecode');
+	    if($this->Hod_model->nh_fh_day_duty_request_update($data)){
+	        echo json_encode(array('status'=>200));
+	    }
+	}
+	
 	function off_day_duty_request_update(){
 	    $data['req_id'] = $this->input->post('req_id');
 	    $data['key'] = $this->input->post('key');
