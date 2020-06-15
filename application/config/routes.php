@@ -24,7 +24,6 @@ $route['es/Tour-Request-Form'] = 'Emp_ctrl/tour_request_form/';
 $route['es/All-Report'] = 'Emp_ctrl/all_report/';
 $route['es/NH-FH-Avail-Form'] = 'Emp_ctrl/nh_fh_avail_form/';
 $route['es/PL-Summary-Report'] = 'Emp_ctrl/pl_summary_report/';
-$route['emp/es/Attendance-Record'] = 'Emp_ctrl/attendance_record/';
 $route['es/Attendance-Record'] = 'Emp_ctrl/attendance/';
 
 $route['es/cab'] = 'Cab_ctrl/index/';

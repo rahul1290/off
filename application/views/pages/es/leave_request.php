@@ -75,7 +75,7 @@
 								<b>COMP OFF:</b> <ul style="list-style: none;">
 											<?php foreach($coffs as $coff){ ?>
 													<li>
-														<input <?php if(isset($x)){if(in_array($coff['refrence_id'],$x)){ echo "checked"; }} ?> type="checkbox" name="coff[]" class="leave coffs" data-value="<?php echo $coff['refrence_id']; ?>" value="<?php echo $coff['refrence_id']; ?>" /><?php echo $this->my_library->sql_datepicker($coff['date_from']); ?>
+														<input <?php if(isset($x)){if(in_array($coff['refrence_id'],$x)){ echo "checked"; }} ?> type="checkbox" name="coff[]" class="leave coffs" data-value="<?php echo $coff['refrence_id']; ?>" value="<?php echo $coff['refrence_id']; ?>" /> <?php echo $this->my_library->sql_datepicker($coff['date_from']); ?>
 													</li>											        
 										    <?php } ?> 
 											</ul>
@@ -83,7 +83,7 @@
                               			
                               	<?php if(count($nhfhs)>0){ ?>
                               	<br/><b>NH/FH:</b> <ul style="list-style: none;"><?php foreach($nhfhs as $nhfh){ ?>
-													<li><input <?php if(isset($y)){if(in_array($nhfh['refrence_id'],$y)){ echo "checked"; }} ?> type="checkbox" name="nhfh[]" class="leave nhfhs" data-value="<?php echo $nhfh['refrence_id']; ?>" value="<?php echo $nhfh['refrence_id']; ?>" /><?php echo $this->my_library->sql_datepicker($nhfh['date_from']); ?></li>											        
+													<li><input <?php if(isset($y)){if(in_array($nhfh['refrence_id'],$y)){ echo "checked"; }} ?> type="checkbox" name="nhfh[]" class="leave nhfhs" data-value="<?php echo $nhfh['refrence_id']; ?>" value="<?php echo $nhfh['refrence_id']; ?>" /> <?php echo $this->my_library->sql_datepicker($nhfh['date_from']); ?></li>											        
 										    <?php } ?> </ul>
 								<?php } ?>
                                <hr/><br/>
@@ -282,6 +282,7 @@ $(document).ready(function(){
 
 	$(document).on('change','#from_date,#to_date',function(){
 		daycalculator();
+		leaveLop();
 	});
 
 
@@ -362,6 +363,10 @@ $(document).ready(function(){
 	}); 
 	
 	$(document).on('click','.leave',function(){
+		leaveLop();
+	});
+
+	function leaveLop(){
 		if(Difference_In_Days > leave_adjustment){ 
 			pl_deduct();
     		if($(this).prop("checked") == true){
@@ -377,7 +382,8 @@ $(document).ready(function(){
 				leave_adjustment = parseInt(parseInt(leave_adjustment) - 1);
 			}
 		}
-	});
+	}
+	
 
 	ajax_test(0);	//load requests
 	

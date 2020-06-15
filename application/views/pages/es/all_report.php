@@ -1,3 +1,6 @@
+<?php if(!isset($pls[0]['balance'])){ 
+	$pls[0]['balance'] = 0;
+}?>
 <?php 
 	$fromdate = $this->input->get('from_date');
 	$todate = $this->input->get('to_date');
@@ -36,10 +39,10 @@
 					  </select>
 				</span>
 				<span class="col">
-					  <input type="text" name="from_date" id="from_date" class="form-control datepicker" value="<?php if(isset($fromdate)){ echo $fromdate; } else { echo date("d-m-Y", strtotime("first day of previous month")); } ?>" autocomplete="off">
+					  <input type="text" name="from_date" id="from_date" class="form-control datepicker" value="<?php if(isset($fromdate)){ echo $fromdate; } else { echo date('01-m-Y'); }?>" autocomplete="off">
 				</span>
 				<span class="col">
-					  <input type="text" name="to_date" id="to_date" class="form-control datepicker" value="<?php if(isset($todate)){ echo $todate; } else { echo date("t/m/Y", strtotime(date('Y-m-d'))); } ?>" autocomplete="off">
+					  <input type="text" name="to_date" id="to_date" class="form-control datepicker" value="<?php if(isset($todate)){ echo $todate; } else { echo date("d/m/Y", strtotime(date('Y-m-d'))); } ?>" autocomplete="off">
 				</span>
 				<span class="col">
 					<input type="submit" value="Search" class="btn btn-secondary">
@@ -50,24 +53,27 @@
 		  </div>
 		
 		<?php if(count($records)>0){ ?>	
-		  <div class="offset-md-1 col-md-10">
+		  <div class="col-md-12">
 			<div class="card card-info">
 			  <div class="card-header" style="border-radius:0px;">
-				<h3 class="card-title">ALL REQUESTS</h3>
+				<span class="card-title">ALL REQUESTS</span>
+				<span class="float-right">Current Remaining Pl's : <?php echo $pls[0]['balance']; ?></span>
 			  </div>
 			  <div class="card-body">
 				<div class="table-responsive">
-					<table class="table table-bordered" id="example">
+					<table class="table table-bordered table-striped" id="example">
 						<thead>	
 							<tr class="bg-dark">
 								<th>S.No.</th>
-								<th>REQUEST TYPE</th>
+								<th>REFERENCE NO.</th>
 								<th>REQUEST SUBMIT DATE</th>
-								<th>DATE</th>
+								<th>LEAVE DATE</th>
 								<th>REASON</th>
+								<th>PL DEDUCT</th>
+								<th>LOP</th>
 								<th>HOD REMARK</th>
-								<th>HOD STATUS</th>
 								<th>HR REMARKS</th>
+								<th>HOD STATUS</th>
 								<th>HR STATUS</th>
 								<th>ACTION</th>
 							</tr>
@@ -76,11 +82,14 @@
 							<?php $c=1; foreach($records as $record){ ?>
 								<tr>
 									<td><?php echo $c++; ?>.</td>
-									<td><?php echo str_replace('_',' ',$record['request_type']); ?></td>
+									<td><?php echo $this->my_library->remove_hyphen($record['refrence_id']); ?></td>
 									<td><?php echo $record['created_at']; ?></td>
-									<td><?php echo $record['date']; ?></td>
+									<td><?php echo $record['from_date'].' - '.$record['to_date']; ?></td>
 									<td><?php echo strlen($record['requirment']) > 50 ? substr($record['requirment'],0,50)."...<a href='#'>read more</a>" : $record['requirment']; ?></td>
+									<td><?php if((int)$record['pl']){ echo (int)$record['pl']; } else { echo '-'; } ?></td>
+									<td><?php if((int)$record['lop']){ echo (int)$record['lop']; }else { echo '-'; } ?></td>
 									<td><?php echo $record['hod_remark']; ?></td>
+									<td><?php echo $record['hr_remark']; ?></td>
 									<td class="
 									<?php if($record['hod_status'] == 'GRANTED'){ 
 											echo "bg-success"; 
@@ -89,7 +98,6 @@
 										  } else {
 											echo "bg-danger";
 										  }?>"><?php echo $record['hod_status']; ?></td>
-									<td><?php echo $record['hr_remark']; ?></td>
 									<td class="
 									<?php if($record['hr_status'] == 'GRANTED'){ 
 											echo "bg-success"; 
@@ -133,40 +141,5 @@
 <script>
 var baseUrl = $('#baseUrl').val();
 
-$(document).ready(function(){
-	$('#example').DataTable();
-	get_detail();
-	
-	$(document).on('change','#half_day_date',function(){
-		get_detail();
-	});
-	
-	
-	function get_detail(){
-		var off_day_date = $('#half_day_date').val();
-		if(off_day_date != ''){
-			off_day_date = $('#half_day_date').val();
-			off_day_date = off_day_date.split("/").reverse().join("-");
-
-			$.ajax({
-				type: 'POST',
-				url: baseUrl+'Emp_ctrl/day_attendance/'+ off_day_date + '/'+ <?php echo "'".$this->session->userdata('ecode')."'"; ?>+'/HALF',
-				data: { },
-				dataType: 'json',
-				beforeSend: function() {},
-				success: function(response){
-					if(response.status == 200){
-						$('#submit').prop("disabled", false);
-					} else {
-						var x = response.msg;
-						$('#duty_detail').html('<p class="text-danger"><b>'+ x +'</b></p>');
-						$('#submit').prop("disabled", true);
-					}
-				}
-			});
-		}
-	}
-	
-});
 </script>
 </body>

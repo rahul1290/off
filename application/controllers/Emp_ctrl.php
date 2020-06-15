@@ -844,7 +844,7 @@ class Emp_ctrl extends CI_Controller {
 		}
 		$type = $this->input->get('report_type');
 		
-		$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date');
+		$this->db->select('*,date_format(created_at,"%d/%m/%Y") as created_at,date_format(date_from,"%d/%m/%Y") as from_date,date_format(date_to,"%d/%m/%Y") as to_date');
 		if(isset($from_date)){
 			$this->db->where('date_from >=',$from_date);
 			$this->db->where('date_from <=',$to_date);
@@ -852,9 +852,19 @@ class Emp_ctrl extends CI_Controller {
 		if(isset($type) && $type != 'All'){
 			$this->db->where('request_type',$type);
 		}
+		$this->db->order_by('id','desc');
 		$data['records'] = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'status'=>1))->result_array();
 		
-		$data['title'] = 'IBC24 | es | All Report';
+		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+		if(count($data['pls'])>0){
+		    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+		    if($data['pls'][0]['balance'] < 0){
+		        $data['pls'][0]['balance'] = 0;
+		    }
+		}
+		
+		$data['title'] = $this->config->item('project_title').'| All Report';
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
 		$data['aside'] = $this->load->view('include/aside',$data,true);
