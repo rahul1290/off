@@ -27,7 +27,7 @@
       <div class="container-fluid">  
 		<div class="col-12">
 			<form name="f1" method="POST" action="<?php echo base_url('es/leave-request');?>">
-			<input type="text" name="f1_pl" id="f1_pl" value="<?php echo $pls[0]['balance']; ?>" />
+			<input type="hidden" name="f1_pl" id="f1_pl" value="<?php echo $pls[0]['balance']; ?>" />
 			<input type="hidden" name="f1_lop" id="f1_lop" value="0" />
 			  
 			<?php echo $this->session->flashdata('msg'); ?>
@@ -124,7 +124,7 @@
 			</form>
 			<hr/>
           
-          <?php if(count($requests)>0) { ?>
+          <?php /*if(isset($requests)){ if(count($requests)>0) { ?>
     		  <div class="card card-info">
                   <div class="card-header" style="border-radius:0px;">
                     <h3 class="card-title">LEAVE REQUESTS</h3>
@@ -200,14 +200,16 @@
     				</div>
                   </div>
                 </div>
-                <?php } ?>
-                
+                <?php } } */ ?>
+               <div class="col-12">
                  <div class="card card-info">
                   <div class="card-header" style="border-radius:0px;">
                      <h3 class="card-title">LEAVE REQUESTS</h3>
                   </div>
                 	<div class="card-body">
     					<div class="table-responsive">
+    						<input id="search" type="text" class="float-right mb-2">
+    						<label class="float-right mr-2" for="search">Search: </label>
     						<table class="table table-bordered table-striped text-center" id="leave_requests_head">
     							<thead class="bg-dark">
     								<tr>
@@ -228,11 +230,10 @@
     							</thead>
     							<tbody id="leave_requests_body"></tbody>
     						</table>
-    						<div class="text-center" id="leave_requests_links"></div>
+    						<nav aria-label="Page navigation example" id="leave_requests_links"></nav>
     					</div>
     				</div>
     			</div>
-                
             </div>
           <hr/>
 		  
@@ -262,13 +263,13 @@
 var baseUrl = $('#baseUrl').val();
 
 $(document).ready(function(){
+	console.log('ready');
 	$('#example').DataTable();
 
 	Difference_In_Days = 0;
 	leave_adjustment = 0;
 	
 	daycalculator();
-
 
 	$(document).on('click','#submit',function(){
 		$('#exampleModalCenter').modal({show:true});
@@ -334,7 +335,9 @@ $(document).ready(function(){
 			else { 
 				$('#pl_deduct').text(0);
 			}	
+			$('#submit').prop('disabled', false);
 		} else {
+			$('#submit').prop('disabled', true);
 			$('#date_range').text('').hide();
 			$('#leave_adjust').hide();
 		}
@@ -362,21 +365,27 @@ $(document).ready(function(){
 		}
 	});
 
-	ajax_test();
-	function ajax_test(){
+	ajax_test(0);	//load requests
+	
+	$(document).on('keyup','#search',function(){
+		ajax_test(0);
+	});
+	
+	function ajax_test(page){
+		var str = $('#search').val();
         $.ajax({
-        	type: 'POST',
-        	url: baseUrl+'Emp_ctrl/leave_request_ajax',
+        	type: 'GET',
+        	url: baseUrl+'Emp_ctrl/leave_request_ajax/'+ page +'/'+ str,
         	data: {},
         	dataType: 'json',
         	beforeSend: function() {},
         	success: function(response){
         		if(response.status == 200){
-        			console.log(response);
         			var x = '';
+        			var c = parseInt(parseInt(page)+1);
         			$.each(response.data.final_array,function(key,value){
             			x = x + '<tr>'+
-            						'<td>'+ parseInt(key+1) +'</td>'+
+            						'<td>'+ parseInt(c++) +'</td>'+
             						'<td>'+ value.refrence_id +'</td>'+
             						'<td>'+ value.created_at +'</td>'+
             						'<td>'+ value.date_from +'</td>'+
@@ -384,14 +393,19 @@ $(document).ready(function(){
             						'<td>'+ value.duration +'</td>'+
             						'<td>'+ value.requirment +'</td>'+
             						'<td>'+ value.pl +'</td>'+
-            						'<td>coff</td>'+
-            						'<td>'+ value.hod_remark +'</td>'+
-            						'<td>'+ value.hod_status +'</td>'+
+            						'<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>'+
+            						'<td>'+ value.hod_remark +'</td>';
+            						var bgcolor = '';
+            						if(value.hod_status == 'REJECTED'){
+            							bgcolor = 'bg-danger';
+                					} else if(value.hod_status == 'GRANTED'){
+                						bgcolor = 'bg-success';
+                    				}else if(value.hod_status == 'PENDING'){
+                						bgcolor = 'bg-warning';
+                    				}
+            					x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
             					'</tr>';
-            		});
-
-					
-                	
+            		});         	
             		$('#leave_requests_body').html(x);
             		$('#leave_requests_links').html(response.data.links);
         		}
@@ -399,6 +413,14 @@ $(document).ready(function(){
         });
 	}
 
+	$(document).on('click','.myLinks',function(){
+		var page = $(this).attr('href');
+		var x = page.split('/');
+		if(x[1] == undefined){
+			x[1] = 0;
+		}
+		ajax_test(x[1]);	
+	});
 });
 </script>
 </body>

@@ -93,37 +93,87 @@ class Emp_model extends CI_Model {
 		return $result; 
 	}
 	
-	
-	function total_leave_requests($ecode){
+	/////////////////////////////////// es leave requests //////////////////////////////
+	function total_leave_requests($ecode,$str){
 	    $result = $this->db->query('SELECT count(*) as total
                 FROM users_leave_requests p
                 WHERE p.request_type = "LEAVE"
                 AND p.ecode = "'.$ecode.'"
+                AND (refrence_id like "%'. $str .'%" OR requirment like "%'. $str .'%")
                 AND p.status = 1 order by refrence_id desc')->result_array();
 	    return $result[0]['total'];
 	}
 	
-	function leave_requests_ajax($ecode,$offset,$limit){
+	function leave_requests_ajax($ecode,$str,$offset,$limit){
 	    $result = $this->db->query('SELECT p.*, date_format(p.created_at, "%d/%m/%Y %H:%i:%s") as created_at, date_format(p.date_from, "%d/%m/%Y") as date_from, date_format(p.date_to, "%d/%m/%Y") as date_to,
                 			(select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = p.refrence_id and c.request_type in ("NH_FH")) as NHFH,
                             (select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = p.refrence_id and c.request_type in ("OFF_DAY")) as COFF
                 FROM users_leave_requests p
                 WHERE p.request_type = "LEAVE"
                 AND p.ecode = "'.$ecode.'"
+                AND (refrence_id like "%'. $str .'%" OR requirment like "%'. $str .'%") 
                 AND p.status = 1 order by refrence_id desc limit '.$limit.','.$offset.'')->result_array();
-	   
 	    return $result;
 	}
 	
-	function leave_requests($ecode){
-        return $this->db->query('SELECT p.*, date_format(p.created_at, "%d/%m/%Y %H:%i:%s") as created_at, date_format(p.date_from, "%d/%m/%Y") as date_from, date_format(p.date_to, "%d/%m/%Y") as date_to,
-                			(select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = p.refrence_id and c.request_type in ("NH_FH")) as NHFH,
-                            (select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = p.refrence_id and c.request_type in ("OFF_DAY")) as COFF
-                FROM users_leave_requests p
-                WHERE p.request_type = "LEAVE"
-                AND p.ecode = "'.$ecode.'"
-                AND p.status = 1 order by refrence_id desc')->result_array();
+	// 	function leave_requests($ecode){
+	//         return $this->db->query('SELECT p.*, date_format(p.created_at, "%d/%m/%Y %H:%i:%s") as created_at, date_format(p.date_from, "%d/%m/%Y") as date_from, date_format(p.date_to, "%d/%m/%Y") as date_to,
+	//                 			(select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = p.refrence_id and c.request_type in ("NH_FH")) as NHFH,
+	//                             (select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = p.refrence_id and c.request_type in ("OFF_DAY")) as COFF
+	//                 FROM users_leave_requests p
+	//                 WHERE p.request_type = "LEAVE"
+	//                 AND p.ecode = "'.$ecode.'"
+	//                 AND p.status = 1 order by refrence_id desc')->result_array();
+	// 	}
+	
+	/////////////////////////////////// es leave requests //////////////////////////////
+	
+
+
+	/////////////////////////////////// HALF leave requests //////////////////////////////
+	function total_hf_leave_requests($ecode,$str){
+	    $this->db->select('count(*) as total');
+	    $this->db->where('(refrence_id like "%'.$str.'%" OR requirment like "%'.$str.'%")');
+	    $result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'request_type'=>'HALF','status'=>1))->result_array();
+	    return $result[0]['total'];
 	}
+	
+	function hf_leave_requests($ecode,$str,$offset,$limit){
+	    $this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date,date_format(hod_remark_date,"%d/%m/%Y %H:%i:%s") as hod_remark_date');
+	    $this->db->where('(refrence_id like "%'.$str.'%" OR requirment like "%'.$str.'%")');
+	    $this->db->order_by('date_from','DESC');
+	    $this->db->limit($offset,$limit);
+	    $result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'request_type'=>'HALF','status'=>1))->result_array();
+	    return $result;   
+	}
+	
+	// 	function hf_leave_requests($ecode){
+	// 	    $this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date,date_format(hod_remark_date,"%d/%m/%Y %H:%i:%s") as hod_remark_date');
+	// 	    $this->db->order_by('date_from','DESC');
+	// 	    $result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'request_type'=>'HALF','status'=>1))->result_array();
+	// 	    return $result;
+	// 	}
+	/////////////////////////////////// HALF leave requests //////////////////////////////
+	
+	
+	/////////////////////////////////// OFF day requests //////////////////////////////
+	function total_off_day_request_ajax($ecode,$str){
+	    $this->db->select('count(*) as total');
+	    $this->db->where('(refrence_id like "%'.$str.'%" OR requirment like "%'.$str.'%")');
+	    $result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'request_type'=>'OFF_DAY','status'=>1))->result_array();
+	    return $result[0]['total'];
+	}
+	
+	function off_day_request($ecode,$str,$offset,$limit){
+    	$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date');
+    	$this->db->where('(refrence_id like "%'.$str.'%" OR requirment like "%'.$str.'%")');
+    	$this->db->order_by('id','desc');
+    	$this->db->limit($offset,$limit);
+    	$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'request_type'=>'OFF_DAY','status'=>1))->result_array();
+    	return $result;
+	}
+	///////////////////////////////// OFF day requests //////////////////////////////
+	
 	
 	function pl_summary_report($data){
 		$this->db->select('*,IFNULL(credit," ") as credit,IFNULL(debit," ") as debit,IFNULL(balance," ") as balance');

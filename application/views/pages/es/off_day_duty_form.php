@@ -1,3 +1,6 @@
+<?php if(!isset($pls[0]['balance'])){ 
+	$pls[0]['balance'] = 0;
+}?>
   
   <div class="content-wrapper">	
 	<div class="content-header bg-light mb-3">
@@ -26,7 +29,7 @@
 				<div class="card card-info">
 				  <div class="card-header" style="border-radius:0px;">
 					<span class="card-title">OFF DAY DUTY FORM</span>
-					<span class="float-right">Current Remaining Pl's : <?php $pl = $this->my_library->pl_calculator($this->session->userdata('ecode')); echo $pl[0]['balance']; ?></span>
+					<span class="float-right">Current Remaining Pl's : <?php echo $pls[0]['balance']; ?></span>
 				  </div>
 				  <div class="card-body">
 					<table class="table table-bordered">
@@ -68,7 +71,7 @@
 		  </form>
 		  <hr/>
 		  
-		 <?php if(count($requests)>0){ ?>
+		 <?php /*if(count($requests)>0){ ?>
 			  <div class="col-12">
 				<div class="card card-info">
 				  <div class="card-header" style="border-radius:0px;">
@@ -122,18 +125,47 @@
 										><?php echo $request['hr_status']; ?></td>
 										*/ ?>
 									</tr>
-								<?php } ?>
+								<?php /*} ?>
 							</tbody>
 						</table>
 					</div>
 				  </div>
 				</div>
 			  </div>
-		<?php } ?>
+		<?php } */?>
 		  
-		  
+		<div class="col-12">
+			<div class="card card-info">
+			  <div class="card-header" style="border-radius:0px;">
+				<h3 class="card-title">OFF DAY DUTY FORM STATUS</h3>
+			  </div>
+			  <div class="card-body">
+				<div class="table-responsive">
+					<input id="search" type="text" class="float-right mb-2">
+    						<label class="float-right mr-2" for="search">Search: </label>
+    						<table class="table table-bordered table-striped text-center" id="off_requests_head">
+						<thead>	
+							<tr class="bg-dark">
+								<th>S.No.</th>
+								<th>REFERENCE No.</th>
+								<th>REQUEST SUBMIT DATE</th>
+								<th>OFF DAY DUTY DATE</th>
+								<th>REASON</th>
+								<th>HOD REMARK</th>	
+								<th>HOD STATUS</th>
+								<!--th>HR REMARKS</th>
+								<th>HR STATUS</th-->
+							</tr>
+						</thead>
+						<tbody id="off_requests_body"></tbody>
+					</table>
+					<nav aria-label="Page navigation example" id="off_requests_links"></nav>
+				</div>
+			  </div>
+			</div>
+      </div><!-- /.container-fluid -->  
 		
-      </div><!-- /.container-fluid -->
+      
     </div>
     <!-- /.content -->
   </div>
@@ -157,7 +189,7 @@
 var baseUrl = $('#baseUrl').val();
 
 $(document).ready(function(){
-	$('#example').DataTable();
+	//$('#example').DataTable();
 	get_detail();
 	
 	$(document).on('change','#off_day_date',function(){
@@ -192,6 +224,60 @@ $(document).ready(function(){
 			});
 		}
 	}
+
+
+ajax_test(0);	//load requests
+	
+	$(document).on('keyup','#search',function(){
+		ajax_test(0);
+	});
+	
+	function ajax_test(page){
+		var str = $('#search').val();
+        $.ajax({
+        	type: 'GET',
+        	url: baseUrl+'Emp_ctrl/off_day_request_ajax/'+ page +'/'+ str,
+        	data: {},
+        	dataType: 'json',
+        	beforeSend: function() {},
+        	success: function(response){
+        		if(response.status == 200){
+        			var x = '';
+        			var c = parseInt(parseInt(page)+1);
+        			$.each(response.data.final_array,function(key,value){
+            			x = x + '<tr>'+
+            						'<td>'+ parseInt(c++) +'</td>'+
+            						'<td>'+ value.refrence_id +'</td>'+
+            						'<td>'+ value.created_at +'</td>'+
+            						'<td>'+ value.date_from +'</td>'+
+            						'<td>'+ value.requirment +'</td>'+
+            						'<td>'+ value.hod_remark +'</td>';
+            						var bgcolor = '';
+            						if(value.hod_status == 'REJECTED'){
+            							bgcolor = 'bg-danger';
+                					} else if(value.hod_status == 'GRANTED'){
+                						bgcolor = 'bg-success';
+                    				}else if(value.hod_status == 'PENDING'){
+                						bgcolor = 'bg-warning';
+                    				}
+            					x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
+            					'</tr>';
+            		});         	
+            		$('#off_requests_body').html(x);
+            		$('#off_requests_links').html(response.data.links);
+        		}
+        	}
+        });
+	}
+
+	$(document).on('click','.myLinks',function(){
+		var page = $(this).attr('href');
+		var x = page.split('/');
+		if(x[1] == undefined){
+			x[1] = 0;
+		}
+		ajax_test(x[1]);	
+	});
 });
 </script>
 </body>

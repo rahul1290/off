@@ -161,7 +161,6 @@ class Emp_ctrl extends CI_Controller {
 	        
 	        $this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
 	        if ($this->form_validation->run() == FALSE) {
-	            //print_r(validation_errors()); die;
 	            
 	            $data = array();
 	            $data['coffs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND date_from >= '".date('Y-m-d', strtotime('-3 month'))."' AND request_type = 'OFF_DAY' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
@@ -178,7 +177,7 @@ class Emp_ctrl extends CI_Controller {
 	            $data['top_nav'] = $this->load->view('include/top_nav','',true);
 	            $data['aside'] = $this->load->view('include/aside',$data,true);
 	            $data['notepad'] = $this->load->view('include/shift_timing','',true);
-	            $data['requests'] = $this->Emp_model->leave_requests($this->session->userdata('ecode'));      //leaver request list
+	            //$data['requests'] = $this->Emp_model->leave_requests($this->session->userdata('ecode'));      //leaver request list
 	            $data['body'] = $this->load->view('pages/es/leave_request',$data,true);
 	            $data['title'] = $this->config->item('project_title').' | Leave Request';
 	            $data['head'] = $this->load->view('common/head',$data,true);
@@ -245,7 +244,7 @@ class Emp_ctrl extends CI_Controller {
     		$data['top_nav'] = $this->load->view('include/top_nav','',true);
     		$data['aside'] = $this->load->view('include/aside',$data,true);
     		$data['notepad'] = $this->load->view('include/shift_timing','',true);
-    		$data['requests'] = $this->Emp_model->leave_requests($this->session->userdata('ecode'));      //leaver request list
+    		//$data['requests'] = $this->Emp_model->leave_requests($this->session->userdata('ecode'));      //leaver request list
     		$data['body'] = $this->load->view('pages/es/leave_request',$data,true);
     		$data['title'] = $this->config->item('project_title').' | Leave Request';
     		$data['head'] = $this->load->view('common/head',$data,true);
@@ -255,18 +254,34 @@ class Emp_ctrl extends CI_Controller {
 	}
 	
 	
-	function leave_request_ajax($page=0){
+	function leave_request_ajax($page=0,$str=''){
 	    $config = array();
 	    $config["base_url"] = "javascript:void(0)";
-	    $config["total_rows"] = $this->Emp_model->total_leave_requests($this->session->userdata('ecode'));
-	    $config["per_page"] = 5;
+	    $config["total_rows"] = $this->Emp_model->total_leave_requests($this->session->userdata('ecode'),$str);
+	    $config["per_page"] = $this->config->item('row_count');
 	    $config["uri_segment"] = $page;
-	    $config['attributes'] = array('class' => 'myLinks');
+	    $config['attributes'] = array('class' => 'page-link myLinks');
+	    
+	    
+	    $config['full_tag_open'] = '<ul class="pagination justify-content-center">';
+	    $config['full_tag_close'] = '</ul>';
+	    $config['num_tag_open'] = '<li class="page-item">';
+	    $config['num_tag_close'] = '</li>';
+	    $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="javascript:void(0);">';
+	    $config['cur_tag_close'] = '</a></li>';
+	    $config['prev_tag_open'] = '<li class="page-item">';
+	    $config['prev_tag_close'] = '</li>';
+	    $config['next_tag_open'] = '<li class="page-item">';
+	    $config['next_tag_close'] = '</li>';
+	    $config['last_tag_open'] = '<li class="page-item">';
+	    $config['last_tag_close'] = '</li>';
+	    $config['first_tag_open'] = '<li class="page-item">';
+	    $config['first_tag_close'] = '</li>';
+	    
 	    $this->pagination->initialize($config);
 	    
-	    
 	    $data["links"] = $this->pagination->create_links();
-	    $records = $this->Emp_model->leave_requests_ajax($this->session->userdata('ecode'),$config["per_page"],1);
+	    $records = $this->Emp_model->leave_requests_ajax($this->session->userdata('ecode'),$str,$config["per_page"],$page);
 	    if(count($records)>0){
 	        $data['final_array'] = array();
 	        foreach($records as $record){
@@ -279,7 +294,7 @@ class Emp_ctrl extends CI_Controller {
 	            $temp['requirment'] = $record['requirment'];
 	            $temp['date_from'] = $record['date_from'];
 	            $temp['date_to'] = $record['date_to'];
-	            $temp['hod_remark'] = $record['hod_remark'];
+	            $temp['hod_remark'] = ($record['hod_remark'])?$record['hod_remark']:'';
 	            $temp['hod_status'] = $record['hod_status'];
                 $temp['hod_id'] = $record['hod_id'];
                 $temp['hod_remark_date'] = $record['hod_remark_date'];
@@ -293,8 +308,8 @@ class Emp_ctrl extends CI_Controller {
                 $temp['pl'] = $record['pl'];
                 $temp['lop'] = $record['lop'];
                 $temp['status'] = $record['status'];
-                $temp['NHFH'] = $record['NHFH'];
-                $temp['COFF'] = $record['COFF'];
+                $temp['NHFH'] = ($record['NHFH'])?$record['NHFH']:'-';
+                $temp['COFF'] = ($record['COFF'])?$record['COFF']:'-';
                 
                 $data['final_array'][] = $temp;
 	        }
@@ -310,13 +325,17 @@ class Emp_ctrl extends CI_Controller {
 				$this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
 				if ($this->form_validation->run() == FALSE){
 					$data = array();
+					$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+					$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+					if(count($data['pls'])>0){
+					    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+					}
+					
 					$data['footer'] = $this->load->view('include/footer','',true);
 					$data['top_nav'] = $this->load->view('include/top_nav','',true);
 					$data['aside'] = $this->load->view('include/aside','',true);
-					$data['notepad'] = $this->load->view('include/shift_timing','',true);
-					
-					$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date');
-					$data['requests'] = $this->db->get_where('users_leave_requests',array('ecode'=>$this->session->userdata('ecode'),'request_type'=>'HALF','status'=>1))->result_array();
+// 					$data['notepad'] = $this->load->view('include/shift_timing','',true);
+// 					$data['requests'] = $this->Emp_model->hf_leave_requests($this->session->userdata('ecode'));
 					$data['body'] = $this->load->view('pages/es/hf_leave_request',$data,true);
 					//===============common===============//
 					$data['title'] =  $this->config->item('project_title').' | HF Leave Request';
@@ -362,12 +381,13 @@ class Emp_ctrl extends CI_Controller {
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
 			$data['aside'] = $this->load->view('include/aside',$data,true);
-			$data['notepad'] = $this->load->view('include/shift_timing','',true);
-			
-			$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date,date_format(hod_remark_date,"%d/%m/%Y %H:%i:%s") as hod_remark_date');
-			$this->db->order_by('date_from','DESC');
-			$data['requests'] = $this->db->get_where('users_leave_requests',array('ecode'=>$this->session->userdata('ecode'),'request_type'=>'HALF','status'=>1))->result_array();
-			
+			$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+			$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+			if(count($data['pls'])>0){
+			    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+			}
+			//$data['notepad'] = $this->load->view('include/shift_timing','',true);
+			//$data['requests'] = $this->Emp_model->hf_leave_requests($this->session->userdata('ecode'));
 			$data['body'] = $this->load->view('pages/es/hf_leave_request',$data,true);
 			//===============common===============//
 			$data['title'] = $this->config->item('project_title').' | HF Leave Request';
@@ -375,6 +395,68 @@ class Emp_ctrl extends CI_Controller {
 			$data['footer'] = $this->load->view('common/footer',$data,true);
 			$this->load->view('layout_master',$data);
 		}
+	}
+	
+	
+	function hf_leave_request_ajax($page=0,$str=''){
+	    $config = array();
+	    $config["base_url"] = "javascript:void(0)";
+	    $config["total_rows"] = $this->Emp_model->total_hf_leave_requests($this->session->userdata('ecode'),$str);
+	    $config["per_page"] = $this->config->item('row_count');
+	    $config["uri_segment"] = $page;
+	    $config['attributes'] = array('class' => 'page-link myLinks');
+	    
+	    
+	    $config['full_tag_open'] = '<ul class="pagination justify-content-center">';
+	    $config['full_tag_close'] = '</ul>';
+	    $config['num_tag_open'] = '<li class="page-item">';
+	    $config['num_tag_close'] = '</li>';
+	    $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="javascript:void(0);">';
+	    $config['cur_tag_close'] = '</a></li>';
+	    $config['prev_tag_open'] = '<li class="page-item">';
+	    $config['prev_tag_close'] = '</li>';
+	    $config['next_tag_open'] = '<li class="page-item">';
+	    $config['next_tag_close'] = '</li>';
+	    $config['last_tag_open'] = '<li class="page-item">';
+	    $config['last_tag_close'] = '</li>';
+	    $config['first_tag_open'] = '<li class="page-item">';
+	    $config['first_tag_close'] = '</li>';
+	    
+	    $this->pagination->initialize($config);
+	    
+	    $data["links"] = $this->pagination->create_links();
+	    $records = $this->Emp_model->hf_leave_requests($this->session->userdata('ecode'),$str,$config["per_page"],$page);
+	    
+	    if(count($records)>0){
+	        $data['final_array'] = array();
+	        foreach($records as $record){
+	            $temp = array();
+	            $temp['id'] = $record['id'];
+	            $temp['request_type'] = $record['request_type'];
+	            $temp['refrence_id'] = $this->my_library->remove_hyphen($record['refrence_id']);
+	            $temp['ecode'] = $record['ecode'];
+	            $temp['requirment'] = $record['requirment'];
+	            $temp['date_from'] = $this->my_library->sql_datepicker($record['date_from']);
+	            $temp['date_to'] = $record['date_to'];
+	            $temp['hod_remark'] = ($record['hod_remark'])?$record['hod_remark']:'';
+	            $temp['hod_status'] = $record['hod_status'];
+	            $temp['hod_id'] = $record['hod_id'];
+	            $temp['hod_remark_date'] = $record['hod_remark_date'];
+	            $temp['hr_remark'] = $record['hr_remark'];
+	            $temp['hr_status'] = $record['hr_status'];
+	            $temp['hr_id'] = $record['hr_id'];
+	            $temp['hr_remark_date'] = $record['hr_remark_date'];
+	            $temp['created_at'] = $record['created_at'];
+	            $temp['wod'] = $record['wod'];
+	            $temp['request_id'] = $record['request_id'];
+	            $temp['pl'] = $record['pl'];
+	            $temp['lop'] = $record['lop'];
+	            $temp['status'] = $record['status'];
+	            
+	            $data['final_array'][] = $temp;
+	        }
+	    }
+	    echo json_encode(array('data'=>$data,'status'=>200));
 	}
 	
 	function hf_leave_request_cancel($request_id){
@@ -404,10 +486,13 @@ class Emp_ctrl extends CI_Controller {
 					$data['footer'] = $this->load->view('include/footer','',true);
 					$data['top_nav'] = $this->load->view('include/top_nav','',true);
 					$data['aside'] = $this->load->view('include/aside','',true);
-					$data['notepad'] = $this->load->view('include/shift_timing','',true);
-					$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date');
-					$data['requests'] = $this->db->get_where('users_leave_requests',array('ecode'=>$this->session->userdata('ecode'),'request_type'=>'OFF_DAY','status'=>1))->result_array();
-					
+					$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+					$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+					if(count($data['pls'])>0){
+					    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+					}
+// 					$data['notepad'] = $this->load->view('include/shift_timing','',true);
+// 					$data['requests'] = $this->Emp_model->off_day_duty_form($this->session->userdata('ecode'));
 					$data['body'] = $this->load->view('pages/es/off_day_duty_form',$data,true);
 					//===============common===============//
 					$data['title'] = $this->config->item('project_title').' | OFF DAY DUTY FORM';
@@ -443,12 +528,13 @@ class Emp_ctrl extends CI_Controller {
 				$data['footer'] = $this->load->view('include/footer','',true);
 				$data['top_nav'] = $this->load->view('include/top_nav','',true);
 				$data['aside'] = $this->load->view('include/aside',$data,true);
-				//$data['open'] = 'true';
-				$data['notepad'] = $this->load->view('include/shift_timing','',true);
-				
-				$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date');
-				$this->db->order_by('id','desc');
-				$data['requests'] = $this->db->get_where('users_leave_requests',array('ecode'=>$this->session->userdata('ecode'),'request_type'=>'OFF_DAY','status'=>1))->result_array();
+				$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+				$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+				if(count($data['pls'])>0){
+				    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+				}
+				//$data['notepad'] = $this->load->view('include/shift_timing','',true);
+				//$data['requests'] = $this->Emp_model->off_day_duty_form($this->session->userdata('ecode'));
 				$data['body'] = $this->load->view('pages/es/off_day_duty_form',$data,true);
 				//===============common===============//
 				$data['title'] = $this->config->item('project_title').' | OFF DAY DUTY FORM';
@@ -456,6 +542,67 @@ class Emp_ctrl extends CI_Controller {
 				$data['footer'] = $this->load->view('common/footer',$data,true);
 				$this->load->view('layout_master',$data);
 			}		
+	}
+	
+	function off_day_request_ajax($page=0,$str=''){
+	    $config = array();
+	    $config["base_url"] = "javascript:void(0)";
+	    $config["total_rows"] = $this->Emp_model->total_off_day_request_ajax($this->session->userdata('ecode'),$str);
+	    $config["per_page"] = $this->config->item('row_count');
+	    $config["uri_segment"] = $page;
+	    $config['attributes'] = array('class' => 'page-link myLinks');
+	    
+	    
+	    $config['full_tag_open'] = '<ul class="pagination justify-content-center">';
+	    $config['full_tag_close'] = '</ul>';
+	    $config['num_tag_open'] = '<li class="page-item">';
+	    $config['num_tag_close'] = '</li>';
+	    $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="javascript:void(0);">';
+	    $config['cur_tag_close'] = '</a></li>';
+	    $config['prev_tag_open'] = '<li class="page-item">';
+	    $config['prev_tag_close'] = '</li>';
+	    $config['next_tag_open'] = '<li class="page-item">';
+	    $config['next_tag_close'] = '</li>';
+	    $config['last_tag_open'] = '<li class="page-item">';
+	    $config['last_tag_close'] = '</li>';
+	    $config['first_tag_open'] = '<li class="page-item">';
+	    $config['first_tag_close'] = '</li>';
+	    
+	    $this->pagination->initialize($config);
+	    
+	    $data["links"] = $this->pagination->create_links();
+	    $records = $this->Emp_model->off_day_request($this->session->userdata('ecode'),$str,$config["per_page"],$page);
+	    
+	    if(count($records)>0){
+	        $data['final_array'] = array();
+	        foreach($records as $record){
+	            $temp = array();
+	            $temp['id'] = $record['id'];
+	            $temp['request_type'] = $record['request_type'];
+	            $temp['refrence_id'] = $this->my_library->remove_hyphen($record['refrence_id']);
+	            $temp['ecode'] = $record['ecode'];
+	            $temp['requirment'] = $record['requirment'];
+	            $temp['date_from'] = $this->my_library->sql_datepicker($record['date_from']);
+	            $temp['date_to'] = $record['date_to'];
+	            $temp['hod_remark'] = ($record['hod_remark'])?$record['hod_remark']:'';
+	            $temp['hod_status'] = $record['hod_status'];
+	            $temp['hod_id'] = $record['hod_id'];
+	            $temp['hod_remark_date'] = $record['hod_remark_date'];
+	            $temp['hr_remark'] = $record['hr_remark'];
+	            $temp['hr_status'] = $record['hr_status'];
+	            $temp['hr_id'] = $record['hr_id'];
+	            $temp['hr_remark_date'] = $record['hr_remark_date'];
+	            $temp['created_at'] = $record['created_at'];
+	            $temp['wod'] = $record['wod'];
+	            $temp['request_id'] = $record['request_id'];
+	            $temp['pl'] = $record['pl'];
+	            $temp['lop'] = $record['lop'];
+	            $temp['status'] = $record['status'];
+	            
+	            $data['final_array'][] = $temp;
+	        }
+	    }
+	    echo json_encode(array('data'=>$data,'status'=>200));
 	}
 	
 	function day_attendance($date,$ecode,$type){
@@ -565,6 +712,11 @@ class Emp_ctrl extends CI_Controller {
 				$data['top_nav'] = $this->load->view('include/top_nav','',true);
 				$data['aside'] = $this->load->view('include/aside','',true);
 				$data['nhfh_days'] = $this->Nh_fh_model->get_nhfh();
+				$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+				$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+				if(count($data['pls'])>0){
+				    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+				}
 				$data['nh_fh_requests'] = $this->Nh_fh_model->user_nhfh_requests($this->session->userdata('ecode'));
 				
 				//$data['open'] = 'true';
@@ -604,6 +756,11 @@ class Emp_ctrl extends CI_Controller {
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
 			$data['aside'] = $this->load->view('include/aside',$data,true);
 			$data['nhfh_days'] = $this->Nh_fh_model->get_nhfh();
+			$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+			$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+			if(count($data['pls'])>0){
+			    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+			}
 			$data['nh_fh_requests'] = $this->Nh_fh_model->user_nhfh_requests($this->session->userdata('ecode'));
 			
 			//$data['open'] = 'true';
