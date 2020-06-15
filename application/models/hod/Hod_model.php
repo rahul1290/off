@@ -159,23 +159,23 @@ class Hod_model extends CI_Model {
 	        'hod_remark_date' => $data['created_at']
 	    ));
 	    
-	    if($data['value'] == 'GRANTED'){
-	        $this->db->select('*');
-	        $reqest_details = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id']))->result_array();
+// 	    if($data['value'] == 'GRANTED'){
+// 	        $this->db->select('*');
+// 	        $reqest_details = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id']))->result_array();
 	        
-	        $pls = $this->my_library->pl_calculator($reqest_details[0]['ecode']);
-	        $balance = $pls[0]['balance'] + 1;
+// 	        $pls = $this->my_library->pl_calculator($reqest_details[0]['ecode']);
+// 	        $balance = $pls[0]['balance'] + 1;
 	        
-	        $this->db->insert('pl_management',array(
-	            'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
-	            'ecode' => $reqest_details[0]['ecode'],
-	            'credit' => 1,
-	            'balance' => $balance,
-	            'date' => date('Y-m-d H:i:s'),
-	            'created_at' => date('Y-m-d H:i:s'),
-	            'created_by' => $this->session->userdata('ecode')
-	        ));
-	    }
+// 	        $this->db->insert('pl_management',array(
+// 	            'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
+// 	            'ecode' => $reqest_details[0]['ecode'],
+// 	            'credit' => 1,
+// 	            'balance' => $balance,
+// 	            'date' => date('Y-m-d H:i:s'),
+// 	            'created_at' => date('Y-m-d H:i:s'),
+// 	            'created_by' => $this->session->userdata('ecode')
+// 	        ));
+// 	    }
 	    
 	    if ($this->db->trans_status() === FALSE){
 	        $this->db->trans_rollback();
@@ -196,23 +196,23 @@ class Hod_model extends CI_Model {
 	        'hod_remark_date' => $data['created_at']
 	     ));
 	    
-	    $this->db->select('*');
-	    $reqest_details = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id']))->result_array();
+// 	    $this->db->select('*');
+// 	    $reqest_details = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id']))->result_array();
 	    
-	    $pls = $this->my_library->pl_calculator($reqest_details[0]['ecode']);
-	    $balance = $pls[0]['balance'] + 1;
+// 	    $pls = $this->my_library->pl_calculator($reqest_details[0]['ecode']);
+// 	    $balance = $pls[0]['balance'] + 1;
 	     
-	    if($data['value'] == 'GRANTED'){
-	        $this->db->insert('pl_management',array(
-	            'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
-	            'ecode' => $reqest_details[0]['ecode'],
-	            'credit' => 1,
-	            'balance' => $balance,
-	            'date' => date('Y-m-d H:i:s'),
-	            'created_at' => date('Y-m-d H:i:s'),
-	            'created_by' => $this->session->userdata('ecode')
-	        ));
-	    }
+// 	    if($data['value'] == 'GRANTED'){
+// 	        $this->db->insert('pl_management',array(
+// 	            'refrence_no' => $this->my_library->leave_request_refno($data['req_id']),
+// 	            'ecode' => $reqest_details[0]['ecode'],
+// 	            'credit' => 1,
+// 	            'balance' => $balance,
+// 	            'date' => date('Y-m-d H:i:s'),
+// 	            'created_at' => date('Y-m-d H:i:s'),
+// 	            'created_by' => $this->session->userdata('ecode')
+// 	        ));
+// 	    }
 	    
 	    if ($this->db->trans_status() === FALSE){
 	        $this->db->trans_rollback();

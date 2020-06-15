@@ -216,16 +216,16 @@
             							<th>S.No.</th>
             							<th>REFERENCE No.</th>
             							<th>REQUEST SUBMIT DATE</th>
-            							<th>LEAVE FROM</th>
-            							<th>LEAVE TO</th>
+            							<th>LEAVE DATE</th>
+            							<th>REASON</th>
             							<th>LEAVE DURATION</th>
-    									<th>REASON</th>
-            							<th>PL TAKEN</th>
+            							<th>PL DEDUCT</th>
+            							<th>LOP</th>
             							<th>LEAVE ADJUSTMENT</th>
             							<th>HOD REMARK</th>
             							<th>HOD STATUS</th>
-            							<!--th>HR REMARK</th>
-<!--             							<th>HR STATUS</th-->
+            							<th>HR REMARK</th>
+    									<th>HR STATUS</th>
             						</tr>
     							</thead>
     							<tbody id="leave_requests_body"></tbody>
@@ -403,10 +403,11 @@ $(document).ready(function(){
             						'<td>'+ value.refrence_id +'</td>'+
             						'<td>'+ value.created_at +'</td>'+
             						'<td>'+ value.date_from +'</td>'+
-            						'<td>'+ value.date_to +'</td>'+
-            						'<td>'+ value.duration +'</td>'+
+            						//'<td>'+ value.date_to +'</td>'+
             						'<td>'+ value.requirment +'</td>'+
-            						'<td>'+ value.pl +'</td>'+
+            						'<td>'+ value.duration +'</td>'+
+            						'<td>'+ parseInt(value.pl) +'</td>'+
+            						'<td>'+ parseInt(value.lop) +'</td>'+
             						'<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>'+
             						'<td>'+ value.hod_remark +'</td>';
             						var bgcolor = '';
@@ -417,7 +418,19 @@ $(document).ready(function(){
                     				}else if(value.hod_status == 'PENDING'){
                 						bgcolor = 'bg-warning';
                     				}
-            					x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
+                    				
+            						x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
+            							  '<td>'+ value.hod_remark +'</td>';
+                					var bgcolor = '';
+            						if(value.hr_status == 'REJECTED'){
+            							bgcolor = 'bg-danger';
+                					} else if(value.hr_status == 'GRANTED'){
+                						bgcolor = 'bg-success';
+                    				}else if(value.hr_status == 'PENDING'){
+                						bgcolor = 'bg-warning';
+                    				}
+                    				
+            						x = x+'<td class="'+ bgcolor +'">'+ value.hr_status +'</td>';  	
             					'</tr>';
             		});         	
             		$('#leave_requests_body').html(x);

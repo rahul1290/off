@@ -97,10 +97,10 @@ foreach($links as $link){
 				  <i class="fas fa-biking text-warning mr-1"></i>
                   <p>TOUR REQUEST FORM</p>
                 </a>
-              </li>
+              </li> */ ?>
 			  
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('ALL REPORT',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('es/All-Report'); ?>" class="nav-link
+                <a href="<?php echo base_url('es/All-Report'); ?>" class="nav-link ml-3
 					<?php if($this->uri->segment('2') == 'All-Report'){ echo "active"; } ?>
 				">
                   
@@ -108,7 +108,6 @@ foreach($links as $link){
                   <p>ALL REPORT</p>
                 </a>
               </li>
-			  */ ?>
 			  
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('NH/FH AVAIL FORM',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('es/NH-FH-Avail-Form');?>" class="nav-link ml-3

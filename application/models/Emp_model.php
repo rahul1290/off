@@ -105,7 +105,7 @@ class Emp_model extends CI_Model {
 	}
 	
 	function leave_requests_ajax($ecode,$str,$offset,$limit){
-	    $result = $this->db->query('SELECT p.*, date_format(p.created_at, "%d/%m/%Y %H:%i:%s") as created_at, date_format(p.date_from, "%d/%m/%Y") as date_from, date_format(p.date_to, "%d/%m/%Y") as date_to,
+	    $result = $this->db->query('SELECT p.*, date_format(p.created_at, "%d/%m/%Y") as created_at, date_format(p.date_from, "%d/%m/%Y") as date_from, date_format(p.date_to, "%d/%m/%Y") as date_to,
                 			(select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = p.refrence_id and c.request_type in ("NH_FH")) as NHFH,
                             (select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = p.refrence_id and c.request_type in ("OFF_DAY")) as COFF
                 FROM users_leave_requests p

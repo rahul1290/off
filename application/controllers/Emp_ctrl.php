@@ -80,8 +80,11 @@ class Emp_ctrl extends CI_Controller {
 			
 			$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
 			$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-			if(count($data['pls'])>0){
+			if(count($data['pls']) > 0){
 			    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+			    if($data['pls'][0]['balance'] < 0){
+			        $data['pls'][0]['balance'] = 0;
+			    }
 			}
 			
 			$data['footer'] = $this->load->view('include/footer','',true);
@@ -176,6 +179,9 @@ class Emp_ctrl extends CI_Controller {
 	            $data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
 	            if(count($data['pls'])>0){
 	                $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+	                if($data['pls'][0]['balance'] < 0){
+	                    $data['pls'][0]['balance'] = 0;
+	                }
 	            }
 	            
 	            $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
@@ -243,6 +249,9 @@ class Emp_ctrl extends CI_Controller {
     		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
 			if(count($data['pls'])>0){
     		  $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+    		  if($data['pls'][0]['balance'] < 0){
+    		      $data['pls'][0]['balance'] = 0;
+    		  }
     		}
     		
             $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
@@ -298,7 +307,7 @@ class Emp_ctrl extends CI_Controller {
 	            $temp['ecode'] = $record['ecode'];
 	            $temp['duration'] = $this->my_library->day_duration($record['date_from'],$record['date_to']);
 	            $temp['requirment'] = $record['requirment'];
-	            $temp['date_from'] = $record['date_from'];
+	            $temp['date_from'] = $record['date_from'] .' - '. $record['date_to'];
 	            $temp['date_to'] = $record['date_to'];
 	            $temp['hod_remark'] = ($record['hod_remark'])?$record['hod_remark']:'';
 	            $temp['hod_status'] = $record['hod_status'];
@@ -336,6 +345,9 @@ class Emp_ctrl extends CI_Controller {
 					$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
 					if(count($data['pls'])>0){
 					    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+					    if($data['pls'][0]['balance'] < 0){
+					        $data['pls'][0]['balance'] = 0;
+					    }
 					}
 					
 					$data['footer'] = $this->load->view('include/footer','',true);
@@ -392,6 +404,9 @@ class Emp_ctrl extends CI_Controller {
 			$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
 			if(count($data['pls'])>0){
 			    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+			    if($data['pls'][0]['balance'] < 0){
+			        $data['pls'][0]['balance'] = 0;
+			    }
 			}
 			//$data['notepad'] = $this->load->view('include/shift_timing','',true);
 			//$data['requests'] = $this->Emp_model->hf_leave_requests($this->session->userdata('ecode'));
@@ -497,6 +512,9 @@ class Emp_ctrl extends CI_Controller {
 					$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
 					if(count($data['pls'])>0){
 					    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+					    if($data['pls'][0]['balance'] < 0){
+					        $data['pls'][0]['balance'] = 0;
+					    }
 					}
 // 					$data['notepad'] = $this->load->view('include/shift_timing','',true);
 // 					$data['requests'] = $this->Emp_model->off_day_duty_form($this->session->userdata('ecode'));
@@ -539,6 +557,9 @@ class Emp_ctrl extends CI_Controller {
 				$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
 				if(count($data['pls'])>0){
 				    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+				    if($data['pls'][0]['balance'] < 0){
+				        $data['pls'][0]['balance'] = 0;
+				    }
 				}
 				//$data['notepad'] = $this->load->view('include/shift_timing','',true);
 				//$data['requests'] = $this->Emp_model->off_day_duty_form($this->session->userdata('ecode'));
@@ -723,6 +744,9 @@ class Emp_ctrl extends CI_Controller {
 				$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
 				if(count($data['pls'])>0){
 				    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+				    if($data['pls'][0]['balance'] < 0){
+				        $data['pls'][0]['balance'] = 0;
+				    }
 				}
 				$data['nh_fh_requests'] = $this->Nh_fh_model->user_nhfh_requests($this->session->userdata('ecode'));
 				
@@ -768,6 +792,9 @@ class Emp_ctrl extends CI_Controller {
 			$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
 			if(count($data['pls'])>0){
 			    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+			    if($data['pls'][0]['balance'] < 0){
+			        $data['pls'][0]['balance'] = 0;
+			    }
 			}
 			$data['nh_fh_requests'] = $this->Nh_fh_model->user_nhfh_requests($this->session->userdata('ecode'));
 			
@@ -857,6 +884,9 @@ class Emp_ctrl extends CI_Controller {
 	            $data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
 	            if(count($data['pls'])>0){
 	                $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+	                if($data['pls'][0]['balance'] < 0){
+	                    $data['pls'][0]['balance'] = 0;
+	                }
 	            }
 	            
 	            $data['notepad'] = $this->load->view('include/shift_timing','',true);
@@ -891,6 +921,9 @@ class Emp_ctrl extends CI_Controller {
 		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
 		if(count($data['pls'])>0){
 		    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+		    if($data['pls'][0]['balance'] < 0){
+		        $data['pls'][0]['balance'] = 0;
+		    }
 		}
 		
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
@@ -932,6 +965,15 @@ class Emp_ctrl extends CI_Controller {
 			$data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
 			$data['users'] = $this->Emp_model->get_employee($this->session->userdata('ecode'));
 			$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+			
+			$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+			$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+			if(count($data['pls'])>0){
+			    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+			    if($data['pls'][0]['balance'] < 0){
+			        $data['pls'][0]['balance'] = 0;
+			    }
+			}
 			
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
