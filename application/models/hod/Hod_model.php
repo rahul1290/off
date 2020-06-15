@@ -119,24 +119,35 @@ class Hod_model extends CI_Model {
     		);
     		
     		if($data['value'] == 'GRANTED'){
-    		    $refrence_no = $this->my_library->leave_request_refno($data['req_id']);
+    		    $this->db->select('*');
+    		    $leave_detail = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id']))->result_array();
     		    
-    		    $this->db->select('ecode');
-    		    $ecode = $this->db->get_where('users_leave_requests',array('refrence_id'=>$refrence_no))->result_array();
+    		    $pls = $this->my_library->pl_calculator($leave_detail[0]['ecode']);
     		    
-    		    $pls = $this->my_library->pl_calculator($ecode[0]['ecode']);
+    		    if($pls < 0){
+    		        $update_data = array(
+    		            'pl' => '0.5',
+    		        );
+    		    } else {
+    		        $update_data = array(
+    		            'lop' => '0.5',
+    		        );
+    		    }
     		    
-    		    $this->db->insert('pl_management',array(
-    		              'type' => 'PL',
-    		              'refrence_no' =>  $refrence_no,
-    		              'ecode' => $ecode[0]['ecode'],
-    		              'credit' => '0',
-    		              'debit' => '0.5',
-    		              'balance' => $pls[0]['balance'] - '0.5',
-    		              'date' => date('Y-m-d H:i:s'),
-    		              'created_at'    => date('Y-m-d H:i:s'),
-    		              'created_by'    => $this->session->userdata('ecode')
-    		    ));
+    		    $this->db->where('refrence_id',$leave_detail[0]['refrence_id']);
+    		    $this->db->update('users_leave_requests',$update_data);
+    		    
+//     		    $this->db->insert('pl_management',array(
+//     		              'type' => 'PL',
+//     		        'refrence_no' =>  $leave_detail[0]['refrence_id'],
+//     		        'ecode' => $leave_detail[0]['ecode'],
+//     		              'credit' => '0',
+//     		              'debit' => '0.5',
+//     		              'balance' => $pls[0]['balance'] - '0.5',
+//     		              'date' => date('Y-m-d H:i:s'),
+//     		              'created_at'    => date('Y-m-d H:i:s'),
+//     		              'created_by'    => $this->session->userdata('ecode')
+//     		    ));
     		}
     		
 		if ($this->db->trans_status() === FALSE){

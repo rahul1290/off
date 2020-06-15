@@ -290,7 +290,8 @@ $(document).ready(function(){
 		var date1 = new Date(date_convert($('#from_date').val()));
 		var date2 = new Date(date_convert($('#to_date').val()));
 		var Difference_In_Time = date2.getTime() - date1.getTime();
-		Difference_In_Days = ((Difference_In_Time / (1000 * 3600 * 24))+1); 
+		Difference_In_Days = ((Difference_In_Time / (1000 * 3600 * 24))+1);
+		 
 		pl_deduct();
 		
 		$('.leave').prop("checked", false);
@@ -320,11 +321,14 @@ $(document).ready(function(){
 		if(Difference_In_Days > 0) {
 			$('#leave_adjust').show();	
 			$('#date_range').text(Difference_In_Days +' Days').show();
+			debugger;
 			coff = $('.coffs:checkbox:checked').length;
 			nhfh = $('.nhfhs:checkbox:checked').length;
-			var pl_deduct = parseInt(Difference_In_Days) - parseInt(coff) - parseInt(nhfh);
-			
-			if(pl_deduct > 0) {
+			console.log(coff);
+			console.log(nhfh);
+			var plDeduct = parseInt(Difference_In_Days) - (parseInt(coff) + parseInt(nhfh));
+			debugger; 
+			//if(plDeduct > 0) {
 				var cpl = $('#current_pl').val();
 				if(cpl >= 0){
 					
@@ -332,24 +336,24 @@ $(document).ready(function(){
 					cpl = 0;
 				}
 				
-				if(pl_deduct > cpl){
+				if(plDeduct > cpl){
 					$('#pl_deduct').text(cpl);
 					$('#f1_pl').val(cpl);
 				} else {
-					$('#pl_deduct').text(pl_deduct);
-					$('#f1_pl').val(pl_deduct);
+					$('#pl_deduct').text(plDeduct);
+					$('#f1_pl').val(plDeduct);
 				}
-				if(pl_deduct - cpl > 0) {
-					$('#lop').text(pl_deduct - $('#f1_pl').val());
-					$('#f1_lop').val(pl_deduct - $('#f1_pl').val());
+				if(plDeduct - cpl > 0) {
+					$('#lop').text(plDeduct - $('#f1_pl').val());
+					$('#f1_lop').val(plDeduct - $('#f1_pl').val());
 				} else {
 					$('#lop').text(0);
 					$('#f1_lop').val(0);
 				}
-			}
-			else { 
-				$('#pl_deduct').text(0);
-			}	
+// 			}
+// 			else { 
+// 				$('#pl_deduct').text(0);
+// 			}	
 			$('#submit').prop('disabled', false);
 		} else {
 			$('#submit').prop('disabled', true);
@@ -367,6 +371,7 @@ $(document).ready(function(){
 	});
 
 	function leaveLop(){
+		
 		if(Difference_In_Days > leave_adjustment){ 
 			pl_deduct();
     		if($(this).prop("checked") == true){
@@ -379,7 +384,13 @@ $(document).ready(function(){
 				$(this).prop("checked", false);
 			} else {
 				pl_deduct();
-				leave_adjustment = parseInt(parseInt(leave_adjustment) - 1);
+				if(parseInt(leave_adjustment) > 0 ){
+					leave_adjustment = parseInt(parseInt(leave_adjustment) - 1); 
+				} else {
+					leave_adjustment = 0;
+				}
+//				leave_adjustment = parseInt(parseInt(leave_adjustment) - 1);
+				console.log('387 '+leave_adjustment);
 			}
 		}
 	}

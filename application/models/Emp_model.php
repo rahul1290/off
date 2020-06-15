@@ -139,7 +139,7 @@ class Emp_model extends CI_Model {
 	}
 	
 	function hf_leave_requests($ecode,$str,$offset,$limit){
-	    $this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date,date_format(hod_remark_date,"%d/%m/%Y %H:%i:%s") as hod_remark_date');
+	    $this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date,date_format(hod_remark_date,"%d/%m/%Y %H:%i:%s") as hod_remark_date,ifnull(pl,"-") as pl,IFNULL(lop,"-") as lop,IFNULL(hr_remark,"") as hr_remark');
 	    $this->db->where('(refrence_id like "%'.$str.'%" OR requirment like "%'.$str.'%")');
 	    $this->db->order_by('date_from','DESC');
 	    $this->db->limit($offset,$limit);

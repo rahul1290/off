@@ -144,10 +144,12 @@
 								<th>REQUEST SUBMIT DATE</th>
 								<th>HALF TAKEN DATE</th>
 								<th>REASON</th>
+								<th>PL</th>
+								<th>LOP</th>
 								<th>HOD REMARK</th>
 								<th>HOD STATUS</th>
-								<!--th>HR REMARKS</th>
-								<th>HR STATUS</th-->
+								<th>HR REMARKS</th>
+								<th>HR STATUS</th>
 							</tr>
 						</thead>
 						<tbody id="hf_requests_body"></tbody>
@@ -277,6 +279,8 @@ $(document).ready(function(){
             						'<td>'+ value.created_at +'</td>'+
             						'<td>'+ value.date_from +'</td>'+
             						'<td>'+ value.requirment +'</td>'+
+            						'<td>'+ value.pl +'</td>'+
+            						'<td>'+ value.lop +'</td>'+
             						'<td>'+ value.hod_remark +'</td>';
             						var bgcolor = '';
             						if(value.hod_status == 'REJECTED'){
@@ -286,7 +290,17 @@ $(document).ready(function(){
                     				}else if(value.hod_status == 'PENDING'){
                 						bgcolor = 'bg-warning';
                     				}
-            					x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
+            						x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
+            							'<td>'+ value.hr_remark +'</td>';
+            						var bgcolor = '';
+            						if(value.hr_status == 'REJECTED'){
+            							bgcolor = 'bg-danger';
+                					} else if(value.hr_status == 'GRANTED'){
+                						bgcolor = 'bg-success';
+                    				}else if(value.hr_status == 'PENDING'){
+                						bgcolor = 'bg-warning';
+                    				}
+            						x = x+'<td class="'+ bgcolor +'">'+ value.hr_status +'</td>'+ 	
             					'</tr>';
             		});         	
             		$('#hf_requests_body').html(x);
