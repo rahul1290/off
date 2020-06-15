@@ -78,6 +78,12 @@ class Emp_ctrl extends CI_Controller {
 			$data['users'] = $this->Emp_model->get_employee($this->session->userdata('ecode'));
 			$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 			
+			$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+			$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+			if(count($data['pls'])>0){
+			    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+			}
+			
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
 			$data['aside'] = $this->load->view('include/aside',$data,true);
@@ -317,9 +323,10 @@ class Emp_ctrl extends CI_Controller {
 	    echo json_encode(array('data'=>$data,'status'=>200));
 	}
 	
+	
 	function hf_leave_request(){
 		if($_SERVER['REQUEST_METHOD'] === 'POST'){
-				$this->form_validation->set_rules('half_day_date', 'HALF day date', 'required');
+				$this->form_validation->set_rules('half_day_date', 'HALF day date', 'required|callback_validateDate');
 				$this->form_validation->set_rules('reason', 'Reason', 'required|trim');
 				
 				$this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
@@ -477,7 +484,7 @@ class Emp_ctrl extends CI_Controller {
 	function off_day_duty_form(){
 			if($_SERVER['REQUEST_METHOD'] === 'POST'){
 			    
-				$this->form_validation->set_rules('off_day_date', 'OFF day date', 'required');
+				$this->form_validation->set_rules('off_day_date', 'OFF day date', 'required|callback_validateDate');
 				$this->form_validation->set_rules('requirment', 'Requirment', 'required|trim');
 				
 				$this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
@@ -756,6 +763,7 @@ class Emp_ctrl extends CI_Controller {
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
 			$data['aside'] = $this->load->view('include/aside',$data,true);
 			$data['nhfh_days'] = $this->Nh_fh_model->get_nhfh();
+            
 			$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
 			$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
 			if(count($data['pls'])>0){
@@ -767,7 +775,7 @@ class Emp_ctrl extends CI_Controller {
 			$data['notepad'] = $this->load->view('include/shift_timing','',true);
 			$data['body'] = $this->load->view('pages/es/nh_fh_day_duty_form',$data,true);
 			//===============common===============//
-			$data['title'] = 'Home | NH FH DAY DUTY FORM';
+			$data['title'] = $this->config->item('project_title').'| NH FH DAY DUTY FORM';
 			$data['head'] = $this->load->view('common/head',$data,true);
 			$data['footer'] = $this->load->view('common/footer',$data,true);
 			$this->load->view('layout_master',$data);
@@ -845,6 +853,12 @@ class Emp_ctrl extends CI_Controller {
 	            $data['nhfh_days'] = $this->Nh_fh_model->get_nhfh();
 	            $data['nh_fh_requests'] = $this->Nh_fh_model->user_nhfh_requests($this->session->userdata('ecode'));
 	            
+	            $data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+	            $data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+	            if(count($data['pls'])>0){
+	                $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+	            }
+	            
 	            $data['notepad'] = $this->load->view('include/shift_timing','',true);
 	            $data['body'] = $this->load->view('pages/es/nh_fh_avail_form',$data,true);
 	            //===============common===============//
@@ -872,6 +886,12 @@ class Emp_ctrl extends CI_Controller {
 		$data['aside'] = $this->load->view('include/aside',$data,true);
 		$data['nhfh_days'] = $this->Nh_fh_model->get_nhfh();
 		$data['nh_fh_avail_requests'] = $this->Nh_fh_model->user_nhfh_avail_requests($this->session->userdata('ecode'));
+		
+		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+		if(count($data['pls'])>0){
+		    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+		}
 		
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
 		$data['body'] = $this->load->view('pages/es/nh_fh_avail_form',$data,true);
@@ -926,18 +946,25 @@ class Emp_ctrl extends CI_Controller {
 		}
 	}
 	
-	function attendance_record(){
-		$data = array();
-		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
-		$data['footer'] = $this->load->view('include/footer','',true);
-		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside',$data,true);
-		$data['notepad'] = $this->load->view('include/notepad','',true);
-		$data['body'] = $this->load->view('pages/emp_dashboard',$data,true);
-		//===============common===============//
-		$data['title'] = 'Home | Emp-Portal';
-		$data['head'] = $this->load->view('common/head',$data,true);
-		$data['footer'] = $this->load->view('common/footer',$data,true);
-		$this->load->view('layout_master',$data);
-	}	
+// 	function attendance_record(){
+// 		$data = array();
+// 		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+		
+// 		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+// 		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+// 		if(count($data['pls'])>0){
+// 		    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+// 		}
+		
+// 		$data['footer'] = $this->load->view('include/footer','',true);
+// 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
+// 		$data['aside'] = $this->load->view('include/aside',$data,true);
+// 		$data['notepad'] = $this->load->view('include/notepad','',true);
+// 		$data['body'] = $this->load->view('pages/emp_dashboard',$data,true);
+// 		//===============common===============//
+// 		$data['title'] = $this->config->item('project_title').'| Emp-Portal';
+// 		$data['head'] = $this->load->view('common/head',$data,true);
+// 		$data['footer'] = $this->load->view('common/footer',$data,true);
+// 		$this->load->view('layout_master',$data);
+// 	}	
 }

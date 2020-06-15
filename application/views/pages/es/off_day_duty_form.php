@@ -225,8 +225,11 @@ $(document).ready(function(){
 		}
 	}
 
-
-ajax_test(0);	//load requests
+	$('#off_day_date').keypress(function(e) {
+	    e.preventDefault();
+	}); 
+	
+	ajax_test(0);	//load requests
 	
 	$(document).on('keyup','#search',function(){
 		ajax_test(0);

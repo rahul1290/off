@@ -247,6 +247,10 @@ $(document).ready(function(){
 	});
 
 
+	$('#half_day_date').keypress(function(e) {
+	    e.preventDefault();
+	}); 
+	
 
 	ajax_test(0);	//load requests
 	

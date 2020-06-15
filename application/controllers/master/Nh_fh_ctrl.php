@@ -12,10 +12,11 @@ class Nh_fh_ctrl extends CI_Controller {
 	
 	function index(){
 		$data = array();
+		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		$data['nhfhs'] = $this->Nh_fh_model->get_nhfh();
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside','',true);
+		$data['aside'] = $this->load->view('include/aside',$data,true);
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
 		$data['body'] = $this->load->view('pages/master/nh_fh',$data,true);
 		

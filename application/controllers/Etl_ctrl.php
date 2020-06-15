@@ -882,7 +882,6 @@ class Etl_ctrl extends CI_Controller {
 	    $this->db2 = $this->load->database('sqlsrv',TRUE);
 	    $results = $this->db2->query("SELECT p.*,u.Code FROM ".$this->config->item('NEWZ36')."Permission p join ".$this->config->item('NEWZ36')." LoginKRA u on u.EmpCode = p.EmpCode where p.EmpCode = '".$ecode."'")->result_array();
 	    
-	    
 	    if(count($results)>0){
 	        $departs = $this->db2->query("SELECT distinct(Dept) as Dept FROM ".$this->config->item('NEWZ36')."LoginKRA where Report1 = '".$ecode."'")->result_array();
 	        
@@ -1034,8 +1033,24 @@ class Etl_ctrl extends CI_Controller {
 	           
 	       }
 	       if($results[0]['HR']){
-	           
+	           $temp = array('link_id'=>18,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	           $temp = array('link_id'=>20,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	           $temp = array('link_id'=>21,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	           $temp = array('link_id'=>22,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	           $temp = array('link_id'=>23,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	           $temp = array('link_id'=>24,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	           $temp = array('link_id'=>25,'ecode'=>$ecode);
+	           array_push($permission, $temp);
+	           $temp = array('link_id'=>25,'ecode'=>$ecode);
+	           array_push($permission, $temp);
 	       }
+	       
 	       if($results[0]['Monitoring']){
 	           $temp = array('link_id'=>45,'ecode'=>$ecode);
 	           array_push($permission, $temp);

@@ -34,7 +34,7 @@
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
                 <span class="card-title">LEAVE REQUEST FORM</span>
-                <span class="float-right">Current Remaining Pl's : <span class="font-weight-bold"><?php echo $pls[0]['balance']; ?></span></span>
+                <span class="float-right">Current Remaining Pl's : <?php echo $pls[0]['balance']; ?></span>
               </div>
               <div class="card-body">
 				<div class="table-responsive">

@@ -1,3 +1,7 @@
+<?php if(!isset($pls[0]['balance'])){ 
+	$pls[0]['balance'] = 0;
+}?>
+
   <div class="content-wrapper">	
 	<div class="content-header bg-light mb-3">
 		<div class="container-fluid">
@@ -22,7 +26,8 @@
             <!-- general form elements disabled -->
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
-                <h3 class="card-title">ATTENDANCE REGISTER</h3>
+                <span class="card-title">ATTENDANCE REGISTER</span>
+                <span class="float-right">Current Remaining Pl's : <?php echo $pls[0]['balance']; ?></span>
               </div>
               <!-- /.card-header -->
               <div class="card-body">

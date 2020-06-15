@@ -1,3 +1,6 @@
+<?php if(!isset($pls[0]['balance'])){ 
+	$pls[0]['balance'] = 0;
+}?>
   <div class="content-wrapper">	
 	<div class="content-header bg-light mb-3">
 		<div class="container-fluid">
@@ -25,7 +28,8 @@
 		   <?php echo $this->session->flashdata('msg'); ?>
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
-                <h3 class="card-title">NH/FH AVAIL FORM</h3>
+                <span class="card-title">NH/FH AVAIL FORM</span>
+                <span class="float-right">Current Remaining Pl's : <?php echo $pls[0]['balance']; ?></span>
               </div>
               <div class="card-body">
 					<table class="table table-bordered">
