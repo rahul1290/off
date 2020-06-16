@@ -197,7 +197,7 @@ class Hr_ctrl extends CI_Controller {
 	            $temp['ecode'] = $record['ecode'];
 	            $temp['duration'] = $this->my_library->day_duration($record['date_from'],$record['date_to']);
 	            $temp['requirment'] = $record['requirment'];
-	            $temp['date_from'] = $record['date_from'] .' - '. $record['date_to'];
+	            $temp['date_from'] = date("d-/m/Y", strtotime($record['date_from'])) .' - '. date("d/m/Y", strtotime($record['date_to']));
 	            $temp['date_to'] = $record['date_to'];
 	            $temp['hod_remark'] = ($record['hod_remark'])?$record['hod_remark']:'';
 	            $temp['hod_status'] = $record['hod_status'];
@@ -215,7 +215,6 @@ class Hr_ctrl extends CI_Controller {
 	            $temp['status'] = $record['status'];
 	            $temp['NHFH'] = ($record['nhfhs'])?$record['nhfhs']:'-';
 	            $temp['COFF'] = ($record['coff'])?$record['coff']:'-';
-	            
 	            $data['final_array'][] = $temp;
 	        }
 	    }

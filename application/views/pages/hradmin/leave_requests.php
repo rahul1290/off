@@ -20,7 +20,6 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-		
 			  <div class="col-md-12">
 				<div class="card card-info">
 				  <div class="card-header" style="border-radius:0px;">
@@ -367,31 +366,21 @@ $(document).ready(function(){
             						'<td>'+ value.refrence_id +'</td>'+
             						'<td>'+ value.created_at +'</td>'+
             						'<td>'+ value.date_from +'</td>'+
-            						//'<td>'+ value.date_to +'</td>'+
             						'<td>'+ value.requirment +'</td>'+
             						'<td>'+ value.duration +'</td>'+
             						'<td>'+ value.pl +'</td>'+
             						'<td>'+ value.lop +'</td>'+
             						'<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>'+
-            						'<td>'+ value.hod_remark +'</td>';
-            						var bgcolor = '';
-            						if(value.hod_status == 'REJECTED'){
-            							bgcolor = 'bg-danger';
-                					} else if(value.hod_status == 'GRANTED'){
-                						bgcolor = 'bg-success';
-                    				}else if(value.hod_status == 'PENDING'){
-                						bgcolor = 'bg-warning';
-                    				}
-                    				
-            						x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
-            							  '<td><textarea name="" id="" data-rid="'+ value.id +'" class="hr_remark form-control"></textarea></td>'+
-                						  '<td>'+
-                							'<select class="hr_status" name="hr_status" data-rid="'+ value.id +'">'+
-        										'<option value="PENDING" selected>PENDING</option>'+
-        										'<option  value="REJECTED">REJECTED</option>'+
-        										'<option  value="GRANTED">GRANTED</option>'+
-    										'</select>'+
-            						      '</td>';  	
+            						'<td>'+ value.hod_remark +'</td>'+
+            						'<td>'+ value.hod_status +'</td>'+
+            						'<td><textarea name="" id="" data-rid="'+ value.id +'" class="hr_remark form-control"></textarea></td>'+
+									'<td>'+
+                						'<select class="hr_status" name="hr_status" data-rid="'+ value.id +'">'+
+        									'<option value="PENDING" selected>PENDING</option>'+
+        									'<option  value="REJECTED">REJECTED</option>'+
+        									'<option  value="GRANTED">GRANTED</option>'+
+    									'</select>'+
+            						'</td>'+  	
             					'</tr>';
             		});         	
             		$('#leave_pending_requests_body').html(x);
@@ -413,7 +402,7 @@ $(document).ready(function(){
 	});
 
 
-	//requests(0);
+	requests(0);
 	$(document).on('keyup','#search2',function(){
 		requests(0);
 	});
@@ -444,25 +433,16 @@ $(document).ready(function(){
             						'<td>'+ value.pl +'</td>'+
             						'<td>'+ value.lop +'</td>'+
             						'<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>'+
-            						'<td>'+ value.hod_remark +'</td>';
-            						var bgcolor = '';
-            						if(value.hod_status == 'REJECTED'){
-            							bgcolor = 'bg-danger';
-                					} else if(value.hod_status == 'GRANTED'){
-                						bgcolor = 'bg-success';
-                    				}else if(value.hod_status == 'PENDING'){
-                						bgcolor = 'bg-warning';
-                    				}
-                    				
-            						x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
-            							  '<td><textarea name="" id="" data-rid="'+ value.id +'" class="hr_remark form-control"></textarea></td>'+
-                						  '<td>'+
-                							'<select class="hr_status" name="hr_status" data-rid="'+ value.id +'">'+
-        										'<option value="PENDING" selected>PENDING</option>'+
-        										'<option  value="REJECTED">REJECTED</option>'+
-        										'<option  value="GRANTED">GRANTED</option>'+
-    										'</select>'+
-            						      '</td>';  	
+            						'<td>'+ value.hod_remark +'</td>'+
+            						'<td>'+ value.hod_status +'</td>'+
+    							  	'<td><textarea name="" id="" data-rid="'+ value.id +'" class="hr_remark form-control"></textarea></td>'+
+        						  	'<td>'+
+        								'<select class="hr_status" name="hr_status" data-rid="'+ value.id +'">'+
+											'<option value="PENDING" selected>PENDING</option>'+
+											'<option  value="REJECTED">REJECTED</option>'+
+											'<option  value="GRANTED">GRANTED</option>'+
+										'</select>'+
+    						      	'</td>'+  	
             					'</tr>';
             		});         	
             		$('#leave_requests_body').html(x);
