@@ -158,18 +158,53 @@ class Emp_ctrl extends CI_Controller {
 	    }
 	}
 	
+	function validatecoff($str){
+	    $from_date = date('Y-m-d', strtotime(str_replace('/', '-',$_POST['from_date'])));
+	    if($str != ''){
+    	    $dates = $this->db->query("select date_from from users_leave_requests where refrence_id = '".$str."' AND status = 1")->result_array();
+    	    $coff_date = date('Y-m-d', strtotime("+3 months", strtotime($dates[0]['date_from'])));
+    	    
+    	    $diff = date_diff(date_create($from_date),date_create($coff_date));
+    	    //$x = $diff->format("%R%a");
+    	    if($diff->format("%R") == '+'){
+    	        return true;
+    	    } else {
+    	        $this->form_validation->set_message('validatecoff', '%s only valid for next 3 month of date.');
+    	        return false;
+    	    }
+	    } else {
+	        return true;
+	    }
+	}
+	
+	function validatenhfh($str){
+	    $from_date = date('Y-m-d', strtotime(str_replace('/', '-',$_POST['from_date'])));
+	    if($str != ''){
+	        $dates = $this->db->query("select date_format(date_from,'%Y') as date_from from users_leave_requests where refrence_id = '".$str."' AND status = 1")->result_array();
+	        
+	        if(date('Y') == $dates[0]['date_from']){
+	            return true;
+	        } else {
+	            $this->form_validation->set_message('validatenhfh', '%s only valid for current year.');
+	            return false;
+	        }
+	    } else {
+	        return true;
+	    }
+	}
+	
 	function leave_request(){
 	    if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	        $this->form_validation->set_rules('from_date', 'From Date', 'required|callback_compareDate|callback_validateDate');
 	        $this->form_validation->set_rules('to_date', 'To Date', 'required|callback_compareDate|callback_validateDate');
 	        $this->form_validation->set_rules('reason','Reason','required|trim');
 	        $this->form_validation->set_rules('wod','wod','required');
-			$this->form_validation->set_rules('coff[]','coff','trim');
-			$this->form_validation->set_rules('f1_pl','f1_pl', 'required|callback_validatePL');
+			$this->form_validation->set_rules('coff[]','coff','trim|callback_validatecoff');
+			$this->form_validation->set_rules('nhfh[]','Nhfh','trim|callback_validatenhfh');
+			$this->form_validation->set_rules('f1_pl','f1_pl', 'required');
 	        
 	        $this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
 	        if ($this->form_validation->run() == FALSE) {
-	            
 	            $data = array();
 	            $data['coffs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND date_from >= '".date('Y-m-d', strtotime('-3 month'))."' AND request_type = 'OFF_DAY' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
 	            $data['nhfhs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'NH_FH' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
