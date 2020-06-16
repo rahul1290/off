@@ -193,6 +193,7 @@ class Emp_ctrl extends CI_Controller {
 	    }
 	}
 	
+	
 	function leave_request(){
 	    if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	        $this->form_validation->set_rules('from_date', 'From Date', 'required|callback_compareDate|callback_validateDate');

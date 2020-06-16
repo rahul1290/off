@@ -26,17 +26,13 @@
     <div class="content">
       <div class="container-fluid">  
 		<div class="col-12">
-			<form name="f1" method="POST" action="<?php echo base_url('es/leave-request');?>">
-			<input type="hidden" name="f1_pl" id="f1_pl" value="<?php echo $pls[0]['balance']; ?>" />
-			<input type="hidden" name="f1_lop" id="f1_lop" value="0" />
-			  
+			<form name="f1" id="f1" method="POST" action="<?php echo base_url('es/leave-request');?>">
 			<?php echo $this->session->flashdata('msg'); ?>
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
                 <span class="card-title">LEAVE REQUEST FORM</span>
                 <span class="float-right">Current Remaining Pl's : <?php echo $pls[0]['balance']; ?></span>
               </div>
-              
               <div class="card-body">
 				<div class="table-responsive">
 					<table class="table table-bordered">
@@ -70,27 +66,33 @@
 							}
 						}
 						?>
-						<tr id="leave_adjust" style="display: <?php if(isset($x) || isset($y)){ echo ""; } else { echo "none"; }?>;">
+						<tr id="leave_adjust">
 							<td><b>LEAVE ADJUSTMENT</b></td>
 							<td>
-								<?php if(count($coffs)>0){ ?>
-    								<b>COMP OFF:</b> 
-    								<ul style="list-style: none;">
-        								<?php foreach($coffs as $coff){ ?>
-        										<li>
-        											<input <?php if(isset($x)){if(in_array($coff['refrence_id'],$x)){ echo "checked"; }} ?> type="checkbox" name="coff[]" class="leave coffs" data-value="<?php echo $coff['refrence_id']; ?>" value="<?php echo $coff['refrence_id']; ?>" /> <?php echo $this->my_library->sql_datepicker($coff['date_from']); ?>
-        										</li>											        
-        							    <?php } ?> 
-    								</ul>
-								<?php }?>
-								<?php echo form_error('coff[]'); ?>
-										
-                              	<?php if(count($nhfhs)>0){ ?>
-                              	<br/><b>NH/FH:</b> <ul style="list-style: none;"><?php foreach($nhfhs as $nhfh){ ?>
-													<li><input <?php if(isset($y)){if(in_array($nhfh['refrence_id'],$y)){ echo "checked"; }} ?> type="checkbox" name="nhfh[]" class="leave nhfhs" data-value="<?php echo $nhfh['refrence_id']; ?>" value="<?php echo $nhfh['refrence_id']; ?>" /> <?php echo $this->my_library->sql_datepicker($nhfh['date_from']); ?></li>											        
-										    <?php } ?> </ul>
-								<?php } ?>
-								<?php echo form_error('nhfh[]'); ?>
+								<div class="row">
+									<div class="col">
+										<?php if(count($coffs)>0){ ?>
+            								<b>COMP OFF:</b> 
+            								<ul style="list-style: none;">
+                								<?php foreach($coffs as $coff){ ?>
+                										<li>
+                											<input <?php if(isset($x)){if(in_array($coff['refrence_id'],$x)){ echo "checked"; }} ?> onclick="rahul();" type="checkbox" name="coff[]" class="leave coffs" data-value="<?php echo $coff['refrence_id']; ?>" value="<?php echo $coff['refrence_id']; ?>" /> <?php echo $this->my_library->sql_datepicker($coff['date_from']); ?>
+                										</li>											        
+                							    <?php } ?> 
+            								</ul>
+        								<?php echo form_error('coff[]'); }?>
+        								
+									</div>
+									<div class="col">
+										<?php if(count($nhfhs)>0){ ?>
+                                      	<b>NH/FH:</b> <ul style="list-style: none;"><?php foreach($nhfhs as $nhfh){ ?>
+        													<li><input <?php if(isset($y)){if(in_array($nhfh['refrence_id'],$y)){ echo "checked"; }} ?> type="checkbox" name="nhfh[]" class="leave nhfhs" data-value="<?php echo $nhfh['refrence_id']; ?>" value="<?php echo $nhfh['refrence_id']; ?>" /> <?php echo $this->my_library->sql_datepicker($nhfh['date_from']); ?></li>											        
+        										    <?php } ?> </ul>
+        								<?php } ?>
+        								<?php echo form_error('nhfh[]'); ?>
+									</div>
+								</div>
+
                                <hr/><br/>
                                		<span>Total PL Deduct: <span id="pl_deduct"></span></span>
                                		<span class="float-right">Loss of pay: <span id="lop">0</span></span>
@@ -123,89 +125,12 @@
               </div>
             </div>
             	<div class="text-center">
-					<input type="submit" value="Submit" class="btn btn-warning" id="submit"/>
+					<input type="submit" value="submit" name="submit" class="btn btn-warning"/>
 					<input type="reset" value="Cancel" class="btn btn-secondary" />
 				</div>
 			</form>
 			<hr/>
           
-          <?php /*if(isset($requests)){ if(count($requests)>0) { ?>
-    		  <div class="card card-info">
-                  <div class="card-header" style="border-radius:0px;">
-                    <h3 class="card-title">LEAVE REQUESTS</h3>
-                  </div>
-                  <div class="card-body">
-    				<div class="table-responsive">
-    					<table class="table table-bordered table-striped text-center" id="example">
-    						<thead class="bg-dark">
-        						<tr>
-        							<th>S.No.</th>
-        							<th>REFERENCE No.</th>
-        							<th>REQUEST SUBMIT DATE</th>
-        							<th>LEAVE FROM</th>
-        							<th>LEAVE TO</th>
-        							<th>LEAVE DURATION</th>
-									<th>REASON</th>
-        							<th>PL TAKEN</th>
-        							<th>LEAVE ADJUSTMENT</th>
-        							<th>HOD REMARK</th>
-        							<th>HOD STATUS</th>
-        							<th>HR REMARK</th>
-        							<th>HR STATUS</th>
-        						</tr>
-    						</thead>
-    						<tbody>
-    								<?php  $c=1; foreach($requests as $request){ ?>
-    									<tr>
-        								    <td><?php echo $c++; ?></td>
-        								    <td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
-        								    <td><?php echo $request['created_at']; ?></td>
-        								    <td><?php echo $request['date_from']; ?></td>
-        								    <td><?php echo $request['date_to']; ?></td>
-                                            <td><?php echo $this->my_library->day_duration($request['date_from'],$request['date_to']); ?></td>
-											<td><?php echo $request['requirment']; ?></td>
-                                            <td><?php echo $request['pl']; ?></td>
-        								    <td>
-        								    	<?php if($request['NHFH'] != ''){
-        								            echo 'NH/FH\'s:<br/><ul style="list-style:none;">';
-        								            foreach(explode(',',$request['NHFH']) as $r){
-        								                echo "<li>".$this->my_library->sql_datepicker($r)."</li>";
-        								            }
-        								        echo '</ul>'; } ?>
-        								        <?php if($request['COFF'] != ''){
-        								            echo 'COFF\'s:<br/><ul style="list-style:none;">';
-        								            foreach(explode(',',$request['COFF']) as $r){
-        								                echo "<li>".$this->my_library->sql_datepicker($r)."</li>";
-        								            }
-        								        echo '<ul/>'; } ?>
-        								    </td>
-        								    <td><?php echo $request['hod_remark']; ?></td>
-        								    <td class="<?php if($request['hod_status'] == 'REJECTED'){ 
-													echo "bg-danger"; 
-											} else if($request['hod_status'] == 'PENDING'){
-													echo "bg-warning";
-											} else {
-												echo "bg-success";
-											}?>"><?php echo $request['hod_status']; ?></td>
-        								    <td><?php echo $request['hr_remark']; ?></td>
-        								    <td class="<?php if($request['hr_status'] == 'REJECTED'){ 
-													echo "bg-danger"; 
-											} else if($request['hr_status'] == 'PENDING'){
-													echo "bg-warning";
-											} else if($request['hr_status'] == 'GRANTED') {
-												echo "bg-success";
-											} else {
-											    
-											}?>"><?php echo $request['hr_status']; ?></td>
-    								    </tr>
-    								<?php }?>
-    							</tr>
-    						</tbody>
-    					</table>
-    				</div>
-                  </div>
-                </div>
-                <?php } } */ ?>
                <div class="col-12">
                  <div class="card card-info">
                   <div class="card-header" style="border-radius:0px;">
@@ -267,145 +192,15 @@
 <script>
 var baseUrl = $('#baseUrl').val();
 
+rahul();
+
+function rahul(){
+	 document.forms['f1'].submit(); 
+}
+
 $(document).ready(function(){
-	
-	$('#example').DataTable();
 
-	Difference_In_Days = 0;
-	leave_adjustment = 0;
-	
-	daycalculator();
-
-	$(document).on('click','#submit',function(){
-		$('#exampleModalCenter').modal({show:true});
-	});
-	
-	function date_convert(date){
-		v = date.split('/');
-		return v[1]+'/'+v[0]+'/'+v[2];
-	}
-
-	$(document).on('change','#from_date,#to_date',function(){
-		daycalculator();
-		leaveLop();
-	});
-
-
-	function daycalculator(){
-		var date1 = new Date(date_convert($('#from_date').val()));
-		var date2 = new Date(date_convert($('#to_date').val()));
-		var Difference_In_Time = date2.getTime() - date1.getTime();
-		Difference_In_Days = ((Difference_In_Time / (1000 * 3600 * 24))+1);
-		 
-		pl_deduct();
-		
-		$('.leave').prop("checked", false);
-
-		var cpl = $('#current_pl').val();
-		if(cpl >= 0){
-			
-		} else {
-			cpl = 0;
-		}
-		
-		if(Difference_In_Days > cpl){ 
-			$('#pl_deduct').text(cpl);
-			$('#f1_pl').val(cpl);
-		} else {
-			$('#pl_deduct').text(Difference_In_Days);
-			if(isNaN(Difference_In_Days)){
-				$('#f1_pl').val(0);
-			} else {
-				$('#f1_pl').val(Difference_In_Days);
-			}
-		}
-	}
-
-	
-	function pl_deduct(){
-		if(Difference_In_Days > 0) {
-			$('#leave_adjust').show();	
-			$('#date_range').text(Difference_In_Days +' Days').show();
-			//debugger;
-			coff = $('.coffs:checkbox:checked').length;
-			nhfh = $('.nhfhs:checkbox:checked').length;
-			
-			var plDeduct = parseInt(Difference_In_Days) - (parseInt(coff) + parseInt(nhfh));
-			//debugger; 
-			//if(plDeduct > 0) {
-				var cpl = $('#current_pl').val();
-				if(cpl >= 0){
-					
-				} else {
-					cpl = 0;
-				}
-				
-				if(plDeduct > cpl){
-					$('#pl_deduct').text(cpl);
-					$('#f1_pl').val(cpl);
-				} else {
-					$('#pl_deduct').text(plDeduct);
-					$('#f1_pl').val(plDeduct);
-				}
-				if(plDeduct - cpl > 0) {
-					$('#lop').text(plDeduct - $('#f1_pl').val());
-					$('#f1_lop').val(plDeduct - $('#f1_pl').val());
-				} else {
-					$('#lop').text(0);
-					$('#f1_lop').val(0);
-				}
-// 			}
-// 			else { 
-// 				$('#pl_deduct').text(0);
-// 			}	
-			$('#submit').prop('disabled', false);
-		} else {
-			$('#submit').prop('disabled', true);
-			$('#date_range').text('').hide();
-			$('#leave_adjust').hide();
-		}
-	}
-
-	$('#from_date,#to_date').keypress(function(e) {
-	    e.preventDefault();
-	}); 
-	
-	$(document).on('click','.leave',function(e){
-		var that = this;
-		leaveLop(that);
-	});
-
-	function leaveLop(that){	
-		if(Difference_In_Days > leave_adjustment){
-    		if($(that).prop("checked") == true){
-    			leave_adjustment = parseInt(parseInt(leave_adjustment) + 1);
-    		} else {
-    			leave_adjustment = parseInt(parseInt(leave_adjustment) - 1);
-    		}
-    		pl_deduct();		
-		} else {
-			if($(that).prop("checked") == true){
-				$(that).prop("checked", false);
-			} else {
-				pl_deduct();
-				if(parseInt(leave_adjustment) > 0 ){
-					console.log('inner leave_adjustment '+ leave_adjustment);
-					leave_adjustment = parseInt(parseInt(leave_adjustment) - 1);
-					console.log('inner1 leave_adjustment '+ leave_adjustment); 
-				} else {
-					leave_adjustment = 0;
-				}
-				//leave_adjustment = parseInt(parseInt(leave_adjustment) - 1);
-			}
-		}
-
-		console.log("Difference_In_Days :"+Difference_In_Days);
-		console.log("leave_adjustment :"+leave_adjustment);
-	}
-	
-
-	ajax_test(0);	//load requests
-	
+	ajax_test(0);	//load requests	
 	$(document).on('keyup','#search',function(){
 		ajax_test(0);
 	});

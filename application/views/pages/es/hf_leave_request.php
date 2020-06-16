@@ -39,16 +39,16 @@
 						</td>
 					</tr>
 					<tr>
-						<td><b>Date</b></td>
+						<td><b>DATE</b><span class="text-danger">*</span></td>
 						<td>
-							<input type="text" name="half_day_date" id="half_day_date" class="form-control datepicker" value="<?php echo set_value('half_day_date'); ?>" autocomplete="off" maxdate="<?php echo date('Y-m-d'); ?>">
+							<input type="text" name="half_day_date" id="half_day_date" class="form-control datepicker" value="<?php echo set_value('half_day_date'); ?>" autocomplete="off" max-date="<?php echo date('Y-m-d'); ?>">
 							<?php echo form_error('half_day_date'); ?>
 							<span id="duty_detail"></span>
 						</td>
 
 					</tr>
 					<tr>
-						<td><b>REASON FOR LEAVE</b></td>
+						<td><b>REASON FOR LEAVE</b><span class="text-danger">*</span></td>
 						<td>
 							<textarea class="form-control" id="reason" name="reason"><?php echo set_value('reason'); ?></textarea>
 							<?php echo form_error('reason'); ?>
