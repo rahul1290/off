@@ -1,5 +1,5 @@
-<?php if(!isset($pls[0]['balance'])){ 
-	$pls[0]['balance'] = 0;
+<?php if(!isset($pls[0]['balance'])){
+    $pls[0]['balance'] = 0;
 }?>
 <input id="current_pl" type="hidden" value="<?php echo $pls[0]['balance'];?>">
 
@@ -27,8 +27,8 @@
       <div class="container-fluid">  
 		<div class="col-12">
 			<form name="f1" method="POST" action="<?php echo base_url('es/leave-request');?>">
-			<input type="text" name="f1_pl" id="f1_pl" value="<?php echo $pls[0]['balance']; ?>" />
-			<input type="text" name="f1_lop" id="f1_lop" value="0" />
+			<input type="hidden" name="f1_pl" id="f1_pl" value="<?php echo $pls[0]['balance']; ?>" />
+			<input type="hidden" name="f1_lop" id="f1_lop" value="0" />
 			  
 			<?php echo $this->session->flashdata('msg'); ?>
             <div class="card card-info">
@@ -273,9 +273,9 @@ $(document).ready(function(){
 
 	Difference_In_Days = 0;
 	leave_adjustment = 0;
-	
-	daycalculator();
 
+	daycalculator();
+	
 	$(document).on('click','#submit',function(){
 		$('#exampleModalCenter').modal({show:true});
 	});
@@ -288,6 +288,7 @@ $(document).ready(function(){
 	$(document).on('change','#from_date,#to_date',function(){
 		daycalculator();
 		leaveLop();
+		
 	});
 
 
@@ -295,7 +296,8 @@ $(document).ready(function(){
 		var date1 = new Date(date_convert($('#from_date').val()));
 		var date2 = new Date(date_convert($('#to_date').val()));
 		var Difference_In_Time = date2.getTime() - date1.getTime();
-		Difference_In_Days = ((Difference_In_Time / (1000 * 3600 * 24))+1); 
+		Difference_In_Days = ((Difference_In_Time / (1000 * 3600 * 24))+1);
+		 
 		pl_deduct();
 		
 		$('.leave').prop("checked", false);
@@ -308,12 +310,10 @@ $(document).ready(function(){
 		}
 		
 		if(Difference_In_Days > cpl){ 
-			console.log('312 '+cpl);
-			$('#pl_deduct').text('rahul3'+cpl);
+			$('#pl_deduct').text(cpl);
 			$('#f1_pl').val(cpl);
 		} else {
-			$('#pl_deduct').text('rahul4'+Difference_In_Days);
-			console.log('317 '+Difference_In_Days);
+			$('#pl_deduct').text(Difference_In_Days);
 			if(isNaN(Difference_In_Days)){
 				$('#f1_pl').val(0);
 			} else {
@@ -324,45 +324,38 @@ $(document).ready(function(){
 
 	
 	function pl_deduct(){
+		
 		if(Difference_In_Days > 0) {
 			$('#leave_adjust').show();	
 			$('#date_range').text(Difference_In_Days +' Days').show();
-			//debugger;
 			coff = $('.coffs:checkbox:checked').length;
 			nhfh = $('.nhfhs:checkbox:checked').length;
 			
-			var plDeduct = parseInt(Difference_In_Days) - (parseInt(coff) + parseInt(nhfh)); 
-			//debugger; 
-			//if(plDeduct > 0) {
+			var plDeduct = parseInt(Difference_In_Days) - (parseInt(coff) + parseInt(nhfh));
+			if(plDeduct < 0){
+				plDeduct = 0;
+			}
 				var cpl = $('#current_pl').val();
-				
-				if(parseFloat(cpl) >= 0){
+				if(cpl >= 0){
 					
 				} else {
 					cpl = 0;
 				}
 				
 				if(plDeduct > cpl){
-					$('#pl_deduct').text('rahul1'+cpl);
+					$('#pl_deduct').text(cpl);
 					$('#f1_pl').val(cpl);
 				} else {
-					$('#pl_deduct').text('rahul2'+cpl);
-					//$('#pl_deduct').text('rahul2'+plDeduct);
+					$('#pl_deduct').text(plDeduct);
 					$('#f1_pl').val(plDeduct);
 				}
-				if(plDeduct - cpl > 0) {
-					console.log('354 '+plDeduct);
+				if(parseFloat(parseFloat(plDeduct) - parseFloat(cpl)) > 0.0) {
 					$('#lop').text(plDeduct - $('#f1_pl').val());
 					$('#f1_lop').val(plDeduct - $('#f1_pl').val());
-					
 				} else {
 					$('#lop').text(0);
 					$('#f1_lop').val(0);
 				}
-// 			}
-// 			else { 
-// 				$('#pl_deduct').text(0);
-// 			}	
 			$('#submit').prop('disabled', false);
 		} else {
 			$('#submit').prop('disabled', true);
@@ -380,12 +373,16 @@ $(document).ready(function(){
 		leaveLop(that);
 	});
 
-	function leaveLop(that){	
+	function leaveLop(that){
 		if(Difference_In_Days > leave_adjustment){
     		if($(that).prop("checked") == true){
     			leave_adjustment = parseInt(parseInt(leave_adjustment) + 1);
     		} else {
-    			leave_adjustment = parseInt(parseInt(leave_adjustment) - 1);
+    			if(!leave_adjustment){
+        			if(!leave_adjustment){
+    					leave_adjustment = parseInt(parseInt(leave_adjustment) - 1);
+        			}
+    			}
     		}
     		pl_deduct();		
 		} else {
@@ -398,12 +395,8 @@ $(document).ready(function(){
 				} else {
 					leave_adjustment = 0;
 				}
-				//leave_adjustment = parseInt(parseInt(leave_adjustment) - 1);
 			}
 		}
-
-		console.log("Difference_In_Days :"+Difference_In_Days);
-		console.log("leave_adjustment :"+leave_adjustment);
 	}
 	
 
