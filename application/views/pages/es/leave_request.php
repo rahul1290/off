@@ -423,8 +423,8 @@ $(document).ready(function(){
             						//'<td>'+ value.date_to +'</td>'+
             						'<td>'+ value.requirment +'</td>'+
             						'<td>'+ value.duration +'</td>'+
-            						'<td>'+ parseInt(value.pl) +'</td>'+
-            						'<td>'+ parseInt(value.lop) +'</td>'+
+            						'<td>'+ value.pl +'</td>'+
+            						'<td>'+ value.lop +'</td>'+
             						'<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>'+
             						'<td>'+ value.hod_remark +'</td>';
             						var bgcolor = '';

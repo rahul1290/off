@@ -8,7 +8,6 @@ class Emp_ctrl extends CI_Controller {
         $this->load->database();
 		$this->load->model(array('Auth_model','master/Department_model','Emp_model','master/Nh_fh_model','master/Employee_model'));
 		$this->is_login();
-		$this->load->library("pagination");
     }
 	
 	function is_login(){

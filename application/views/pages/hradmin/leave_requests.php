@@ -27,7 +27,7 @@
 					<h3 class="card-title">NEW REQUESTS</h3>
 				  </div>
 				  <div class="card-body">
-					<?php if(count($pending_requests)>0){?>
+					<?php /* if(count($pending_requests)>0){?>
 					<div class="table-responsive table-striped">
 						<table class="table table-bordered text-center" id="example">
 							<thead>	
@@ -109,7 +109,34 @@
 					</div>
 					<?php } else {
 						echo "<p class='text-center'>No new record found.</p>";
-					}?>
+					} */ ?>
+					
+						<div class="table-responsive">
+    						<input id="search" type="text" class="float-right mb-2">
+    						<label class="float-right mr-2" for="search">Search: </label>
+    						<table class="table table-bordered table-striped text-center" id="leave_pending_requests_head">
+    							<thead class="bg-dark">
+    								<tr>
+            							<th>S.No.</th>
+            							<th>REFERENCE No.</th>
+            							<th>REQUEST SUBMIT DATE</th>
+            							<th>LEAVE DATE</th>
+            							<th>REASON</th>
+            							<th>LEAVE DURATION</th>
+            							<th>PL DEDUCT</th>
+            							<th>LOP</th>
+            							<th>LEAVE ADJUSTMENT</th>
+            							<th>HOD REMARK</th>
+            							<th>HOD STATUS</th>
+            							<th>HR REMARK</th>
+    									<th>HR STATUS</th>
+            						</tr>
+    							</thead>
+    							<tbody id="leave_pending_requests_body"></tbody>
+    						</table>
+    						<nav aria-label="Page navigation example" id="leave_pending_requests_links"></nav>
+    					</div>
+    					
 				  </div>
 				</div>
 			  </div>
@@ -121,7 +148,7 @@
 					<h3 class="card-title">PREVIOUS HF REQUESTS</h3>
 				  </div>
 				  <div class="card-body">
-					<?php if(count($requests)>0){?>
+					<?php /*if(count($requests)>0){?>
 					<div class="table-responsive">
 						<table class="table table-bordered text-center" id="example2">
 							<thead>	
@@ -201,7 +228,32 @@
 							</tbody>
 						</table>
 					</div>
-					<?php } ?>
+					<?php }*/ ?>
+						<div class="table-responsive">
+    						<input id="search2" type="text" class="float-right mb-2">
+    						<label class="float-right mr-2" for="search">Search: </label>
+    						<table class="table table-bordered table-striped text-center" id="leave_requests_head">
+    							<thead class="bg-dark">
+    								<tr>
+            							<th>S.No.</th>
+            							<th>REFERENCE No.</th>
+            							<th>REQUEST SUBMIT DATE</th>
+            							<th>LEAVE DATE</th>
+            							<th>REASON</th>
+            							<th>LEAVE DURATION</th>
+            							<th>PL DEDUCT</th>
+            							<th>LOP</th>
+            							<th>LEAVE ADJUSTMENT</th>
+            							<th>HOD REMARK</th>
+            							<th>HOD STATUS</th>
+            							<th>HR REMARK</th>
+    									<th>HR STATUS</th>
+            						</tr>
+    							</thead>
+    							<tbody id="leave_requests_body"></tbody>
+    						</table>
+    						<nav aria-label="Page navigation example" id="leave_requests_links"></nav>
+    					</div>
 				  </div>
 				</div>
 			  </div>
@@ -233,7 +285,7 @@ var baseUrl = $('#baseUrl').val();
 
 $(document).ready(function(){
 	$('#example').DataTable();
-	$('#example2').DataTable();
+	$('#example2').DataTable();	
 	
 	var previous;
 	var that;
@@ -286,6 +338,149 @@ $(document).ready(function(){
 				}
 			}
 		});
+	});
+
+
+	pending_requests(0);	//load requests
+	
+	$(document).on('keyup','#search',function(){
+		pending_requests(0);
+	});
+	
+	function pending_requests(page){
+		var str = $('#search').val();
+        $.ajax({
+        	type: 'GET',
+        	url: baseUrl+'Hr_ctrl/leave_pending_request_ajax/'+ page +'/'+ str,
+        	data: {},
+        	dataType: 'json',
+        	beforeSend: function() {
+        		$('#leave_pending_requests_body').html('<td colspan="13" class="text-center">Record fatching.</td>');
+            },
+        	success: function(response){
+        		if(response.status == 200){
+        			var x = '';
+        			var c = parseInt(parseInt(page)+1);
+        			$.each(response.data.final_array,function(key,value){
+            			x = x + '<tr>'+
+            						'<td>'+ parseInt(c++) +'</td>'+
+            						'<td>'+ value.refrence_id +'</td>'+
+            						'<td>'+ value.created_at +'</td>'+
+            						'<td>'+ value.date_from +'</td>'+
+            						//'<td>'+ value.date_to +'</td>'+
+            						'<td>'+ value.requirment +'</td>'+
+            						'<td>'+ value.duration +'</td>'+
+            						'<td>'+ value.pl +'</td>'+
+            						'<td>'+ value.lop +'</td>'+
+            						'<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>'+
+            						'<td>'+ value.hod_remark +'</td>';
+            						var bgcolor = '';
+            						if(value.hod_status == 'REJECTED'){
+            							bgcolor = 'bg-danger';
+                					} else if(value.hod_status == 'GRANTED'){
+                						bgcolor = 'bg-success';
+                    				}else if(value.hod_status == 'PENDING'){
+                						bgcolor = 'bg-warning';
+                    				}
+                    				
+            						x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
+            							  '<td><textarea name="" id="" data-rid="'+ value.id +'" class="hr_remark form-control"></textarea></td>'+
+                						  '<td>'+
+                							'<select class="hr_status" name="hr_status" data-rid="'+ value.id +'">'+
+        										'<option value="PENDING" selected>PENDING</option>'+
+        										'<option  value="REJECTED">REJECTED</option>'+
+        										'<option  value="GRANTED">GRANTED</option>'+
+    										'</select>'+
+            						      '</td>';  	
+            					'</tr>';
+            		});         	
+            		$('#leave_pending_requests_body').html(x);
+            		$('#leave_pending_requests_links').html(response.data.links);
+        		} else {
+        			$('#leave_pending_requests_body').html('<td colspan="13" class="text-center">NO Record found.</td>');
+            	}
+        	}
+        });
+	}
+
+	$(document).on('click','.myLinks',function(){
+		var page = $(this).attr('href');
+		var x = page.split('/');
+		if(x[1] == undefined){
+			x[1] = 0;
+		}
+		pending_requests(x[1]);	
+	});
+
+
+	//requests(0);
+	$(document).on('keyup','#search2',function(){
+		requests(0);
+	});
+	
+	function requests(page){
+		var str = $('#search2').val();
+        $.ajax({
+        	type: 'GET',
+        	url: baseUrl+'Hr_ctrl/leave_request_ajax/'+ page +'/'+ str,
+        	data: {},
+        	dataType: 'json',
+        	beforeSend: function() {
+        		$('#leave_requests_body').html('<td colspan="13" class="text-center">Record fatching.</td>');
+            },
+        	success: function(response){
+        		if(response.status == 200){
+        			var x = '';
+        			var c = parseInt(parseInt(page)+1);
+        			$.each(response.data.final_array,function(key,value){
+            			x = x + '<tr>'+
+            						'<td>'+ parseInt(c++) +'</td>'+
+            						'<td>'+ value.refrence_id +'</td>'+
+            						'<td>'+ value.created_at +'</td>'+
+            						'<td>'+ value.date_from +'</td>'+
+            						//'<td>'+ value.date_to +'</td>'+
+            						'<td>'+ value.requirment +'</td>'+
+            						'<td>'+ value.duration +'</td>'+
+            						'<td>'+ value.pl +'</td>'+
+            						'<td>'+ value.lop +'</td>'+
+            						'<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>'+
+            						'<td>'+ value.hod_remark +'</td>';
+            						var bgcolor = '';
+            						if(value.hod_status == 'REJECTED'){
+            							bgcolor = 'bg-danger';
+                					} else if(value.hod_status == 'GRANTED'){
+                						bgcolor = 'bg-success';
+                    				}else if(value.hod_status == 'PENDING'){
+                						bgcolor = 'bg-warning';
+                    				}
+                    				
+            						x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
+            							  '<td><textarea name="" id="" data-rid="'+ value.id +'" class="hr_remark form-control"></textarea></td>'+
+                						  '<td>'+
+                							'<select class="hr_status" name="hr_status" data-rid="'+ value.id +'">'+
+        										'<option value="PENDING" selected>PENDING</option>'+
+        										'<option  value="REJECTED">REJECTED</option>'+
+        										'<option  value="GRANTED">GRANTED</option>'+
+    										'</select>'+
+            						      '</td>';  	
+            					'</tr>';
+            		});         	
+            		$('#leave_requests_body').html(x);
+            		$('#leave_requests_links').html(response.data.links);
+        		} else {
+        			$('#leave_requests_body').html('<td colspan="13" class="text-center">NO Record found.</td>');
+            	}
+        	}
+        });
+	}
+
+	$(document).on('click','.myLinks',function(){
+		var page = $(this).attr('href');
+		var x = page.split('/');
+		if(x[1] == undefined){
+			x[1] = 0;
+		}
+		requests(x[1]);	
 	});
 	
 });
