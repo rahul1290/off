@@ -71,6 +71,7 @@
 								<th>REASON</th>
 								<th>PL DEDUCT</th>
 								<th>LOP</th>
+								<th>LEAVE ADJUSTMENT</th>
 								<th>HOD REMARK</th>
 								<th>HR REMARKS</th>
 								<th>HOD STATUS</th>
@@ -88,6 +89,7 @@
 									<td><?php echo strlen($record['requirment']) > 50 ? substr($record['requirment'],0,50)."...<a href='#'>read more</a>" : $record['requirment']; ?></td>
 									<td><?php if((int)$record['pl']){ echo (int)$record['pl']; } else { echo '-'; } ?></td>
 									<td><?php if((int)$record['lop']){ echo (int)$record['lop']; }else { echo '-'; } ?></td>
+									<td>COFF'S:</br><?php echo $record['COFF']; ?></br>NH/FH:<?php echo $record['NHFH']; ?></td>
 									<td><?php echo $record['hod_remark']; ?></td>
 									<td><?php echo $record['hr_remark']; ?></td>
 									<td class="

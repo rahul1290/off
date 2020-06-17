@@ -65,67 +65,6 @@
           </div>
 		</form>
 		  <hr/>
-		  
-		  <?php /*if(isset($requests)){ if(count($requests)>0){?>
-			  <div class="col-12">
-				<div class="card card-info">
-				  <div class="card-header" style="border-radius:0px;">
-					<h3 class="card-title">PREVIOUS HF REQUEST STATUS</h3>
-				  </div>
-				  <div class="card-body">
-					<div class="table-responsive">
-						<table class="table table-bordered table-striped text-center" id="example">
-							<thead>	
-								<tr class="bg-dark">
-									<th>S.No.</th>
-									<th>REFERENCE No.</th>
-									<th>REQUEST SUBMIT DATE</th>
-									<th>HALF TAKEN DATE</th>
-									<th>REASON</th>
-									<th>HOD REMARK</th>
-									<th>HOD STATUS</th>
-									<!--th>HR REMARKS</th>
-									<th>HR STATUS</th-->
-								</tr>
-							</thead>
-							<tbody>
-								<?php $c=1; foreach($requests as $request){ ?>
-									<tr>	
-										<td><?php echo $c++; ?>.</td>
-										<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
-										<td><?php echo $request['created_at']; ?></td>
-										<td><?php echo $request['date']; ?></td>
-										<td><?php echo strlen($request['requirment']) > 50 ? ucfirst(substr($request['requirment'],0,50))."...<a href='#'>read more</a>" : ucfirst($request['requirment']); ?></td>
-										<td><?php echo ucfirst($request['hod_remark']); ?></td>
-										<td class="
-											<?php if($request['hod_status'] == 'REJECTED'){ 
-													echo "bg-danger"; 
-											} else if($request['hod_status'] == 'PENDING'){
-													echo "bg-warning";
-											} else {
-												echo "bg-success";
-											}?>"
-										><?php echo $request['hod_status']; ?><?php //echo $request['hod_remark_date']; ?></td>
-										<?php /*<td><?php echo $request['hr_remark']; ?></td>
-										<td class="
-											<?php if($request['hr_status'] == 'REJECTED'){ 
-													echo "bg-danger"; 
-											} else if($request['hr_status'] == 'PENDING'){
-													echo "bg-warning";
-											} else {
-												echo "bg-success";
-											}?>"
-										><?php echo $request['hr_status']; ?></td>
-										*/ ?>
-									</tr>
-								<?php /*} ?>
-							</tbody>
-						</table>
-					</div>
-				  </div>
-				</div>
-			  </div>
-		<?php } } */?>
 		
 		<div class="col-12">
 			<div class="card card-info">
@@ -158,6 +97,7 @@
 				</div>
 			  </div>
 			</div>
+	      </div>
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content -->

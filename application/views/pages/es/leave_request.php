@@ -128,84 +128,6 @@
 				</div>
 			</form>
 			<hr/>
-          
-          <?php /*if(isset($requests)){ if(count($requests)>0) { ?>
-    		  <div class="card card-info">
-                  <div class="card-header" style="border-radius:0px;">
-                    <h3 class="card-title">LEAVE REQUESTS</h3>
-                  </div>
-                  <div class="card-body">
-    				<div class="table-responsive">
-    					<table class="table table-bordered table-striped text-center" id="example">
-    						<thead class="bg-dark">
-        						<tr>
-        							<th>S.No.</th>
-        							<th>REFERENCE No.</th>
-        							<th>REQUEST SUBMIT DATE</th>
-        							<th>LEAVE FROM</th>
-        							<th>LEAVE TO</th>
-        							<th>LEAVE DURATION</th>
-									<th>REASON</th>
-        							<th>PL TAKEN</th>
-        							<th>LEAVE ADJUSTMENT</th>
-        							<th>HOD REMARK</th>
-        							<th>HOD STATUS</th>
-        							<th>HR REMARK</th>
-        							<th>HR STATUS</th>
-        						</tr>
-    						</thead>
-    						<tbody>
-    								<?php  $c=1; foreach($requests as $request){ ?>
-    									<tr>
-        								    <td><?php echo $c++; ?></td>
-        								    <td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
-        								    <td><?php echo $request['created_at']; ?></td>
-        								    <td><?php echo $request['date_from']; ?></td>
-        								    <td><?php echo $request['date_to']; ?></td>
-                                            <td><?php echo $this->my_library->day_duration($request['date_from'],$request['date_to']); ?></td>
-											<td><?php echo $request['requirment']; ?></td>
-                                            <td><?php echo $request['pl']; ?></td>
-        								    <td>
-        								    	<?php if($request['NHFH'] != ''){
-        								            echo 'NH/FH\'s:<br/><ul style="list-style:none;">';
-        								            foreach(explode(',',$request['NHFH']) as $r){
-        								                echo "<li>".$this->my_library->sql_datepicker($r)."</li>";
-        								            }
-        								        echo '</ul>'; } ?>
-        								        <?php if($request['COFF'] != ''){
-        								            echo 'COFF\'s:<br/><ul style="list-style:none;">';
-        								            foreach(explode(',',$request['COFF']) as $r){
-        								                echo "<li>".$this->my_library->sql_datepicker($r)."</li>";
-        								            }
-        								        echo '<ul/>'; } ?>
-        								    </td>
-        								    <td><?php echo $request['hod_remark']; ?></td>
-        								    <td class="<?php if($request['hod_status'] == 'REJECTED'){ 
-													echo "bg-danger"; 
-											} else if($request['hod_status'] == 'PENDING'){
-													echo "bg-warning";
-											} else {
-												echo "bg-success";
-											}?>"><?php echo $request['hod_status']; ?></td>
-        								    <td><?php echo $request['hr_remark']; ?></td>
-        								    <td class="<?php if($request['hr_status'] == 'REJECTED'){ 
-													echo "bg-danger"; 
-											} else if($request['hr_status'] == 'PENDING'){
-													echo "bg-warning";
-											} else if($request['hr_status'] == 'GRANTED') {
-												echo "bg-success";
-											} else {
-											    
-											}?>"><?php echo $request['hr_status']; ?></td>
-    								    </tr>
-    								<?php }?>
-    							</tr>
-    						</tbody>
-    					</table>
-    				</div>
-                  </div>
-                </div>
-                <?php } } */ ?>
                <div class="col-12">
                  <div class="card card-info">
                   <div class="card-header" style="border-radius:0px;">
@@ -240,6 +162,7 @@
     				</div>
     			</div>
             </div>
+           </div>
           <hr/>
 		  
 		  
@@ -274,7 +197,11 @@ $(document).ready(function(){
 	Difference_In_Days = 0;
 	leave_adjustment = 0;
 
-	daycalculator();
+	refresh_page();
+	function refresh_page(){
+		daycalculator();
+		leaveLop();
+	}
 	
 	$(document).on('click','#submit',function(){
 		$('#exampleModalCenter').modal({show:true});
@@ -286,9 +213,7 @@ $(document).ready(function(){
 	}
 
 	$(document).on('change','#from_date,#to_date',function(){
-		daycalculator();
-		leaveLop();
-		
+		refresh_page();
 	});
 
 
@@ -324,7 +249,6 @@ $(document).ready(function(){
 
 	
 	function pl_deduct(){
-		
 		if(Difference_In_Days > 0) {
 			$('#leave_adjust').show();	
 			$('#date_range').text(Difference_In_Days +' Days').show();
@@ -342,13 +266,15 @@ $(document).ready(function(){
 					cpl = 0;
 				}
 				
-				if(plDeduct > cpl){
+				if(parseFloat(plDeduct) > parseFloat(cpl)){
 					$('#pl_deduct').text(cpl);
 					$('#f1_pl').val(cpl);
 				} else {
 					$('#pl_deduct').text(plDeduct);
 					$('#f1_pl').val(plDeduct);
 				}
+				debugger;
+				var x=parseFloat(parseFloat(plDeduct) - parseFloat(cpl));
 				if(parseFloat(parseFloat(plDeduct) - parseFloat(cpl)) > 0.0) {
 					$('#lop').text(plDeduct - $('#f1_pl').val());
 					$('#f1_lop').val(plDeduct - $('#f1_pl').val());
@@ -374,14 +300,20 @@ $(document).ready(function(){
 	});
 
 	function leaveLop(that){
-		if(Difference_In_Days > leave_adjustment){
+		debugger;
+		coff = $('.coffs:checkbox:checked').length;
+		nhfh = $('.nhfhs:checkbox:checked').length;
+		leaveAdjusment = parseInt(parseInt(coff)+parseInt(nhfh));
+		if(Difference_In_Days >= leaveAdjusment){
     		if($(that).prop("checked") == true){
     			leave_adjustment = parseInt(parseInt(leave_adjustment) + 1);
     		} else {
     			if(!leave_adjustment){
         			if(!leave_adjustment){
     					leave_adjustment = parseInt(parseInt(leave_adjustment) - 1);
-        			}
+        			} else{
+        				leave_adjustment = 1;
+            		}
     			}
     		}
     		pl_deduct();		
@@ -393,7 +325,7 @@ $(document).ready(function(){
 				if(parseInt(leave_adjustment) > 0 ){
 					leave_adjustment = parseInt(parseInt(leave_adjustment) - 1); 
 				} else {
-					leave_adjustment = 0;
+					leave_adjustment = 1;
 				}
 			}
 		}

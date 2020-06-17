@@ -39,7 +39,7 @@
 								<select class="form-control" name="" id="sloat">
 									<option value="0">Choose Time Slot</option>
 									<option value="1">00:00 - 00:30</option>
-									<option value="2">30:00 - 01:00</option>
+									<option value="2">00:30 - 01:00</option>
 									<option value="3">01:00 - 01:30</option>
 									<option value="4">01:30 - 02:00</option>
 									<option value="5">02:00 - 02:30</option>
