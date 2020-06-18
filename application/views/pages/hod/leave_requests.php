@@ -20,8 +20,20 @@
     <div class="content">
       <div class="container-fluid">
 
-		
-			  <div class="col-md-12">
+				
+			 <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#home">NEW LEAVE REQUESTS</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#menu1">PREVIOUS HF REQUESTS</a>
+            </li>
+          </ul>
+        
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div id="home" class="tab-pane active"><br>
+              	<div class="col-md-12">
 				<div class="card card-info">
 				  <div class="card-header" style="border-radius:0px;">
 					<h3 class="card-title">NEW LEAVE REQUESTS</h3>
@@ -40,8 +52,6 @@
 									<th>LEAVE DATE'S</th>
 									<th>LEAVE DURATION</th>
 									<th>LEAVE ADJUSTMENT'S</th>
-									<th>PL</th>
-									<th>LOP</th>
 									<th>REASON</th>
 									<th>REMARK</th>
 									<th>HOD STATUS</th>
@@ -89,8 +99,6 @@
 													}
 												?>
 											</td>
-											<td><?php echo $request['pl']; ?></td>
-											<td><?php echo $request['lop']; ?></td>
 											<td><?php echo strlen($request['requirment']) > 50 ? ucfirst(substr($request['requirment'],0,50))."...<a href='#'>read more</a>" : ucfirst($request['requirment']); ?></td>
 											<td>
 												<textarea class="form-control hod_remark" name="hod_remark" data-rid="<?php echo $request['id']; ?>"><?php echo $request['hod_remark']; ?></textarea>
@@ -113,9 +121,54 @@
 				  </div>
 				</div>
 			  </div> 
-		
-		
-			  <div class="col-md-12">
+			  
+			  
+			  
+			  
+			  
+			  <div class="col-12">
+                 <div class="card card-info">
+                  <div class="card-header" style="border-radius:0px;">
+                     <h3 class="card-title">LEAVE REQUESTS</h3>
+                  </div>
+                	<div class="card-body">
+    					<div class="table-responsive">
+    						<input id="search" type="text" class="float-right mb-2">
+    						<label class="float-right mr-2" for="search">Search: </label>
+    						<table class="table table-bordered table-striped text-center" id="leave_pending_requests_head">
+    							<thead class="bg-dark">
+    								<tr>
+            							<th>S.No.</th>
+    									<th>REFERENCE No.</th>
+    									<th>DEPARTMENT</th>
+    									<th>EMPLOYEE NAME</th>
+    									<th>REQUEST SUBMIT DATE</th>
+    									<th>LEAVE DATE'S</th>
+    									<th>LEAVE DURATION</th>
+    									<th>LEAVE ADJUSTMENT'S</th>
+    									<th>REASON</th>
+    									<th>REMARK</th>
+    									<th>HOD STATUS</th>
+            						</tr>
+    							</thead>
+    							<tbody id="leave_pending_requests_body"></tbody>
+    						</table>
+    						<nav aria-label="Page navigation example" id="leave_pending_requests_links"></nav>
+    					</div>
+    				</div>
+    			</div>
+            </div>
+			  
+			  
+			  
+			  
+			  
+			  
+            </div>
+            
+            
+            <div id="menu1" class="tab-pane fade"><br>
+            	<div class="col-md-12">
 				<div class="card card-info">
 				  <div class="card-header" style="border-radius:0px;">
 					<h3 class="card-title">PREVIOUS HF REQUESTS</h3>
@@ -199,9 +252,15 @@
 					</div>
 				  </div>
 				</div>
-			  </div>
-		  
-		  
+			  </div>  
+            </div>
+            
+            
+          </div>
+        </div>
+						
+			  
+		
 		
       </div><!-- /.container-fluid -->
     </div>
@@ -284,6 +343,77 @@ $(document).ready(function(){
 			}
 		});
 	});
+
+
+	leavePendingRequests(0);	//load pending requests
+	$(document).on('keyup','#search',function(){
+		leavePendingRequests(0);
+	});
+	
+	function leavePendingRequests(page){
+		var str = $('#search').val();
+        $.ajax({
+        	type: 'GET',
+        	url: baseUrl+'hod/hod_ctrl/leave_pending_request_ajax/'+ page +'/'+ str,
+        	data: {},
+        	dataType: 'json',
+        	beforeSend: function() {},
+        	success: function(response){
+        		if(response.status == 200){
+        			var x = '';
+        			var c = parseInt(parseInt(page)+1);
+        			$.each(response.data.final_array,function(key,value){
+            			x = x + '<tr>'+
+            						'<td>'+ parseInt(c++) +'</td>'+
+            						'<td>'+ value.refrence_id +'</td>'+
+            						'<td>'+ value.dept_name +'</td>'+
+            						'<td>'+ value.emp_name +'</td>'+
+            						'<td>'+ value.created_at +'</td>'+
+            						'<td>'+ value.date_from +'</td>'+
+            						'<td>'+ value.duration +'</td>'+
+            					    '<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>';
+            						x = x + '<td>'+ value.requirment +'</td>'+
+            						'<td><textarea>'+ value.hod_remark +'</textarea></td>';
+            						var hodStatus = '';
+            						if(value.hod_status == 'PENDING'){
+    									x = x+'<td><select>'+
+                        							'<option value="PENDING" selected>PENDING</option>'+
+                        							'<option value="REJECTED">REJECTED</option>'+
+                        							'<option value="GRANTED">GRANTED</option>'+
+                    							'</select></td>';	
+        							} else if(value.hod_status == 'REJECTED'){
+        								x = x+'<td><select>'+
+                    							'<option value="PENDING">PENDING</option>'+
+                    							'<option value="REJECTED" selected>REJECTED</option>'+
+                    							'<option value="GRANTED">GRANTED</option>'+
+                							'</select></td>';
+            						} else {
+            							x = x+'<td><select>'+
+                    							'<option value="PENDING">PENDING</option>'+
+                    							'<option value="REJECTED">REJECTED</option>'+
+                    							'<option value="GRANTED" selected>GRANTED</option>'+
+                							'</select></td>';
+                					}  	
+            					'</tr>';
+            		});         	
+            		$('#leave_pending_requests_body').html(x);
+            		$('#leave_pending_requests_links').html(response.data.links);
+        		}
+        	}
+        });
+	}
+
+	$(document).on('click','.myLinks',function(){
+		var page = $(this).attr('href');
+		var x = page.split('/');
+		if(x[1] == undefined){
+			x[1] = 0;
+		}
+		ajax_test(x[1]);	
+	});
+	
+
+	
 });
 </script>
 </body>

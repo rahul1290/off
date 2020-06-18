@@ -43,6 +43,75 @@ class Hod_ctrl extends CI_Controller {
 	    $this->load->view('layout_master',$data);
 	}
 	
+	
+	function leave_pending_request_ajax($page=0,$str=''){
+	    $config = array();
+	    
+	    $data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
+	    $users = $this->Emp_model->get_employee($this->session->userdata('ecode'));
+	    $ulist = '';
+	    foreach($users as $user) {
+	        $ulist = $ulist.",'".$user['ecode']."'";
+	    }
+	    $ulist = ltrim($ulist,',');
+	    
+	    $config["base_url"] = "javascript:void(0)";
+	    $config["total_rows"] = $this->Hod_model->total_pending_leave_requests($ulist,$str);
+	    $config["per_page"] = $this->config->item('row_count');
+	    $config["uri_segment"] = $page;
+	    $config['attributes'] = array('class' => 'page-link myLinks');
+	    
+	    $config['full_tag_open'] = '<ul class="pagination justify-content-center">';
+	    $config['full_tag_close'] = '</ul>';
+	    $config['num_tag_open'] = '<li class="page-item">';
+	    $config['num_tag_close'] = '</li>';
+	    $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="javascript:void(0);">';
+	    $config['cur_tag_close'] = '</a></li>';
+	    $config['prev_tag_open'] = '<li class="page-item">';
+	    $config['prev_tag_close'] = '</li>';
+	    $config['next_tag_open'] = '<li class="page-item">';
+	    $config['next_tag_close'] = '</li>';
+	    $config['last_tag_open'] = '<li class="page-item">';
+	    $config['last_tag_close'] = '</li>';
+	    $config['first_tag_open'] = '<li class="page-item">';
+	    $config['first_tag_close'] = '</li>';
+	    
+	    $this->pagination->initialize($config);
+	    
+	    $data["links"] = $this->pagination->create_links();
+	    $records = $this->Hod_model->pending_leave_requests($ulist,$str,$config["per_page"],$page);
+	    if(count($records)>0){
+	        $data['final_array'] = array();
+	        foreach($records as $record){
+	            $temp = array();
+	            $temp['id'] = $record['id'];
+	            $temp['refrence_id'] = $this->my_library->remove_hyphen($record['refrence_id']);
+	            $temp['dept_name'] = $record['dept_name'];
+	            $temp['emp_name'] = $record['name'];
+	            $temp['created_at'] = $record['created_at'];
+	            $temp['ecode'] = $record['ecode'];
+	            $temp['date_from'] = $record['date_from'] .' - '. $record['date_to'];
+	            $temp['date_to'] = $record['date_to'];
+	            $temp['duration'] = $this->my_library->day_duration($record['date_from'],$record['date_to']);
+	            $temp['requirment'] = $record['requirment'];
+	            $temp['hod_remark'] = ($record['hod_remark'])?$record['hod_remark']:'';
+	            $temp['hod_id'] = $record['hod_id'];
+	            $temp['hod_remark_date'] = $record['hod_remark_date'];
+	            $temp['wod'] = $record['wod'];
+	            $temp['request_id'] = $record['request_id'];
+	            $temp['status'] = $record['status'];
+	            $temp['NHFH'] = ($record['nhfhs'])?$record['nhfhs']:'-';
+	            $temp['COFF'] = ($record['coff'])?$record['coff']:'-';
+	            
+	            $data['final_array'][] = $temp;
+	        }
+	    }
+	    echo json_encode(array('data'=>$data,'status'=>200));
+	}
+	
+	
+	
+	
 	function leave_request_update(){
 	    $data['req_id'] = $this->input->post('req_id');
 	    $data['key'] = $this->input->post('key');
