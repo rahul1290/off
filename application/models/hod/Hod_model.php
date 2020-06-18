@@ -27,7 +27,7 @@ class Hod_model extends CI_Model {
         if($ref_id != null){
             $this->db->where('ulr.refrence_id',$ref_id);
         }
-        $this->db->order_by('ulr.created_at','desc');
+        $this->db->order_by('ulr.id','DESC');
         $result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'LEAVE','ulr.hod_status'=>'PENDING','ulr.status'=>1))->result_array();
 		return $result;
     }
@@ -97,13 +97,14 @@ class Hod_model extends CI_Model {
 	}
 	
 	function hf_leave_pending_request($ulist,$ref_id){
-		$this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y %H:%i:%s") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y %H:%i:%s") as last_update');
+		$this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y") as last_update');
 		$this->db->where_in('ulr.ecode',$ulist,false);
 		$this->db->join('users u','u.ecode = ulr.ecode');
 		$this->db->join('department_master dm','dm.id = u.department_id');
 		if($ref_id != null){
 			$this->db->where('ulr.refrence_id',$ref_id);
 		}
+		$this->db->order_by('ulr.id','desc');
 		$result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'HALF','ulr.hod_status'=>'PENDING','ulr.status'=>1))->result_array();
 		return $result;
 	}

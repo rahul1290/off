@@ -33,7 +33,6 @@ class Hod_ctrl extends CI_Controller {
 	    //$data['open'] = 'true';
 	    $data['notepad'] = $this->load->view('include/shift_timing','',true);
 	    $data['pending_requests'] = $this->Hod_model->leave_pending_request($ulist,$ref_id);
-	    
 	    $data['requests'] = $this->Hod_model->leave_request($ulist,$ref_id);
 	    $data['body'] = $this->load->view('pages/hod/leave_requests',$data,true);
 	    //===============common===============//

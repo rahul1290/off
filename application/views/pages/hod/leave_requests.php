@@ -19,43 +19,9 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-      
-      		 <div class="col-12">
-                 <div class="card card-info">
-                  <div class="card-header" style="border-radius:0px;">
-                     <h3 class="card-title">NEW LEAVE REQUESTS</h3>
-                  </div>
-                	<div class="card-body">
-    					<div class="table-responsive">
-    						<input id="search" type="text" class="float-right mb-2">
-    						<label class="float-right mr-2" for="search">Search: </label>
-    						<table class="table table-bordered table-striped text-center" id="pending_leave_requests_head">
-    							<thead class="bg-dark">
-    								<tr>
-                						<th>S.No.</th>
-    									<th>REFERENCE No.</th>
-    									<th>DEPARTMENT</th>
-    									<th>EMPLOYEE NAME</th>
-    									<th>REQUEST SUBMIT DATE</th>
-    									<th>LEAVE DATE'S</th>
-    									<th>LEAVE DURATION</th>
-    									<th>LEAVE ADJUSTMENT'S</th>
-    									<th>REASON</th>
-    									<th>HOD REMARK</th>
-    									<th>HOD STATUS</th>
-    									<th>HR REMARK</th>
-    									<th>HR STATUS</th>
-            						</tr>
-    							</thead>
-    							<tbody id="pending_leave_requests_body"></tbody>
-    						</table>
-    						<nav aria-label="Page navigation example" id="pending_leave_requests_links"></nav>
-    					</div>
-    				</div>
-    			</div>
-            </div>
+
 		
-			  <?php /*<div class="col-md-12">
+			  <div class="col-md-12">
 				<div class="card card-info">
 				  <div class="card-header" style="border-radius:0px;">
 					<h3 class="card-title">NEW LEAVE REQUESTS</h3>
@@ -74,6 +40,8 @@
 									<th>LEAVE DATE'S</th>
 									<th>LEAVE DURATION</th>
 									<th>LEAVE ADJUSTMENT'S</th>
+									<th>PL</th>
+									<th>LOP</th>
 									<th>REASON</th>
 									<th>REMARK</th>
 									<th>HOD STATUS</th>
@@ -121,6 +89,8 @@
 													}
 												?>
 											</td>
+											<td><?php echo $request['pl']; ?></td>
+											<td><?php echo $request['lop']; ?></td>
 											<td><?php echo strlen($request['requirment']) > 50 ? ucfirst(substr($request['requirment'],0,50))."...<a href='#'>read more</a>" : ucfirst($request['requirment']); ?></td>
 											<td>
 												<textarea class="form-control hod_remark" name="hod_remark" data-rid="<?php echo $request['id']; ?>"><?php echo $request['hod_remark']; ?></textarea>
@@ -142,7 +112,7 @@
 					}?>
 				  </div>
 				</div>
-			  </div> */?>
+			  </div> 
 		
 		
 			  <div class="col-md-12">
@@ -314,76 +284,6 @@ $(document).ready(function(){
 			}
 		});
 	});
-
-	ajax_test(0);	//load requests
-	$(document).on('keyup','#search',function(){
-		ajax_test(0);
-	});
-	
-	function ajax_test(page){
-		var str = $('#search').val();
-        $.ajax({
-        	type: 'GET',
-        	url: baseUrl+'hod/Hod_ctrl/pending_leave_request_ajax/'+ page +'/'+ str,
-        	data: {},
-        	dataType: 'json',
-        	beforeSend: function() {},
-        	success: function(response){
-        		if(response.status == 200){
-        			var x = '';
-        			var c = parseInt(parseInt(page)+1);
-        			$.each(response.data.final_array,function(key,value){
-            			x = x + '<tr>'+
-            						'<td>'+ parseInt(c++) +'</td>'+
-            						'<td>'+ value.refrence_id +'</td>'+
-            						'<td>'+ value.created_at +'</td>'+
-            						'<td>'+ value.date_from +'</td>'+
-            						//'<td>'+ value.date_to +'</td>'+
-            						'<td>'+ value.requirment +'</td>'+
-            						'<td>'+ value.duration +'</td>'+
-            						'<td>'+ value.pl +'</td>'+
-            						'<td>'+ value.lop +'</td>'+
-            						'<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>'+
-            						'<td>'+ value.hod_remark +'</td>';
-            						var bgcolor = '';
-            						if(value.hod_status == 'REJECTED'){
-            							bgcolor = 'bg-danger';
-                					} else if(value.hod_status == 'GRANTED'){
-                						bgcolor = 'bg-success';
-                    				}else if(value.hod_status == 'PENDING'){
-                						bgcolor = 'bg-warning';
-                    				}
-                    				
-            						x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
-            							  '<td>'+ value.hod_remark +'</td>';
-                					var bgcolor = '';
-            						if(value.hr_status == 'REJECTED'){
-            							bgcolor = 'bg-danger';
-                					} else if(value.hr_status == 'GRANTED'){
-                						bgcolor = 'bg-success';
-                    				}else if(value.hr_status == 'PENDING'){
-                						bgcolor = 'bg-warning';
-                    				}
-                    				
-            						x = x+'<td class="'+ bgcolor +'">'+ value.hr_status +'</td>';  	
-            					'</tr>';
-            		});         	
-            		$('#pending_leave_requests_body').html(x);
-            		$('#pening_leave_requests_links').html(response.data.links);
-        		}
-        	}
-        });
-	}
-
-	$(document).on('click','.myLinks',function(){
-		var page = $(this).attr('href');
-		var x = page.split('/');
-		if(x[1] == undefined){
-			x[1] = 0;
-		}
-		ajax_test(x[1]);	
-	});
-	
 });
 </script>
 </body>

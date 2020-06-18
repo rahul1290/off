@@ -26,15 +26,16 @@ date_default_timezone_set('Asia/Kolkata');
 // production url
 //$config['base_url'] = 'http://emp2.ibc24.in/kra/';
 // staging url
-$config['base_url'] = 'http://192.168.25.237/kra/';
+//$config['base_url'] = 'http://192.168.25.237/kra/';
 // local url
-//$config['base_url'] = 'http://192.168.25.184:82/off/';
+$config['base_url'] = 'http://192.168.25.184:82/off/';
 
 
 
 $config['sql_entry'] = true;
 ////////////////////////////*************************************/////////////////////
 //$config['img_url'] = 'https://employee.ibc24.in/OLAppraisal/EmpImage/';
+$config['row_count'] = '5';
 $config['img_url'] = 'assets/employee_images/';
 $config['it_policies'] = 'assets/policies/it/';
 $config['hr_policies'] = 'assets/policies/hr/';
