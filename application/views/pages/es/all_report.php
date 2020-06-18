@@ -108,7 +108,11 @@
 										  } else {
 											echo "bg-danger";
 										  }?>"><?php echo $record['hr_status']; ?></td>
-									<td><a href="#">CANCEL</a></td>
+									<td>
+										<?php if($record['hod_status'] == 'PENDING' && $record['hr_status'] == 'PENDING'){ ?>
+										<a href="javascript:void(0);" class="req_cancel" data-id="<?php echo $record['refrence_id']; ?>">CANCEL</a>
+										<?php } ?>
+									</td>
 								</tr>
 							<?php } ?>
 						</tbody>
@@ -143,5 +147,25 @@
 <script>
 var baseUrl = $('#baseUrl').val();
 
+	$(document).on('click','.req_cancel',function(){
+		var req_id = $(this).data('id');
+		$.ajax({
+        	type: 'GET',
+        	url: baseUrl+'Emp_ctrl/request_cancel/'+ req_id,
+        	data: {},
+        	dataType: 'json',
+        	beforeSend: function() {
+            	$('.modal').show();
+            },
+        	success: function(response){
+            	if(response.status == 200){
+                	alert(response.msg);
+                } else {
+                    alert(response.msg);
+                }
+            	location.reload(true); 
+        	}
+		});
+	});
 </script>
 </body>

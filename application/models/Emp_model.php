@@ -181,4 +181,18 @@ class Emp_model extends CI_Model {
 		$result = $this->db->get_where('pl_management',array('ecode'=>$data['paycode'],'status'=>1))->result_array();
 		return  $result;
 	} 
+	
+	
+	///////////////////////////// request cancel ////////////////////////////////////////////
+	
+	function request_cancel($refrence_id){
+	    $this->db->where('request_id',$refrence_id);
+	    $this->db->update('users_leave_requests',array(
+	       'request_id' => null 
+	    ));
+	    
+	    $this->db->where('refrence_id',$refrence_id);
+	    $this->db->update('users_leave_requests',array('status'=>0));
+	    return true;
+	}
 }

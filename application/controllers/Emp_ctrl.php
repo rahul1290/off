@@ -905,8 +905,8 @@ class Emp_ctrl extends CI_Controller {
                             (select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = ulr.refrence_id and c.request_type in ("OFF_DAY")) as COFF,
                             date_format(ulr.date_from,"%d/%m/%Y") as from_date,date_format(ulr.date_to,"%d/%m/%Y") as to_date');
 		if(isset($from_date)){
-			$this->db->where('ulr.date_from >=',$from_date);
-			$this->db->where('ulr.date_from <=',$to_date);
+			$this->db->where('ulr.created_at >=',$from_date);
+			$this->db->where('ulr.created_at <=',$to_date);
 		}
 		if(isset($type) && $type != 'All'){
 			$this->db->where('ulr.request_type',$type);
@@ -1058,25 +1058,11 @@ class Emp_ctrl extends CI_Controller {
 		}
 	}
 	
-// 	function attendance_record(){
-// 		$data = array();
-// 		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
-		
-// 		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-// 		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-// 		if(count($data['pls'])>0){
-// 		    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-// 		}
-		
-// 		$data['footer'] = $this->load->view('include/footer','',true);
-// 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-// 		$data['aside'] = $this->load->view('include/aside',$data,true);
-// 		$data['notepad'] = $this->load->view('include/notepad','',true);
-// 		$data['body'] = $this->load->view('pages/emp_dashboard',$data,true);
-// 		//===============common===============//
-// 		$data['title'] = $this->config->item('project_title').'| Emp-Portal';
-// 		$data['head'] = $this->load->view('common/head',$data,true);
-// 		$data['footer'] = $this->load->view('common/footer',$data,true);
-// 		$this->load->view('layout_master',$data);
-// 	}	
+	function request_cancel($request_id){
+	    if($this->Emp_model->request_cancel($request_id)){
+	        echo json_encode(array('msg'=>'Request canceled.','status'=>200));
+	    } else {
+	        echo json_encode(array('msg'=>'Request not canceled.','status'=>500));
+	    }
+	}
 }
