@@ -418,11 +418,13 @@ class Emp_ctrl extends CI_Controller {
 					$pls = $this->my_library->pl_calculator($this->session->userdata('ecode'));
 					$pl_aplied = $this->my_library->pl_applied($this->session->userdata('ecode'));
 					$balance = $pls[0]['balance'] - $pl_aplied;
-				    if($balance < 0) {
+					
+				    if($balance > 0) {
 				        $data['pl'] = '0.5';
 				    } else {
 				        $data['lop'] = '0.5';
 				    }
+				    
 					$data['date_from'] = $date;
 					$data['date_to'] = $date;
 					$data['request_type'] = 'HALF';
