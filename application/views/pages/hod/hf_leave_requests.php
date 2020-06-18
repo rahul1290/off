@@ -28,7 +28,7 @@
 				  <div class="card-body">
 					<?php if(count($pending_requests)>0){ ?>
 						<div class="table-responsive">
-							<table class="table table-bordered text-center" id="example">
+							<table class="table table-bordered text-center table-striped" id="example">
 								<thead>	
 									<tr class="bg-dark">
 										<th>S.No.</th>
@@ -37,6 +37,8 @@
 										<th>EMPLOYEE NAME</th>
 										<th>REQUEST SUBMIT DATE</th>
 										<th>HALF TAKEN DATE</th>
+										<th>PL</th>
+										<th>LOP</th>
 										<th>REASON</th>
 										<th>REMARK</th>
 										<th>HOD STATUS</th>
@@ -52,6 +54,8 @@
 												<td><?php echo $request['name']; ?></td>
 												<td><?php echo $request['created_at']; ?></td>
 												<td><?php echo $request['date']; ?></td>
+												<td><?php echo $request['pl']; ?></td>
+												<td><?php echo $request['lop']; ?></td>
 												<td><?php echo strlen($request['requirment']) > 50 ? ucfirst(substr($request['requirment'],0,50))."...<a href='#'>read more</a>" : ucfirst($request['requirment']); ?></td>
 												<td>
 													<textarea class="form-control hod_remark" name="hod_remark" data-rid="<?php echo $request['id']; ?>"><?php echo $request['hod_remark']; ?></textarea>

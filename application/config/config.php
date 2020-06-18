@@ -31,10 +31,10 @@ date_default_timezone_set('Asia/Kolkata');
 $config['base_url'] = 'http://localhost/off/';
 
 
-
 $config['sql_entry'] = true;
 ////////////////////////////*************************************/////////////////////
 //$config['img_url'] = 'https://employee.ibc24.in/OLAppraisal/EmpImage/';
+$config['row_count'] = '5';
 $config['img_url'] = 'assets/employee_images/';
 $config['it_policies'] = 'assets/policies/it/';
 $config['hr_policies'] = 'assets/policies/hr/';

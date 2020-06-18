@@ -26,10 +26,7 @@
     <div class="content">
       <div class="container-fluid">  
 		<div class="col-12">
-			<form name="f1" method="POST" action="<?php echo base_url('es/leave-request');?>">
-			<input type="hidden" name="f1_pl" id="f1_pl" value="<?php echo $pls[0]['balance']; ?>" />
-			<input type="hidden" name="f1_lop" id="f1_lop" value="0" />
-			  
+			<form name="f1" method="POST" action="<?php echo base_url('es/leave-request');?>">  
 			<?php echo $this->session->flashdata('msg'); ?>
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
@@ -78,7 +75,7 @@
     								<ul style="list-style: none;">
         								<?php foreach($coffs as $coff){ ?>
         										<li>
-        											<input <?php if(isset($x)){if(in_array($coff['refrence_id'],$x)){ echo "checked"; }} ?> type="checkbox" name="coff[]" class="leave coffs" data-value="<?php echo $coff['refrence_id']; ?>" value="<?php echo $coff['refrence_id']; ?>" /> <?php echo $this->my_library->sql_datepicker($coff['date_from']); ?>
+        											<input <?php if(isset($x)){if(in_array($coff['refrence_id'],$x)){ echo "checked"; }} ?> type="checkbox" name="coff[]" class="leave coffs" data-value="<?php echo $coff['refrence_id']; ?>" value="<?php echo $coff['refrence_id']; ?>" /> <?php echo $coff['refrence_id'];?> <b>[<?php echo $this->my_library->sql_datepicker($coff['date_from']); ?>]</b>
         										</li>											        
         							    <?php } ?> 
     								</ul>
@@ -91,9 +88,6 @@
 										    <?php } ?> </ul>
 								<?php } ?>
 								<?php echo form_error('nhfh[]'); ?>
-                               <hr/><br/>
-                               		<span>Total PL Deduct: <span id="pl_deduct"></span></span>
-                               		<span class="float-right">Loss of pay: <span id="lop">0</span></span>
 							</td>
 						</tr>
 						<tr>
@@ -146,8 +140,6 @@
             							<th>LEAVE DATE</th>
             							<th>REASON</th>
             							<th>LEAVE DURATION</th>
-            							<th>PL DEDUCT</th>
-            							<th>LOP</th>
             							<th>LEAVE ADJUSTMENT</th>
             							<th>HOD REMARK</th>
             							<th>HOD STATUS</th>
@@ -273,7 +265,6 @@ $(document).ready(function(){
 					$('#pl_deduct').text(plDeduct);
 					$('#f1_pl').val(plDeduct);
 				}
-				debugger;
 				var x=parseFloat(parseFloat(plDeduct) - parseFloat(cpl));
 				if(parseFloat(parseFloat(plDeduct) - parseFloat(cpl)) > 0.0) {
 					$('#lop').text(plDeduct - $('#f1_pl').val());
@@ -300,7 +291,6 @@ $(document).ready(function(){
 	});
 
 	function leaveLop(that){
-		debugger;
 		coff = $('.coffs:checkbox:checked').length;
 		nhfh = $('.nhfhs:checkbox:checked').length;
 		leaveAdjusment = parseInt(parseInt(coff)+parseInt(nhfh));
@@ -358,11 +348,13 @@ $(document).ready(function(){
             						'<td>'+ value.date_from +'</td>'+
             						//'<td>'+ value.date_to +'</td>'+
             						'<td>'+ value.requirment +'</td>'+
-            						'<td>'+ value.duration +'</td>'+
-            						'<td>'+ value.pl +'</td>'+
-            						'<td>'+ value.lop +'</td>'+
-            						'<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>'+
-            						'<td>'+ value.hod_remark +'</td>';
+            						'<td>'+ value.duration +'</td>';
+            						if(value.hod_status == 'GRANTED' && value.hr_status == 'GRANTED') { 
+            							x = x + '<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>';
+            						} else {
+                						x = x + '<td></td>';
+                					}
+            						x = x + '<td>'+ value.hod_remark +'</td>';
             						var bgcolor = '';
             						if(value.hod_status == 'REJECTED'){
             							bgcolor = 'bg-danger';
