@@ -71,6 +71,7 @@
 								<th>REASON</th>
 								<th>PL DEDUCT</th>
 								<th>LOP</th>
+								<th>LEAVE ADJUSTMENT</th>
 								<th>HOD REMARK</th>
 								<th>HR REMARKS</th>
 								<th>HOD STATUS</th>
@@ -88,6 +89,7 @@
 									<td><?php echo strlen($record['requirment']) > 50 ? substr($record['requirment'],0,50)."...<a href='#'>read more</a>" : $record['requirment']; ?></td>
 									<td><?php if((int)$record['pl']){ echo (int)$record['pl']; } else { echo '-'; } ?></td>
 									<td><?php if((int)$record['lop']){ echo (int)$record['lop']; }else { echo '-'; } ?></td>
+									<td>COFF'S:</br><?php echo $record['COFF']; ?></br>NH/FH:<?php echo $record['NHFH']; ?></td>
 									<td><?php echo $record['hod_remark']; ?></td>
 									<td><?php echo $record['hr_remark']; ?></td>
 									<td class="
@@ -106,7 +108,11 @@
 										  } else {
 											echo "bg-danger";
 										  }?>"><?php echo $record['hr_status']; ?></td>
-									<td><a href="#">CANCEL</a></td>
+									<td>
+										<?php if($record['hod_status'] == 'PENDING' && $record['hr_status'] == 'PENDING'){ ?>
+										<a href="javascript:void(0);" class="req_cancel" data-id="<?php echo $record['refrence_id']; ?>">CANCEL</a>
+										<?php } ?>
+									</td>
 								</tr>
 							<?php } ?>
 						</tbody>
@@ -141,5 +147,25 @@
 <script>
 var baseUrl = $('#baseUrl').val();
 
+	$(document).on('click','.req_cancel',function(){
+		var req_id = $(this).data('id');
+		$.ajax({
+        	type: 'GET',
+        	url: baseUrl+'Emp_ctrl/request_cancel/'+ req_id,
+        	data: {},
+        	dataType: 'json',
+        	beforeSend: function() {
+            	$('.modal').show();
+            },
+        	success: function(response){
+            	if(response.status == 200){
+                	alert(response.msg);
+                } else {
+                    alert(response.msg);
+                }
+            	location.reload(true); 
+        	}
+		});
+	});
 </script>
 </body>

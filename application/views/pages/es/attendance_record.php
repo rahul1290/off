@@ -214,14 +214,22 @@ $(document).ready(function(){
 				'dept_id' : dept_id
 			},
 			dataType: 'json',
-			beforeSend: function() {},
+			beforeSend: function() {
+// 				$('#exampleModalCenter').modal({
+// 					show:true,
+// 					backdrop:'static'
+// 					});
+			},
 			success: function(response){
+				//$('#exampleModalCenter').modal('hide');
 				if(response.status == 200){
 					var x = '<option value="0">Select Employee</option>';
 					$.each(response.data,function(key,value){
 						x = x + '<option value="'+ value.ecode +'">'+ value.name +'</option>';
 					});
 					$('#employee').html(x);
+				} else {
+					$('#employee').html('');
 				}
 			}
 		});

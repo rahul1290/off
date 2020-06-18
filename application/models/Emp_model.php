@@ -139,9 +139,9 @@ class Emp_model extends CI_Model {
 	}
 	
 	function hf_leave_requests($ecode,$str,$offset,$limit){
-	    $this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date,date_format(hod_remark_date,"%d/%m/%Y %H:%i:%s") as hod_remark_date,ifnull(pl,"-") as pl,IFNULL(lop,"-") as lop,IFNULL(hr_remark,"") as hr_remark');
+	    $this->db->select('*,date_format(created_at,"%d/%m/%Y") as created_at,date_format(date_from,"%d/%m/%Y") as date,date_format(hod_remark_date,"%d/%m/%Y %H:%i:%s") as hod_remark_date,ifnull(pl,"-") as pl,IFNULL(lop,"-") as lop,IFNULL(hr_remark,"") as hr_remark');
 	    $this->db->where('(refrence_id like "%'.$str.'%" OR requirment like "%'.$str.'%")');
-	    $this->db->order_by('date_from','DESC');
+	    $this->db->order_by('id','DESC');
 	    $this->db->limit($offset,$limit);
 	    $result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'request_type'=>'HALF','status'=>1))->result_array();
 	    return $result;   
@@ -157,7 +157,7 @@ class Emp_model extends CI_Model {
 	
 	
 	/////////////////////////////////// OFF day requests //////////////////////////////
-	function total_off_day_request_ajax($ecode,$str){
+	function total_off_day_request($ecode,$str){
 	    $this->db->select('count(*) as total');
 	    $this->db->where('(refrence_id like "%'.$str.'%" OR requirment like "%'.$str.'%")');
 	    $result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'request_type'=>'OFF_DAY','status'=>1))->result_array();
@@ -165,7 +165,7 @@ class Emp_model extends CI_Model {
 	}
 	
 	function off_day_request($ecode,$str,$offset,$limit){
-    	$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date');
+    	$this->db->select('*,date_format(created_at,"%d/%m/%Y") as created_at,date_format(date_from,"%d/%m/%Y") as date,IFNULL(hr_remark,"-") as hr_remark,IFNULL(hr_status,"")as hr_status');
     	$this->db->where('(refrence_id like "%'.$str.'%" OR requirment like "%'.$str.'%")');
     	$this->db->order_by('id','desc');
     	$this->db->limit($offset,$limit);
@@ -181,4 +181,18 @@ class Emp_model extends CI_Model {
 		$result = $this->db->get_where('pl_management',array('ecode'=>$data['paycode'],'status'=>1))->result_array();
 		return  $result;
 	} 
+	
+	
+	///////////////////////////// request cancel ////////////////////////////////////////////
+	
+	function request_cancel($refrence_id){
+	    $this->db->where('request_id',$refrence_id);
+	    $this->db->update('users_leave_requests',array(
+	       'request_id' => null 
+	    ));
+	    
+	    $this->db->where('refrence_id',$refrence_id);
+	    $this->db->update('users_leave_requests',array('status'=>0));
+	    return true;
+	}
 }

@@ -193,6 +193,7 @@ class Emp_ctrl extends CI_Controller {
 	    }
 	}
 	
+	
 	function leave_request(){
 	    if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	        $this->form_validation->set_rules('from_date', 'From Date', 'required|callback_compareDate|callback_validateDate');
@@ -293,7 +294,6 @@ class Emp_ctrl extends CI_Controller {
     		$data['top_nav'] = $this->load->view('include/top_nav','',true);
     		$data['aside'] = $this->load->view('include/aside',$data,true);
     		$data['notepad'] = $this->load->view('include/shift_timing','',true);
-    		//$data['requests'] = $this->Emp_model->leave_requests($this->session->userdata('ecode'));      //leaver request list
     		$data['body'] = $this->load->view('pages/es/leave_request',$data,true);
     		$data['title'] = $this->config->item('project_title').' | Leave Request';
     		$data['head'] = $this->load->view('common/head',$data,true);
@@ -331,6 +331,7 @@ class Emp_ctrl extends CI_Controller {
 	    
 	    $data["links"] = $this->pagination->create_links();
 	    $records = $this->Emp_model->leave_requests_ajax($this->session->userdata('ecode'),$str,$config["per_page"],$page);
+	    
 	    if(count($records)>0){
 	        $data['final_array'] = array();
 	        foreach($records as $record){
@@ -367,9 +368,24 @@ class Emp_ctrl extends CI_Controller {
 	}
 	
 	
+	
+	function validateHFDate($str){
+	    $onemonthBack = date("Y-m-d",strtotime("-1 month"));
+	    $str = date('Y-m-d', strtotime(str_replace('/','-',$str)));
+	    $diff = date_diff(date_create($onemonthBack),date_create($str));
+	    $x = $diff->format("%R");
+	    if($x == '+'){
+            return true;
+        } else {
+            $onemonthBack = date('d/m/Y',strtotime($onemonthBack));
+            $this->form_validation->set_message('validateHFDate', 'Please choose date for half day after '.$onemonthBack);
+            return false;
+        }
+	}
+	
 	function hf_leave_request(){
 		if($_SERVER['REQUEST_METHOD'] === 'POST'){
-				$this->form_validation->set_rules('half_day_date', 'HALF day date', 'required|callback_validateDate');
+				$this->form_validation->set_rules('half_day_date', 'HALF day date', 'required|callback_validateDate|callback_validateHFDate');
 				$this->form_validation->set_rules('reason', 'Reason', 'required|trim');
 				
 				$this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
@@ -387,8 +403,6 @@ class Emp_ctrl extends CI_Controller {
 					$data['footer'] = $this->load->view('include/footer','',true);
 					$data['top_nav'] = $this->load->view('include/top_nav','',true);
 					$data['aside'] = $this->load->view('include/aside','',true);
-// 					$data['notepad'] = $this->load->view('include/shift_timing','',true);
-// 					$data['requests'] = $this->Emp_model->hf_leave_requests($this->session->userdata('ecode'));
 					$data['body'] = $this->load->view('pages/es/hf_leave_request',$data,true);
 					//===============common===============//
 					$data['title'] =  $this->config->item('project_title').' | HF Leave Request';
@@ -400,6 +414,17 @@ class Emp_ctrl extends CI_Controller {
 					$data['ecode'] = $this->session->userdata('ecode');
 					$data['requirment'] = $this->input->post('reason');
 					$date = $this->my_library->mydate($this->input->post('half_day_date'));
+					
+					$pls = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+					$pl_aplied = $this->my_library->pl_applied($this->session->userdata('ecode'));
+					if(count($pls[0]['balance'])>0){
+					    $balance = $pls[0]['balance'] - $pl_aplied;
+					    if($balance < 0){
+					        $data['lop'] = '0.5';
+					    } else {
+					        $data['pl'] = '0.5';
+					    }
+					}
 					$data['date_from'] = $date;
 					$data['date_to'] = $date;
 					$data['request_type'] = 'HALF';
@@ -532,7 +557,6 @@ class Emp_ctrl extends CI_Controller {
 	
 	function off_day_duty_form(){
 			if($_SERVER['REQUEST_METHOD'] === 'POST'){
-			    
 				$this->form_validation->set_rules('off_day_date', 'OFF day date', 'required|callback_validateDate');
 				$this->form_validation->set_rules('requirment', 'Requirment', 'required|trim');
 				
@@ -595,8 +619,6 @@ class Emp_ctrl extends CI_Controller {
 				        $data['pls'][0]['balance'] = 0;
 				    }
 				}
-				//$data['notepad'] = $this->load->view('include/shift_timing','',true);
-				//$data['requests'] = $this->Emp_model->off_day_duty_form($this->session->userdata('ecode'));
 				$data['body'] = $this->load->view('pages/es/off_day_duty_form',$data,true);
 				//===============common===============//
 				$data['title'] = $this->config->item('project_title').' | OFF DAY DUTY FORM';
@@ -609,7 +631,7 @@ class Emp_ctrl extends CI_Controller {
 	function off_day_request_ajax($page=0,$str=''){
 	    $config = array();
 	    $config["base_url"] = "javascript:void(0)";
-	    $config["total_rows"] = $this->Emp_model->total_off_day_request_ajax($this->session->userdata('ecode'),$str);
+	    $config["total_rows"] = $this->Emp_model->total_off_day_request($this->session->userdata('ecode'),$str);
 	    $config["per_page"] = $this->config->item('row_count');
 	    $config["uri_segment"] = $page;
 	    $config['attributes'] = array('class' => 'page-link myLinks');
@@ -679,7 +701,8 @@ class Emp_ctrl extends CI_Controller {
 			
 			//check user is already requested or not
 			$this->db->select('*');
-			$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'date_from'=>$nhfhdate,'request_type'=>$type,'status'=>1))->result_array();
+			$this->db->where('(hod_status = "GRANTED" OR hr_status = "GRANTED")');
+			$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'date_from'=>$nhfhdate,'hr_status <>' => 'REJECTED','request_type'=>$type,'status'=>1))->result_array();
 			
 			if(count($result)>0){
 				echo json_encode(array('msg'=>'You already requested for this date.','status'=>500));
@@ -694,8 +717,8 @@ class Emp_ctrl extends CI_Controller {
 		}
 		else if($type == "OFF_DAY"){
 			$this->db->select('*');
-			$this->db->where_not_in('hod_status',array('REJECTED'));
-			$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'date_from'=>$date,'request_type'=>$type,'status'=>1))->result_array();
+			$this->db->where('(hod_status = "GRANTED" OR hr_status = "GRANTED")');
+			$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'date_from'=>$date,'hr_status <>' => 'REJECTED','request_type'=>$type,'status'=>1))->result_array();
 			if(count($result)>0) { 
 				echo json_encode(array('msg'=>'You already requested for this date.','status'=>500));
 			} else { 
@@ -713,9 +736,9 @@ class Emp_ctrl extends CI_Controller {
 		} 
 		else if($type == "HALF"){
 			$this->db->select('*');
-			$this->db->where_not_in('hod_status',array('REJECTED'));
+			$this->db->where('(hod_status = "GRANTED" OR hr_status = "GRANTED")');
 			$this->db->order_by('created_at','desc');
-			$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'date_from'=>$date,'request_type'=>$type,'status'=>1))->result_array();
+			$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'date_from'=>$date,'hr_status <>' => 'REJECTED','request_type'=>$type,'status'=>1))->result_array();
 			if(count($result)>0){
 				echo json_encode(array('msg'=>'You already requested for this date.','status'=>500));
 			} else {
@@ -831,7 +854,6 @@ class Emp_ctrl extends CI_Controller {
 			    }
 			}
 			$data['nh_fh_requests'] = $this->Nh_fh_model->user_nhfh_requests($this->session->userdata('ecode'));
-			
 			//$data['open'] = 'true';
 			$data['notepad'] = $this->load->view('include/shift_timing','',true);
 			$data['body'] = $this->load->view('pages/es/nh_fh_day_duty_form',$data,true);
@@ -878,16 +900,19 @@ class Emp_ctrl extends CI_Controller {
 		}
 		$type = $this->input->get('report_type');
 		
-		$this->db->select('*,date_format(created_at,"%d/%m/%Y") as created_at,date_format(date_from,"%d/%m/%Y") as from_date,date_format(date_to,"%d/%m/%Y") as to_date');
+		$this->db->select('ulr.*,date_format(ulr.created_at,"%d/%m/%Y") as created_at,
+                            (select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = ulr.refrence_id and c.request_type in ("NH_FH")) as NHFH,
+                            (select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = ulr.refrence_id and c.request_type in ("OFF_DAY")) as COFF,
+                            date_format(ulr.date_from,"%d/%m/%Y") as from_date,date_format(ulr.date_to,"%d/%m/%Y") as to_date');
 		if(isset($from_date)){
-			$this->db->where('date_from >=',$from_date);
-			$this->db->where('date_from <=',$to_date);
+			$this->db->where('ulr.created_at >=',$from_date);
+			$this->db->where('ulr.created_at <=',$to_date);
 		}
 		if(isset($type) && $type != 'All'){
-			$this->db->where('request_type',$type);
+			$this->db->where('ulr.request_type',$type);
 		}
 		$this->db->order_by('id','desc');
-		$data['records'] = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'status'=>1))->result_array();
+		$data['records'] = $this->db->get_where('users_leave_requests ulr',array('ulr.ecode'=>$ecode,'ulr.status'=>1))->result_array();
 		
 		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
 		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
@@ -897,7 +922,6 @@ class Emp_ctrl extends CI_Controller {
 		        $data['pls'][0]['balance'] = 0;
 		    }
 		}
-		
 		$data['title'] = $this->config->item('project_title').'| All Report';
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
@@ -908,6 +932,7 @@ class Emp_ctrl extends CI_Controller {
 		$data['footer'] = $this->load->view('common/footer',$data,true);
 		$this->load->view('layout_master',$data);
 	}
+	
 	
 	function nh_fh_avail_form(){
 	    if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -952,31 +977,32 @@ class Emp_ctrl extends CI_Controller {
 	            }
 	            
 	        }
+	    } else {
+    		$data = array();
+    		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+    		$data['footer'] = $this->load->view('include/footer','',true);
+    		$data['top_nav'] = $this->load->view('include/top_nav','',true);
+    		$data['aside'] = $this->load->view('include/aside',$data,true);
+    		$data['nhfh_days'] = $this->Nh_fh_model->get_nhfh();
+    		$data['nh_fh_avail_requests'] = $this->Nh_fh_model->user_nhfh_avail_requests($this->session->userdata('ecode'));
+    		
+    		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+    		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+    		if(count($data['pls'])>0){
+    		    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+    		    if($data['pls'][0]['balance'] < 0){
+    		        $data['pls'][0]['balance'] = 0;
+    		    }
+    		}
+    		
+    		$data['notepad'] = $this->load->view('include/shift_timing','',true);
+    		$data['body'] = $this->load->view('pages/es/nh_fh_avail_form',$data,true);
+    		//===============common===============//
+    		$data['title'] = $this->config->item('project_title').'| NH FH AVAIL FORM';
+    		$data['head'] = $this->load->view('common/head',$data,true);
+    		$data['footer'] = $this->load->view('common/footer',$data,true);
+    		$this->load->view('layout_master',$data);
 	    }
-		$data = array();
-		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
-		$data['footer'] = $this->load->view('include/footer','',true);
-		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside',$data,true);
-		$data['nhfh_days'] = $this->Nh_fh_model->get_nhfh();
-		$data['nh_fh_avail_requests'] = $this->Nh_fh_model->user_nhfh_avail_requests($this->session->userdata('ecode'));
-		
-		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-		if(count($data['pls'])>0){
-		    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-		    if($data['pls'][0]['balance'] < 0){
-		        $data['pls'][0]['balance'] = 0;
-		    }
-		}
-		
-		$data['notepad'] = $this->load->view('include/shift_timing','',true);
-		$data['body'] = $this->load->view('pages/es/nh_fh_avail_form',$data,true);
-		//===============common===============//
-		$data['title'] = $this->config->item('project_title').'| NH FH AVAIL FORM';
-		$data['head'] = $this->load->view('common/head',$data,true);
-		$data['footer'] = $this->load->view('common/footer',$data,true);
-		$this->load->view('layout_master',$data);
 	}
 	
 	
@@ -1032,25 +1058,11 @@ class Emp_ctrl extends CI_Controller {
 		}
 	}
 	
-// 	function attendance_record(){
-// 		$data = array();
-// 		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
-		
-// 		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-// 		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-// 		if(count($data['pls'])>0){
-// 		    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-// 		}
-		
-// 		$data['footer'] = $this->load->view('include/footer','',true);
-// 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-// 		$data['aside'] = $this->load->view('include/aside',$data,true);
-// 		$data['notepad'] = $this->load->view('include/notepad','',true);
-// 		$data['body'] = $this->load->view('pages/emp_dashboard',$data,true);
-// 		//===============common===============//
-// 		$data['title'] = $this->config->item('project_title').'| Emp-Portal';
-// 		$data['head'] = $this->load->view('common/head',$data,true);
-// 		$data['footer'] = $this->load->view('common/footer',$data,true);
-// 		$this->load->view('layout_master',$data);
-// 	}	
+	function request_cancel($request_id){
+	    if($this->Emp_model->request_cancel($request_id)){
+	        echo json_encode(array('msg'=>'Request canceled.','status'=>200));
+	    } else {
+	        echo json_encode(array('msg'=>'Request not canceled.','status'=>500));
+	    }
+	}
 }

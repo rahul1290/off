@@ -125,12 +125,14 @@ $(document).ready(function(){
 			beforeSend: function() {},
 			success: function(response){
 				if(response.status == 200){
-					var x = '<option value="0">Select Employee</option>';
+					var x = '';
 					$.each(response.data,function(key,value){
 						x = x + '<option value="'+ value.ecode +'">'+ value.name +'</option>';
 					});
 					$('#employee').html(x);
-				}
+				} else {
+					$('#employee').html('');
+				}	
 			}
 		});
 	}
@@ -155,7 +157,36 @@ $(document).ready(function(){
 			dataType: 'json',
 			beforeSend: function() {},
 			success: function(response){
-			//	console.log()
+				var x = '';
+				if(response.status == 200){
+					x = x + '<div class="table-responsive">'+
+						'<table class="table table-striped table-bordered text-center">'+
+							'<thead>'+
+								'<tr class="bg-dark">'+
+									'<th>DATE</th>'+
+									'<th>REFERENCE</th>'+
+									'<th>ADD</th>'+
+									'<th>DEDUCT</th>'+
+									'<th>BALANCE</th>'+
+								'</tr>'+
+							'</thead>'+
+							'<tbody>';
+								$.each(response.data,function(key,value){
+									x = x + '<tr>'+
+											'<td>'+ value.date +'</td>'+
+											'<td>'+ value.refrence_no +'</td>'+
+											'<td>'+ value.credit +'</td>'+
+											'<td>'+ value.debit +'</td>'+
+											'<td>'+ value.balance +'</td>'+
+										'</tr>';
+								});
+							x = x +'</tbody>'+
+						'</table>'+
+					'</div>';
+    				$('#plsummary').html(x);
+				} else {
+					$('#plsummary').html('');
+				}
 			}
 		});	
 	});

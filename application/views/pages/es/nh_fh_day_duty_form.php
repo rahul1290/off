@@ -96,8 +96,8 @@
 									<th>REASON</th>
 									<th>HOD REMARK</th>
 									<th>HOD STATUS</th>
-									<!--th>HR REMARKS</th>
-									<th>HR STATUS</th-->
+									<th>HR REMARKS</th>
+									<th>HR STATUS</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -114,21 +114,24 @@
 													echo "bg-danger"; 
 											} else if($request['hod_status'] == 'PENDING'){
 													echo "bg-warning";
-											} else {
+											} else if($request['hod_status'] == 'GRANTED'){
 												echo "bg-success";
+											} else {
+											    
 											}?>"
 										><?php echo $request['hod_status']; ?></td>
-									<?php /*<td><?php echo $request['hr_remark']; ?></td>
+									<td><?php echo $request['hr_remark']; ?></td>
 									<td class="
 											<?php if($request['hr_status'] == 'REJECTED'){ 
 													echo "bg-danger"; 
 											} else if($request['hr_status'] == 'PENDING'){
 													echo "bg-warning";
-											} else {
+											} else if($request['hr_status'] == 'GRANTED'){
 												echo "bg-success";
+											} else {
+											    
 											}?>"
 										><?php echo $request['hr_status']; ?></td>
-									*/ ?>
 									</tr>
 								<?php } ?>
 							</tbody>
@@ -165,8 +168,6 @@ var baseUrl = $('#baseUrl').val();
 
 $(document).ready(function(){
 	$('#example').DataTable();	
-
-	get_detail();
 	
 	$(document).on('change','#nhfh_date',function(){
 		get_detail();

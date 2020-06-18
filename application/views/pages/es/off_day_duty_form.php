@@ -40,20 +40,20 @@
 							</td>
 						</tr>
 						<tr>
-							<td><b>Date</b></td>
+							<td><b>DATE</b><span class="text-danger">*</span></td>
 							<td>
 								<input type="text" name="off_day_date" id="off_day_date" class="form-control datepicker" value="<?php echo set_value('off_day_date'); ?>" autocomplete="off">
 								<?php echo form_error('off_day_date'); ?>
 							</td>
 						</tr>
 						<tr>
-							<td><b>Duty Detail</b></td>
+							<td><b>DUTY DETAIL</b><span class="text-danger">*</span></td>
 							<td>
 								<span id="duty_detail"></span>
 							</td>
 						</tr>
 						<tr>
-							<td><b>As Per The Requirment of</b></td>
+							<td><b>AS PER THE REQUIRMENT OF</b><span class="text-danger">*</span></td>
 							<td>
 								<textarea class="form-control" name="requirment" id="requirment"><?php echo set_value('requirment'); ?></textarea>
 								<?php echo form_error('requirment'); ?>
@@ -70,69 +70,6 @@
 			  </div>
 		  </form>
 		  <hr/>
-		  
-		 <?php /*if(count($requests)>0){ ?>
-			  <div class="col-12">
-				<div class="card card-info">
-				  <div class="card-header" style="border-radius:0px;">
-					<h3 class="card-title">OFF DAY DUTY FORM STATUS</h3>
-				  </div>
-				  <div class="card-body">
-					<div class="table-responsive">
-						<table class="table table-bordered" id="example">
-							<thead>	
-								<tr class="bg-dark">
-									<th>S.No.</th>
-									<th>REFERENCE No.</th>
-									<th>REQUEST SUBMIT DATE</th>
-									<th>OFF DAY DUTY DATE</th>
-									<th>REASON</th>
-									<th>HOD REMARK</th>	
-									<th>HOD STATUS</th>
-									<!--th>HR REMARKS</th>
-									<th>HR STATUS</th-->
-								</tr>
-							</thead>
-							<tbody>
-								<?php $c=1; foreach($requests as $request){ ?>
-									<tr class="text-center">
-										<td><?php echo $c++; ?>.</td>
-										<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
-										<td><?php echo $request['created_at']; ?></td>
-										<td><?php echo $request['date']; ?></td>
-										<td><?php echo strlen($request['requirment']) > 50 ? substr($request['requirment'],0,50)."...<a href='#'>read more</a>" : $request['requirment']; ?></td>
-										<td><?php echo $request['hod_remark']; ?></td>
-										
-										<td class="
-											<?php if($request['hod_status'] == 'REJECTED'){ 
-													echo "bg-danger"; 
-											} else if($request['hod_status'] == 'PENDING'){
-													echo "bg-warning";
-											} else {
-												echo "bg-success";
-											}?>"
-										><?php echo $request['hod_status']; ?></td>
-										<?php /*
-										<td><?php echo $request['hr_remark']; ?></td>
-										<td class="
-											<?php if($request['hr_status'] == 'REJECTED'){ 
-													echo "bg-danger"; 
-											} else if($request['hr_status'] == 'PENDING'){
-													echo "bg-warning";
-											} else {
-												echo "bg-success";
-											}?>"
-										><?php echo $request['hr_status']; ?></td>
-										*/ ?>
-									</tr>
-								<?php /*} ?>
-							</tbody>
-						</table>
-					</div>
-				  </div>
-				</div>
-			  </div>
-		<?php } */?>
 		  
 		<div class="col-12">
 			<div class="card card-info">
@@ -153,8 +90,8 @@
 								<th>REASON</th>
 								<th>HOD REMARK</th>	
 								<th>HOD STATUS</th>
-								<!--th>HR REMARKS</th>
-								<th>HR STATUS</th-->
+								<th>HR REMARKS</th>
+								<th>HR STATUS</th>
 							</tr>
 						</thead>
 						<tbody id="off_requests_body"></tbody>
@@ -163,6 +100,7 @@
 				</div>
 			  </div>
 			</div>
+		 </div>
       </div><!-- /.container-fluid -->  
 		
       
@@ -263,7 +201,19 @@ $(document).ready(function(){
                     				}else if(value.hod_status == 'PENDING'){
                 						bgcolor = 'bg-warning';
                     				}
-            					x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
+            						x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
+            						'<td>'+ value.hr_remark +'</td>';
+            						var bgcolor = '';
+            						if(value.hr_status == 'REJECTED'){
+            							bgcolor = 'bg-danger';
+                					} else if(value.hr_status == 'GRANTED'){
+                						bgcolor = 'bg-success';
+                    				}else if(value.hr_status == 'PENDING'){
+                						bgcolor = 'bg-warning';
+                    				} else {
+                        				bgcolor = '';
+                        			}
+                    				x = x + '<td class="'+ bgcolor +'">'+ value.hr_status +'</td>'+
             					'</tr>';
             		});         	
             		$('#off_requests_body').html(x);
