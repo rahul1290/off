@@ -52,7 +52,7 @@ $route['hod/leave-request'] = 'hod/Hod_ctrl/leave_request/';
 $route['hod/leave-request/(:any)'] = 'hod/Hod_ctrl/leave_request/$1';
 $route['hod/leave-request-update'] = 'hod/Hod_ctrl/leave_request_update';
 
-$route['hod/hf-leave-request'] = 'hod/Hod_ctrl/hf_leave_request/';
+$route['hod/hf-leave-request'] = 'hod/Hf_leave_ctrl/hf_leave_request/';
 $route['hod/hf-leave-request/(:any)'] = 'hod/Hod_ctrl/hf_leave_request/$1';
 $route['hod/hf-leave-request-update'] = 'hod/Hod_ctrl/hf_leave_request_update';
 
