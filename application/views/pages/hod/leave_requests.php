@@ -21,18 +21,18 @@
       <div class="container-fluid">
 
 				
-			 <ul class="nav nav-tabs">
-            <li class="nav-item">
-              <a class="nav-link active" data-toggle="tab" href="#home">NEW LEAVE REQUESTS</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#menu1">PREVIOUS HF REQUESTS</a>
-            </li>
-          </ul>
+		<ul class="nav nav-tabs">
+        	<li class="nav-item">
+          		<a class="nav-link active" id="#pending_requests_tab" data-toggle="tab" href="#pending_requests">NEW LEAVE REQUESTS</a>
+        	</li>
+        	<li class="nav-item">
+          		<a class="nav-link" id="previous_requests_tab" data-toggle="tab" href="#previous_requests">PREVIOUS HF REQUESTS</a>
+        	</li>
+      	</ul>
         
           <!-- Tab panes -->
           <div class="tab-content">
-            <div id="home" class="tab-pane active"><br>
+            <div id="pending_requests" class="tab-pane active"><br>
              
 			  <div class="col-12">
                  <div class="card card-info">
@@ -70,7 +70,7 @@
             </div>
             
             
-            <div id="menu1" class="tab-pane fade"><br>
+            <div id="previous_requests" class="tab-pane fade"><br>
             	
             	<div class="col-12">
                  <div class="card card-info">
@@ -95,7 +95,6 @@
     									<th>REASON</th>
     									<th>REMARK</th>
     									<th>HOD STATUS</th>
-    									<th>LAST UPDATE</th>
 									</tr>
     							</thead>
     							<tbody id="leave_requests_body"></tbody>
@@ -148,53 +147,32 @@ $(document).ready(function(){
     }).change(function() {
 		var req_id = $(that).data('rid');
 		var status = $(that).val();
+		
 		var c = confirm('Are you sure!');
-		if(c){	
+		if(c){
+			remark = $('#hod_remark_'+req_id).val();
 			$.ajax({
 				type: 'POST',
 				url: baseUrl+'hod/leave-request-update/',
 				data: { 
 					'req_id' : req_id,
-					'key' : 'hod_status',
-					'value' : status,
+					'hod_status' : status,
+					'hod_remark' : remark,
 				},
 				dataType: 'json',
 				beforeSend: function() {},
 				success: function(response){
 					if(response.status == 200){
-						location.reload();
+						leavePendingRequests(0);
 					} else {
 					}
 				}
 			});
 		} else {
 			$(that).val(previous);
-		}
-        
+		}        
     });
 	
-	$(document).on('blur','.hod_remark',function(){
-		var req_id = $(this).data('rid');
-		var status = $(this).val();		
-		$.ajax({
-			type: 'POST',
-			url: baseUrl+'hod/leave-request-update/',
-			data: { 
-				'req_id' : req_id,
-				'key' : 'hod_remark',
-				'value' : status,
-			},
-			dataType: 'json',
-			beforeSend: function() {},
-			success: function(response){
-				if(response.status == 200){
-					//location.reload();
-				} else {
-				}
-			}
-		});
-	});
-
 
 	leavePendingRequests(0);	//load pending requests
 	$(document).on('keyup','#search',function(){
@@ -208,7 +186,9 @@ $(document).ready(function(){
         	url: baseUrl+'hod/hod_ctrl/leave_pending_request_ajax/'+ page +'/'+ str,
         	data: {},
         	dataType: 'json',
-        	beforeSend: function() {},
+        	beforeSend: function() {
+        		$('#leave_pending_requests_body').html('<td class="text-center" colspan="11">Featching data..</td>');
+            },
         	success: function(response){
         		if(response.status == 200){
         			var x = '';
@@ -224,7 +204,7 @@ $(document).ready(function(){
             						'<td>'+ value.duration +'</td>'+
             					    '<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>'+
             						'<td>'+ value.requirment +'</td>'+
-            						'<td><textarea class="hod_remark" data-rid="'+ value.id +'">'+ value.hod_remark +'</textarea></td>'+
+            						'<td><textarea id="hod_remark_'+ value.id +'">'+ value.hod_remark +'</textarea></td>'+
     								'<td><select class="hod_status" data-rid="'+ value.id +'">'+
                         							'<option value="PENDING" selected>PENDING</option>'+
                         							'<option value="REJECTED">REJECTED</option>'+
@@ -239,20 +219,21 @@ $(document).ready(function(){
         });
 	}
 
-	$(document).on('click','.myLinks',function(){
+	$(document).on('click','.myLinks1',function(){
 		var page = $(this).attr('href');
 		var x = page.split('/');
 		if(x[1] == undefined){
 			x[1] = 0;
 		}
-		ajax_test(x[1]);	
+		leavePendingRequests(x[1]);	
 	});
 	
 
 
+	$(document).on('click','#previous_requests_tab',function(){
+		leaveRequests(0);	//load pending requests		
+	});
 
-
-	leaveRequests(0);	//load pending requests
 	$(document).on('keyup','#search2',function(){
 		leaveRequests(0);
 	});
@@ -264,7 +245,10 @@ $(document).ready(function(){
         	url: baseUrl+'hod/hod_ctrl/leave_request_ajax/'+ page +'/'+ str,
         	data: {},
         	dataType: 'json',
-        	beforeSend: function() {},
+        	beforeSend: function() {
+        		$('#leave_requests_body').html('<td class="text-center" colspan="11">Fatching data...</td>');
+        		$('#leave_requests_links').hide();
+            },
         	success: function(response){
         		if(response.status == 200){
         			var x = '';
@@ -280,16 +264,12 @@ $(document).ready(function(){
             						'<td>'+ value.duration +'</td>'+
             					    '<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>'+
             						'<td>'+ value.requirment +'</td>'+
-            						'<td><textarea class="hod_remark" data-rid="'+ value.id +'">'+ value.hod_remark +'</textarea></td>'+
-    								'<td><select class="hod_status" data-rid="'+ value.id +'">'+
-                        							'<option value="PENDING" selected>PENDING</option>'+
-                        							'<option value="REJECTED">REJECTED</option>'+
-                        							'<option value="GRANTED">GRANTED</option>'+
-                    							'</select></td>'+  	
+            						'<td>'+ value.hod_remark +'</td>'+  	
+                    				'<td>'+ value.hod_status +'</td>'+
             					'</tr>';
             		});         	
             		$('#leave_requests_body').html(x);
-            		$('#leave_requests_links').html(response.data.links);
+            		$('#leave_requests_links').html(response.data.links).show();
         		}
         	}
         });
@@ -301,7 +281,7 @@ $(document).ready(function(){
 		if(x[1] == undefined){
 			x[1] = 0;
 		}
-		ajax_test(x[1]);	
+		leaveRequests(x[1]);	
 	});
 
 	

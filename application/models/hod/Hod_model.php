@@ -59,31 +59,18 @@ class Hod_model extends CI_Model {
         $this->db->limit($offset,$limit);
         $this->db->order_by('ulr.id','DESC');
         $result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'LEAVE','ulr.hod_status'=>'PENDING','ulr.status'=>1))->result_array();
+        
         return $result;
     }
-    
-    
-    function leave_pending_request($ulist,$ref_id){
-        $this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y %H:%i:%s") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y %H:%i:%s") as last_update,(select group_concat(ulr2.refrence_id) from users_leave_requests ulr2 WHERE ulr2.request_id = ulr.refrence_id AND ulr2.request_type = "OFF_DAY") as coff,
-						 (select group_concat(ulr2.refrence_id) from users_leave_requests ulr2 WHERE ulr2.request_id = ulr.refrence_id AND ulr2.request_type = "NH_FH") as nhfhs');
-        $this->db->where_in('ulr.ecode',$ulist,false);
-        $this->db->join('users u','u.ecode = ulr.ecode');
-        $this->db->join('department_master dm','dm.id = u.department_id');
-        if($ref_id != null){
-            $this->db->where('ulr.refrence_id',$ref_id);
-        }
-        $this->db->order_by('ulr.id','DESC');
-        $result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'LEAVE','ulr.hod_status'=>'PENDING','ulr.status'=>1))->result_array();
-        return $result;
-    }
+
     
     function leave_request_update($data){
         $this->db->trans_begin();
         
         $this->db->where('id',$data['req_id']);
         $this->db->update('users_leave_requests',array(
-            $data['key'] => $data['value'],
-            'hod_id' => $data['hod_id'],
+            'hod_remark' => $data['hod_remark'],
+            'hod_status' => $data['hod_status'],
             'hod_remark_date' => $data['created_at']
         ));
         
@@ -95,85 +82,6 @@ class Hod_model extends CI_Model {
         }
     }
     
-    
-    ////HALF DAY REQUEST
-    function hf_leave_request($ulist,$ref_id){
-        $this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y %H:%i:%s") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y %H:%i:%s") as last_update');
-        $this->db->where_in('ulr.ecode',$ulist,false);
-        $this->db->join('users u','u.ecode = ulr.ecode');
-        $this->db->join('department_master dm','dm.id = u.department_id');
-        if($ref_id != null){
-            $this->db->where('ulr.refrence_id',$ref_id);
-        }
-        $this->db->order_by('ulr.hod_remark_date','desc');
-        $result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'HALF','ulr.hod_status<>'=>'PENDING','ulr.status'=>1))->result_array();
-        return $result;
-    }
-    
-    function hf_leave_pending_request($ulist,$ref_id){
-        $this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y") as last_update');
-        $this->db->where_in('ulr.ecode',$ulist,false);
-        $this->db->join('users u','u.ecode = ulr.ecode');
-        $this->db->join('department_master dm','dm.id = u.department_id');
-        if($ref_id != null){
-            $this->db->where('ulr.refrence_id',$ref_id);
-        }
-        $this->db->order_by('ulr.id','desc');
-        $result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'HALF','ulr.hod_status'=>'PENDING','ulr.status'=>1))->result_array();
-        return $result;
-    }
-    
-    
-    
-    function hf_leave_request_update($data){
-        $this->db->trans_begin();
-        $this->db->where('id',$data['req_id']);
-        $this->db->update('users_leave_requests',array(
-            $data['key'] => $data['value'],
-            'hod_id' => $data['hod_id'],
-            'hod_remark_date' => $data['created_at']
-        )
-            );
-        
-        if($data['value'] == 'GRANTED'){
-            $this->db->select('*');
-            $leave_detail = $this->db->get_where('users_leave_requests',array('id'=>$data['req_id']))->result_array();
-            
-            $pls = $this->my_library->pl_calculator($leave_detail[0]['ecode']);
-            
-            if($pls < 0){
-                $update_data = array(
-                    'pl' => '0.5',
-                );
-            } else {
-                $update_data = array(
-                    'lop' => '0.5',
-                );
-            }
-            
-            $this->db->where('refrence_id',$leave_detail[0]['refrence_id']);
-            $this->db->update('users_leave_requests',$update_data);
-            
-            //     		    $this->db->insert('pl_management',array(
-            //     		              'type' => 'PL',
-            //     		        'refrence_no' =>  $leave_detail[0]['refrence_id'],
-            //     		        'ecode' => $leave_detail[0]['ecode'],
-            //     		              'credit' => '0',
-            //     		              'debit' => '0.5',
-            //     		              'balance' => $pls[0]['balance'] - '0.5',
-            //     		              'date' => date('Y-m-d H:i:s'),
-            //     		              'created_at'    => date('Y-m-d H:i:s'),
-            //     		              'created_by'    => $this->session->userdata('ecode')
-            //     		    ));
-        }
-        
-        if ($this->db->trans_status() === FALSE){
-            $this->db->trans_rollback();
-        } else {
-            $this->db->trans_commit();
-            return true;
-        }
-    }
     
     
     ////////nh fh avail form

@@ -36,8 +36,6 @@ class Hod_ctrl extends CI_Controller {
 	    $data['aside'] = $this->load->view('include/aside',$data,true);
 	    //$data['open'] = 'true';
 	    $data['notepad'] = $this->load->view('include/shift_timing','',true);
-	    //$data['pending_requests'] = $this->Hod_model->leave_pending_request($ulist,$ref_id);
-	    //$data['requests'] = $this->Hod_model->leave_request($ulist,$ref_id);
 	    $data['body'] = $this->load->view('pages/hod/leave_requests',$data,true);
 	    //===============common===============//
 	    $data['title'] = $this->config->item('project_title').' | Leave Requests';
@@ -50,7 +48,6 @@ class Hod_ctrl extends CI_Controller {
 	
 	function leave_pending_request_ajax($page=0,$str=''){
 	    $config = array();
-	    
 	    $data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
 	    $users = $this->Emp_model->get_employee($this->session->userdata('ecode'));
 	    $ulist = '';
@@ -63,7 +60,7 @@ class Hod_ctrl extends CI_Controller {
 	    $config["total_rows"] = $this->Hod_model->total_pending_leave_requests($ulist,$str);
 	    $config["per_page"] = $this->config->item('row_count');
 	    $config["uri_segment"] = $page;
-	    $config['attributes'] = array('class' => 'page-link myLinks');
+	    $config['attributes'] = array('class' => 'page-link myLinks1');
 	    $config['full_tag_open'] = '<ul class="pagination justify-content-center">';
 	    $config['full_tag_close'] = '</ul>';
 	    $config['num_tag_open'] = '<li class="page-item">';
@@ -145,7 +142,7 @@ class Hod_ctrl extends CI_Controller {
 	    $this->pagination->initialize($config);
 	    
 	    $data["links"] = $this->pagination->create_links();
-	    $records = $this->Hod_model->pending_leave_requests($ulist,$str,$config["per_page"],$page);
+	    $records = $this->Hod_model->leave_request($ulist,$str,$config["per_page"],$page);
 	    if(count($records)>0){
 	        $data['final_array'] = array();
 	        foreach($records as $record){
@@ -162,6 +159,7 @@ class Hod_ctrl extends CI_Controller {
 	            $temp['requirment'] = $record['requirment'];
 	            $temp['hod_remark'] = ($record['hod_remark'])?$record['hod_remark']:'';
 	            $temp['hod_id'] = $record['hod_id'];
+	            $temp['hod_status'] = $record['hod_status'];
 	            $temp['hod_remark_date'] = $record['hod_remark_date'];
 	            $temp['wod'] = $record['wod'];
 	            $temp['request_id'] = $record['request_id'];
@@ -177,8 +175,8 @@ class Hod_ctrl extends CI_Controller {
 	
 	function leave_request_update(){
 	    $data['req_id'] = $this->input->post('req_id');
-	    $data['key'] = $this->input->post('key');
-	    $data['value'] = $this->input->post('value');
+	    $data['hod_remark'] = $this->input->post('hod_remark');
+	    $data['hod_status'] = $this->input->post('hod_status');
 	    $data['created_at'] = date('Y-m-d H:i:s');
 	    $data['hod_id'] = $this->session->userdata('ecode');
 	    if($this->Hod_model->leave_request_update($data)){
@@ -187,49 +185,7 @@ class Hod_ctrl extends CI_Controller {
 	}
 	//////////////////////////////////////// LEAVE REQUESTS ////////////////////////////////////////////
 	
-	
-	
-	
-	
-	
-	
-	//////////////////////////////////////// HALF DAY REQUEST //////////////////////////////////////////
-	function hf_leave_request($ref_id = null){		
-		$data = array();
-		$data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
-		$users = $this->Emp_model->get_employee($this->session->userdata('ecode'));			
-		$ulist = '';
-		foreach($users as $user) {
-			$ulist = $ulist.",'".$user['ecode']."'";
-		}
-		$ulist = ltrim($ulist,',');
-		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
-		$data['footer'] = $this->load->view('include/footer','',true);
-		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside',$data,true);
-		//$data['open'] = 'true';
-		$data['notepad'] = $this->load->view('include/shift_timing','',true);
-		$data['pending_requests'] = $this->Hod_model->hf_leave_pending_request($ulist,$ref_id);
-		$data['requests'] = $this->Hod_model->hf_leave_request($ulist,$ref_id);
-		$data['body'] = $this->load->view('pages/hod/hf_leave_requests',$data,true);
-		//===============common===============//
-		$data['title'] = $this->config->item('project_title').' | HF Day Leave Requests';
-		$data['head'] = $this->load->view('common/head',$data,true);
-		$data['footer'] = $this->load->view('common/footer',$data,true);
-		
-		$this->load->view('layout_master',$data);
-	}
 
-	function hf_leave_request_update(){
-		$data['req_id'] = $this->input->post('req_id');
-		$data['key'] = $this->input->post('key');
-		$data['value'] = $this->input->post('value');
-		$data['created_at'] = date('Y-m-d H:i:s');
-		$data['hod_id'] = $this->session->userdata('ecode');
-		if($this->Hod_model->hf_leave_request_update($data)){
-			echo json_encode(array('status'=>200));
-		}
-	}
 	
 	function nh_fh_day_duty_request_update(){
 	    $data['req_id'] = $this->input->post('req_id');
