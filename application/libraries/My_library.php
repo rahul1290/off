@@ -92,7 +92,7 @@ class My_library {
 	function coff($ecode){
 	    $this->CI->db->select('pl.*,date_format(ulr.date_from,"%d/%m/%Y") as date');
 	    $this->CI->db->order_by('pl.created_at','desc');
-	    $this->CI->db->join('users_leave_requests ulr','ulr.refrence_id = pl.refrence_no AND ulr.status = 1');
+	    $this->CI->db->join('users_leave_requests ulr','ulr.reference_id = pl.refrence_no AND ulr.status = 1');
 	    $result = $this->CI->db->get_where('pl_management pl',array('pl.type'=>'COFF','pl.credit<>'=>NULL,'pl.ecode'=>$ecode,'pl.status'=>1))->result_array();
 	    return $result;
 	}
@@ -100,7 +100,7 @@ class My_library {
 	function nhfh($ecode){
 	    $this->CI->db->select('pl.*,date_format(ulr.date_from,"%d/%m/%Y") as date');
 	    $this->CI->db->order_by('pl.created_at','desc');
-	    $this->CI->db->join('users_leave_requests ulr','ulr.refrence_id = pl.refrence_no AND ulr.status = 1');
+	    $this->CI->db->join('users_leave_requests ulr','ulr.reference_id = pl.refrence_no AND ulr.status = 1');
 	    $result = $this->CI->db->get_where('pl_management pl',array('pl.type'=>'NH_FH','pl.credit<>'=>NULL,'pl.ecode'=>$ecode,'pl.status'=>1))->result_array();
 	    return $result;
 	}
@@ -112,9 +112,9 @@ class My_library {
 	}
 	
 	function leave_request_refno($ref_id){
-	    $this->CI->db->select('refrence_id');
+	    $this->CI->db->select('reference_id');
 	    $result = $this->CI->db->get_where('users_leave_requests',array('id'=>$ref_id))->result_array();
-	    return $result[0]['refrence_id'];
+	    return $result[0]['reference_id'];
 	}
 	
 	function get_current_session(){

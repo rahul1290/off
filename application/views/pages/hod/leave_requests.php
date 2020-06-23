@@ -147,30 +147,32 @@ $(document).ready(function(){
     }).change(function() {
 		var req_id = $(that).data('rid');
 		var status = $(that).val();
-		
-		var c = confirm('Are you sure!');
-		if(c){
-			remark = $('#hod_remark_'+req_id).val();
-			$.ajax({
-				type: 'POST',
-				url: baseUrl+'hod/leave-request-update/',
-				data: { 
-					'req_id' : req_id,
-					'hod_status' : status,
-					'hod_remark' : remark,
-				},
-				dataType: 'json',
-				beforeSend: function() {},
-				success: function(response){
-					if(response.status == 200){
-						leavePendingRequests(0);
-					} else {
-					}
-				}
-			});
-		} else {
-			$(that).val(previous);
-		}        
+		if(previous != $(that).val()){
+    		var c = confirm('Are you sure!');
+    		if(c){	
+    			remark = $('#hod_remark_'+req_id).val();
+    			$.ajax({
+    				type: 'POST',
+    				url: baseUrl+'hod/leave-request-update/',
+    				data: { 
+    					'req_id' : req_id,
+    					'hod_status' : status,
+    					'hod_remark' : remark,
+    				},
+    				dataType: 'json',
+    				beforeSend: function() {},
+    				success: function(response){
+    					if(response.status == 200){
+        					alert('Done');
+    						leavePendingRequests(0);
+    					} else {
+    					}
+    				}
+    			});
+    		} else {
+    			$(that).val(previous);
+    		}  
+		}      
     });
 	
 
@@ -196,7 +198,7 @@ $(document).ready(function(){
         			$.each(response.data.final_array,function(key,value){
             			x = x + '<tr>'+
             						'<td>'+ parseInt(c++) +'</td>'+
-            						'<td>'+ value.refrence_id +'</td>'+
+            						'<td>'+ value.reference_id +'</td>'+
             						'<td>'+ value.dept_name +'</td>'+
             						'<td>'+ value.emp_name +'</td>'+
             						'<td>'+ value.created_at +'</td>'+
@@ -256,7 +258,7 @@ $(document).ready(function(){
         			$.each(response.data.final_array,function(key,value){
             			x = x + '<tr>'+
             						'<td>'+ parseInt(c++) +'</td>'+
-            						'<td>'+ value.refrence_id +'</td>'+
+            						'<td>'+ value.reference_id +'</td>'+
             						'<td>'+ value.dept_name +'</td>'+
             						'<td>'+ value.emp_name +'</td>'+
             						'<td>'+ value.created_at +'</td>'+

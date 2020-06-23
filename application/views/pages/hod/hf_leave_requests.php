@@ -122,64 +122,42 @@
 var baseUrl = $('#baseUrl').val();
 
 $(document).ready(function(){
-	$('#example').DataTable();
-	$('#example2').DataTable();
-	
 	var previous;
-
-    $(".hod_status").on('focus', function () {
+	var that;
+	$(document).on('focus','.hod_status',function(){
+	//$(".hod_status").on('focus', function () {
         previous = this.value;
+        that = this;
     }).change(function() { 
-		var req_id = $(this).data('rid');
-		var status = $(this).val();
-		var that = this;
-		var c = confirm('Are you sure!');
-		if(c){
-			$.ajax({
-				type: 'POST',
-				url: baseUrl+'hod/hf-leave-request-update/',
-				data: { 
-					'req_id' : req_id,
-					'key' : 'hod_status',
-					'value' : status,
-				},
-				dataType: 'json',
-				beforeSend: function() {},
-				success: function(response){
-					if(response.status == 200){
-						location.reload();
-					} else {
-					}
-				}
-			});
-		} else {
-			$(that).val(previous);
-		}
-        
+		var req_id = $(that).data('rid');
+		var status = $(that).val();
+		if(previous != status){
+    		var c = confirm('Are you sure!');
+    		if(c){
+    			remark = $('hod_remark_'+req_id).val();
+    			$.ajax({
+    				type: 'POST',
+    				url: baseUrl+'hod/hf-leave-request-update/',
+    				data: { 
+    					'req_id' : req_id,
+    					'hod_status' : status,
+    					'hod_remark' : remark,
+    				},
+    				dataType: 'json',
+    				beforeSend: function() {},
+    				success: function(response){
+    					if(response.status == 200){
+    						alert('Done');
+    						hfPendingRequests(0);
+    					} else {
+    					}
+    				}
+    			});
+    		} else {
+    			$(that).val(previous);
+    		}
+		}        
     });
-	
-	$(document).on('blur','.hod_remark',function(){
-		var req_id = $(this).data('rid');
-		var status = $(this).val();		
-		$.ajax({
-			type: 'POST',
-			url: baseUrl+'hod/hf-leave-request-update/',
-			data: { 
-				'req_id' : req_id,
-				'key' : 'hod_remark',
-				'value' : status,
-			},
-			dataType: 'json',
-			beforeSend: function() {},
-			success: function(response){
-				if(response.status == 200){
-					
-				} else {
-				}
-			}
-		});
-	});
-
 
 
 	hfPendingRequests(0);	//load pending requests
@@ -194,7 +172,9 @@ $(document).ready(function(){
         	url: baseUrl+'hod/hf_leave_ctrl/hf_pending_request_ajax/'+ page +'/'+ str,
         	data: {},
         	dataType: 'json',
-        	beforeSend: function() {},
+        	beforeSend: function() {
+        		$('#hf_pending_requests_body').html('<td class="text-center" ></td>');
+            },
         	success: function(response){
         		if(response.status == 200){
         			var x = '';
@@ -202,7 +182,7 @@ $(document).ready(function(){
         			$.each(response.data.final_array,function(key,value){
             			x = x + '<tr>'+
             						'<td>'+ parseInt(c++) +'</td>'+
-            						'<td>'+ value.refrence_id +'</td>'+
+            						'<td>'+ value.reference_id +'</td>'+
             						'<td>'+ value.dept_name +'</td>'+
             						'<td>'+ value.emp_name +'</td>'+
             						'<td>'+ value.created_at +'</td>'+
@@ -223,7 +203,7 @@ $(document).ready(function(){
         });
 	}
 
-	$(document).on('click','.myLinks',function(){
+	$(document).on('click','.myLinks1',function(){
 		var page = $(this).attr('href');
 		var x = page.split('/');
 		if(x[1] == undefined){
@@ -258,7 +238,7 @@ $(document).ready(function(){
         			$.each(response.data.final_array,function(key,value){
             			x = x + '<tr>'+
             						'<td>'+ parseInt(c++) +'</td>'+
-            						'<td>'+ value.refrence_id +'</td>'+
+            						'<td>'+ value.reference_id +'</td>'+
             						'<td>'+ value.dept_name +'</td>'+
             						'<td>'+ value.emp_name +'</td>'+
             						'<td>'+ value.created_at +'</td>'+

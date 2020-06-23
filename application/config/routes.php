@@ -53,12 +53,12 @@ $route['hod/leave-request/(:any)'] = 'hod/Hod_ctrl/leave_request/$1';
 $route['hod/leave-request-update'] = 'hod/Hod_ctrl/leave_request_update';
 
 $route['hod/hf-leave-request'] = 'hod/Hf_leave_ctrl/hf_leave_request/';
-$route['hod/hf-leave-request/(:any)'] = 'hod/Hod_ctrl/hf_leave_request/$1';
-$route['hod/hf-leave-request-update'] = 'hod/Hod_ctrl/hf_leave_request_update';
+$route['hod/hf-leave-request/(:any)'] = 'hod/Hf_leave_ctrl/hf_leave_request/$1';
+$route['hod/hf-leave-request-update'] = 'hod/Hf_leave_ctrl/hf_leave_request_update';
 
-$route['hod/off-day-duty-request'] = 'hod/Hod_ctrl/off_day_duty_request/';
-$route['hod/off-day-duty-request/(:any)'] = 'hod/Hod_ctrl/off_day_duty_request/$1';
-$route['hod/off-day-duty-update'] = 'hod/Hod_ctrl/off_day_duty_request_update';
+$route['hod/off-day-duty-request'] = 'hod/Off_day_duty_ctrl/off_day_duty_request/';
+$route['hod/off-day-duty-request/(:any)'] = 'hod/Off_day_duty_ctrl/off_day_duty_request/$1';
+$route['hod/off-day-duty-update'] = 'hod/Off_day_duty_ctrl/off_day_duty_request_update';
 
 $route['hod/nh-fh-day-duty-request'] = 'hod/Hod_ctrl/nh_fh_day_duty_request/';
 $route['hod/nh-fh-day-duty-request/(:any)'] = 'hod/Hod_ctrl/nh_fh_day_duty_request/$1';

@@ -84,12 +84,12 @@ class Hod_ctrl extends CI_Controller {
 	        foreach($records as $record){
 	            $temp = array();
 	            $temp['id'] = $record['id'];
-	            $temp['refrence_id'] = $this->my_library->remove_hyphen($record['refrence_id']);
+	            $temp['reference_id'] = $this->my_library->remove_hyphen($record['reference_id']);
 	            $temp['dept_name'] = $record['dept_name'];
 	            $temp['emp_name'] = $record['name'];
 	            $temp['created_at'] = $record['created_at'];
 	            $temp['ecode'] = $record['ecode'];
-	            $temp['date_from'] = $record['date_from'] .' - '. $record['date_to'];
+	            $temp['date_from'] = date('d/m/Y',strtotime($record['date_from'])) .' - '. date('d/m/Y',strtotime($record['date_to']));
 	            $temp['date_to'] = $record['date_to'];
 	            $temp['duration'] = $this->my_library->day_duration($record['date_from'],$record['date_to']);
 	            $temp['requirment'] = $record['requirment'];
@@ -148,7 +148,7 @@ class Hod_ctrl extends CI_Controller {
 	        foreach($records as $record){
 	            $temp = array();
 	            $temp['id'] = $record['id'];
-	            $temp['refrence_id'] = $this->my_library->remove_hyphen($record['refrence_id']);
+	            $temp['reference_id'] = $this->my_library->remove_hyphen($record['reference_id']);
 	            $temp['dept_name'] = $record['dept_name'];
 	            $temp['emp_name'] = $record['name'];
 	            $temp['created_at'] = $record['created_at'];
@@ -198,16 +198,6 @@ class Hod_ctrl extends CI_Controller {
 	    }
 	}
 	
-	function off_day_duty_request_update(){
-	    $data['req_id'] = $this->input->post('req_id');
-	    $data['key'] = $this->input->post('key');
-	    $data['value'] = $this->input->post('value');
-	    $data['created_at'] = date('Y-m-d H:i:s');
-	    $data['hod_id'] = $this->session->userdata('ecode');
-	    if($this->Hod_model->off_day_duty_request_update($data)){
-	        echo json_encode(array('status'=>200));
-	    }
-	}
 	
 	function nh_fh_avail_request_update(){
 	    $data['req_id'] = $this->input->post('req_id');
@@ -218,33 +208,6 @@ class Hod_ctrl extends CI_Controller {
 	    if($this->Hod_model->nh_fh_avail_request_update($data)){
 	        echo json_encode(array('status'=>200));
 	    }
-	}
-	
-	///OFF DAY DUTY REQUEST
-	function off_day_duty_request($ref_id = null){		
-		$data = array();
-		$data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
-		
-		$users = $this->Emp_model->get_employee($this->session->userdata('ecode'));			
-		$ulist = '';
-		foreach($users as $user) {
-			$ulist = $ulist.",'".$user['ecode']."'";
-		}
-		$ulist = ltrim($ulist,',');
-		
-		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
-		$data['footer'] = $this->load->view('include/footer','',true);
-		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside',$data,true);
-		$data['notepad'] = $this->load->view('include/shift_timing','',true);
-		$data['pending_requests'] = $this->Hod_model->off_day_duty_pending_request($ulist,$ref_id);
-		$data['requests'] = $this->Hod_model->off_day_duty_request($ulist,$ref_id);
-		$data['body'] = $this->load->view('pages/hod/off_day_duty_request',$data,true);
-		
-		$data['title'] = $this->config->item('project_title').' | OFF Day Duty Requests';
-		$data['head'] = $this->load->view('common/head',$data,true);
-		$data['footer'] = $this->load->view('common/footer',$data,true);
-		$this->load->view('layout_master',$data);
 	}
 	
 	///NH FH DAY DUTY REQUEST

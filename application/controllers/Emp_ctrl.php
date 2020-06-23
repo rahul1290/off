@@ -161,7 +161,7 @@ class Emp_ctrl extends CI_Controller {
 	function validatecoff($str){
 	    $from_date = date('Y-m-d', strtotime(str_replace('/', '-',$_POST['from_date'])));
 	    if($str != ''){
-    	    $dates = $this->db->query("select date_from from users_leave_requests where refrence_id = '".$str."' AND status = 1")->result_array();
+    	    $dates = $this->db->query("select date_from from users_leave_requests where reference_id = '".$str."' AND status = 1")->result_array();
     	    $coff_date = date('Y-m-d', strtotime("+3 months", strtotime($dates[0]['date_from'])));
     	    
     	    $diff = date_diff(date_create($from_date),date_create($coff_date));
@@ -180,7 +180,7 @@ class Emp_ctrl extends CI_Controller {
 	function validatenhfh($str){
 	    $from_date = date('Y-m-d', strtotime(str_replace('/', '-',$_POST['from_date'])));
 	    if($str != ''){
-	        $dates = $this->db->query("select date_format(date_from,'%Y') as date_from from users_leave_requests where refrence_id = '".$str."' AND status = 1")->result_array();
+	        $dates = $this->db->query("select date_format(date_from,'%Y') as date_from from users_leave_requests where reference_id = '".$str."' AND status = 1")->result_array();
 	        
 	        if(date('Y') == $dates[0]['date_from']){
 	            return true;
@@ -233,7 +233,7 @@ class Emp_ctrl extends CI_Controller {
                 $from_date = $this->my_library->mydate($this->input->post('from_date'));
                 $to_date = $this->my_library->mydate($this->input->post('to_date'));
                 $data['request_type'] = 'LEAVE';
-                $data['refrence_id'] = 'LEAVE-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
+                $data['reference_id'] = 'LEAVE-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
                 $data['ecode'] = $this->session->userdata('ecode');
                 $data['requirment'] = $this->input->post('reason');
                 $data['date_from'] = $from_date;
@@ -251,17 +251,17 @@ class Emp_ctrl extends CI_Controller {
                 if($this->db->insert('users_leave_requests',$data)){
                     $id = $this->db->insert_id();
                     $this->db->where('id',$id);
-                    $this->db->update('users_leave_requests',array('refrence_id'=>$data['refrence_id'].'-'.$id));
+                    $this->db->update('users_leave_requests',array('reference_id'=>$data['reference_id'].'-'.$id));
                     
                     
                     if($coff != ''){
-                        $this->db->where_in('refrence_id',$coff);
-                        $this->db->update('users_leave_requests',array('request_id'=>$data['refrence_id'].'-'.$id));
+                        $this->db->where_in('reference_id',$coff);
+                        $this->db->update('users_leave_requests',array('request_id'=>$data['reference_id'].'-'.$id));
                     }
                     
                     if($nhfh != ''){
-                        $this->db->where_in('refrence_id',$nhfh);
-                        $this->db->update('users_leave_requests',array('request_id'=>$data['refrence_id'].'-'.$id));
+                        $this->db->where_in('reference_id',$nhfh);
+                        $this->db->update('users_leave_requests',array('request_id'=>$data['reference_id'].'-'.$id));
                     }
                     
                     
@@ -335,7 +335,7 @@ class Emp_ctrl extends CI_Controller {
 	            $temp = array();
 	            $temp['id'] = $record['id'];
 	            $temp['request_type'] = $record['request_type'];
-	            $temp['refrence_id'] = $this->my_library->remove_hyphen($record['refrence_id']);
+	            $temp['reference_id'] = $this->my_library->remove_hyphen($record['reference_id']);
 	            $temp['ecode'] = $record['ecode'];
 	            $temp['duration'] = $this->my_library->day_duration($record['date_from'],$record['date_to']);
 	            $temp['requirment'] = $record['requirment'];
@@ -425,13 +425,13 @@ class Emp_ctrl extends CI_Controller {
 					$data['date_from'] = $date;
 					$data['date_to'] = $date;
 					$data['request_type'] = 'HALF';
-					$data['refrence_id'] = 'HF-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
+					$data['reference_id'] = 'HF-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
 					$data['created_at'] = date('Y-m-d H:i:s');
 					
 					if($this->db->insert('users_leave_requests',$data)){ 
 						$id = $this->db->insert_id();
 						$this->db->where('id',$id);
-						$this->db->update('users_leave_requests',array('refrence_id'=>$data['refrence_id'].'-'.$id));
+						$this->db->update('users_leave_requests',array('reference_id'=>$data['reference_id'].'-'.$id));
 						
 						// //send mail to reporting persone
 						// $mail['name'] = $this->session->userdata('username').$this->session->userdata('ecode');
@@ -511,7 +511,7 @@ class Emp_ctrl extends CI_Controller {
 	            $temp = array();
 	            $temp['id'] = $record['id'];
 	            $temp['request_type'] = $record['request_type'];
-	            $temp['refrence_id'] = $this->my_library->remove_hyphen($record['refrence_id']);
+	            $temp['reference_id'] = $this->my_library->remove_hyphen($record['reference_id']);
 	            $temp['ecode'] = $record['ecode'];
 	            $temp['requirment'] = $record['requirment'];
 	            $temp['date_from'] = $this->my_library->sql_datepicker($record['date_from']);
@@ -587,13 +587,13 @@ class Emp_ctrl extends CI_Controller {
 					$data['date_from'] = $date;
 					$data['date_to'] = $date;
 					$data['request_type'] = 'OFF_DAY';
-					$data['refrence_id'] = 'OFF_DAY-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
+					$data['reference_id'] = 'OFF_DAY-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
 					$data['created_at'] = date('Y-m-d H:i:s');
 					
 					if($this->db->insert('users_leave_requests',$data)){ 
 						$id = $this->db->insert_id();
 						$this->db->where('id',$id);
-						$this->db->update('users_leave_requests',array('refrence_id'=>$data['refrence_id'].'-'.$id));
+						$this->db->update('users_leave_requests',array('reference_id'=>$data['reference_id'].'-'.$id));
 					
 						$this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your OFF day duty request send successfully.</h3>');
 					} else {
@@ -660,7 +660,7 @@ class Emp_ctrl extends CI_Controller {
 	            $temp = array();
 	            $temp['id'] = $record['id'];
 	            $temp['request_type'] = $record['request_type'];
-	            $temp['refrence_id'] = $this->my_library->remove_hyphen($record['refrence_id']);
+	            $temp['reference_id'] = $this->my_library->remove_hyphen($record['reference_id']);
 	            $temp['ecode'] = $record['ecode'];
 	            $temp['requirment'] = $record['requirment'];
 	            $temp['date_from'] = $this->my_library->sql_datepicker($record['date_from']);
@@ -819,13 +819,13 @@ class Emp_ctrl extends CI_Controller {
 				$date = $this->Nh_fh_model->get_nhfh($this->input->post('nhfh_date'));
 				$data['date_from'] = $date[0]['nhfh_date'];
 				$data['request_type'] = 'NH_FH';
-				$data['refrence_id'] = 'NH_HF-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
+				$data['reference_id'] = 'NH_HF-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
 				$data['created_at'] = date('Y-m-d H:i:s');
 				
 				if($this->Nh_fh_model->nh_fh_day_duty_form($data)){ 
 					$id = $this->db->insert_id();
 					$this->db->where('id',$id);
-					$this->db->update('users_leave_requests',array('refrence_id'=>$data['refrence_id'].'-'.$id));
+					$this->db->update('users_leave_requests',array('reference_id'=>$data['reference_id'].'-'.$id));
 						
 					$this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your NH/FH Request send successfully.</h3>');
 				} else{
@@ -898,8 +898,8 @@ class Emp_ctrl extends CI_Controller {
 		$type = $this->input->get('report_type');
 		
 		$this->db->select('ulr.*,date_format(ulr.created_at,"%d/%m/%Y") as created_at,
-                            (select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = ulr.refrence_id and c.request_type in ("NH_FH")) as NHFH,
-                            (select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = ulr.refrence_id and c.request_type in ("OFF_DAY")) as COFF,
+                            (select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = ulr.reference_id and c.request_type in ("NH_FH")) as NHFH,
+                            (select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = ulr.reference_id and c.request_type in ("OFF_DAY")) as COFF,
                             date_format(ulr.date_from,"%d/%m/%Y") as from_date,date_format(ulr.date_to,"%d/%m/%Y") as to_date');
 		if(isset($from_date)){
 			$this->db->where('ulr.created_at >=',$from_date);
