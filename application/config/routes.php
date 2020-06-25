@@ -60,8 +60,8 @@ $route['hod/off-day-duty-request'] = 'hod/Off_day_duty_ctrl/off_day_duty_request
 $route['hod/off-day-duty-request/(:any)'] = 'hod/Off_day_duty_ctrl/off_day_duty_request/$1';
 $route['hod/off-day-duty-update'] = 'hod/Off_day_duty_ctrl/off_day_duty_request_update';
 
-$route['hod/nh-fh-day-duty-request'] = 'hod/Hod_ctrl/nh_fh_day_duty_request/';
-$route['hod/nh-fh-day-duty-request/(:any)'] = 'hod/Hod_ctrl/nh_fh_day_duty_request/$1';
+$route['hod/nh-fh-day-duty-request'] = 'hod/Nh_fh_ctrl/nh_fh_day_duty_request/';
+$route['hod/nh-fh-day-duty-request/(:any)'] = 'hod/Nh_fh_ctrl/nh_fh_day_duty_request/$1';
 $route['hod/nh-fh-day-duty-update'] = 'hod/Hod_ctrl/nh_fh_day_duty_request_update';
 
 $route['hod/nh-fh-avail-request'] = 'hod/Hod_ctrl/nh_fh_avail_request/';

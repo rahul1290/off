@@ -1,4 +1,4 @@
-    <div class="content-wrapper">	
+<div class="content-wrapper">	
 	<div class="content-header bg-light mb-3">
 		<div class="container-fluid">
 			<div class="row mb-2">
@@ -26,14 +26,13 @@
           		<a class="nav-link active" id="#pending_requests_tab" data-toggle="tab" href="#pending_requests">NEW LEAVE REQUESTS</a>
         	</li>
         	<li class="nav-item">
-          		<a class="nav-link" id="previous_requests_tab" data-toggle="tab" href="#previous_requests">PREVIOUS HF REQUESTS</a>
+          		<a class="nav-link" id="previous_requests_tab" data-toggle="tab" href="#previous_requests">PREVIOUS LEAVE REQUESTS</a>
         	</li>
       	</ul>
         
           <!-- Tab panes -->
           <div class="tab-content">
             <div id="pending_requests" class="tab-pane active"><br>
-             
 			  <div class="col-12">
                  <div class="card card-info">
                   <div class="card-header" style="border-radius:0px;">

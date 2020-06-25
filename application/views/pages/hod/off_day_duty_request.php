@@ -57,51 +57,6 @@
         						</table>
         						<nav aria-label="Page navigation example" id="offduty_pending_requests_links"></nav>
         					</div>
-            				
-        					<?php /*if(count($pending_requests)>0){?>
-        					<div class="table-responsive">
-        						<table class="table table-bordered text-center" id="example">
-        							<thead>	
-        								<tr class="bg-dark">
-        									<th>S.No.</th>
-        									<th>REFERENCE No.</th>
-        									<th>DEPARTMENT</th>
-        									<th>EMPLOYEE NAME</th>
-        									<th>REQUEST SUBMIT DATE</th>
-        									<th>OFF DAY DATE</th>
-        									<th>REASON</th>
-        									<th>REMARK</th>
-        									<th>HOD STATUS</th>
-        								</tr>
-        							</thead>
-        							<tbody>
-        									<?php $c=1; foreach($pending_requests as $request){ ?>
-        										<tr>	
-        											<td><?php echo $c++; ?>.</td>
-        											<td><?php echo $this->my_library->remove_hyphen($request['reference_id']); ?></td>
-        											<td><?php echo $request['dept_name']; ?></td>
-        											<td><?php echo $request['name']; ?></td>
-        											<td><?php echo $request['created_at']; ?></td>
-        											<td><?php echo $request['date']; ?></td>
-        											<td><?php echo strlen($request['requirment']) > 50 ? ucfirst(substr($request['requirment'],0,50))."...<a href='#'>read more</a>" : ucfirst($request['requirment']); ?></td>
-        											<td>
-        												<textarea class="form-control hod_remark" name="hod_remark" data-rid="<?php echo $request['id']; ?>"><?php echo $request['hod_remark']; ?></textarea>
-        											</td>
-        											<td>
-        												<select class="hod_status" name="hod_status" data-rid="<?php echo $request['id']; ?>">
-        													<option value="PENDING" <?php if($request['hod_status'] == 'PENDING'){ echo 'selected'; }?>>PENDING</option>
-        													<option  value="REJECTED" <?php if($request['hod_status'] == 'REJECTED'){ echo 'selected'; }?>>REJECTED</option>
-        													<option  value="GRANTED" <?php if($request['hod_status'] == 'GRANTED'){ echo 'selected'; }?>>GRANTED</option>
-        												</select>
-        											</td>
-        										</tr>
-        									<?php } ?>
-        							</tbody>
-        						</table>
-        					</div>
-        					<?php } else {
-        						echo "<p class='text-center'>No new record found.</p>";
-        					} */ ?>
         				  </div>
         				</div>
         			  </div>	
@@ -114,6 +69,28 @@
         					<h3 class="card-title">PREVIOUS OFF DAY REQUESTS</h3>
         				  </div>
         				  <div class="card-body">
+        				  	<div class="table-responsive">
+        						<input id="search" type="text" class="float-right mb-2">
+        						<label class="float-right mr-2" for="search">Search: </label>
+        						<table class="table table-bordered table-striped text-center" id="offdudy_requests_head">
+        							<thead class="bg-dark">
+        								<tr>
+                							<th>S.No.</th>
+        									<th>REFERENCE No.</th>
+        									<th>DEPARTMENT</th>
+        									<th>EMPLOYEE NAME</th>
+        									<th>REQUEST SUBMIT DATE</th>
+        									<th>OFF DAY DATE</th>
+        									<th>REASON</th>
+        									<th>REMARK</th>
+        									<th>HOD STATUS</th>
+                						</tr>
+        							</thead>
+        							<tbody id="offduty_requests_body"></tbody>
+        						</table>
+        						<nav aria-label="Page navigation example" id="offduty_requests_links"></nav>
+        					</div>
+        				  <?php /*
         					<div class="table-responsive">
         						<table class="table table-bordered text-center" id="example2">
         							<thead>	
@@ -127,7 +104,6 @@
         									<th>REASON</th>
         									<th>REMARK</th>
         									<th>HOD STATUS</th>
-        									<th>LAST UPDATE</th>
         								</tr>
         							</thead>
         							<tbody>
@@ -147,13 +123,14 @@
         											<td>
         												<?php echo $request['hod_status']; ?>
         											</td>
-        											<td><?php echo $request['last_update']; ?></td>
         										</tr>
         									<?php } ?>
         								<?php } ?>
         							</tbody>
         						</table>
         					</div>
+        					
+        					*/ ?>
         				  </div>
         				</div>
         			  </div>
@@ -218,31 +195,9 @@ $(document).ready(function(){
 			});
 		} else {
 			$(that).val(previous);
-		}
-        
+		}    
     });
 	
-	$(document).on('blur','.hod_remark',function(){
-		var req_id = $(this).data('rid');
-		var status = $(this).val();		
-		$.ajax({
-			type: 'POST',
-			url: baseUrl+'hod/hf-leave-request-update/',
-			data: { 
-				'req_id' : req_id,
-				'key' : 'hod_remark',
-				'value' : status,
-			},
-			dataType: 'json',
-			beforeSend: function() {},
-			success: function(response){
-				if(response.status == 200){
-				} else {
-				}
-			}
-		});
-	});
-
 
 	offDayPendingRequests(0);	//load pending requests
 	$(document).on('keyup','#search',function(){
@@ -253,7 +208,7 @@ $(document).ready(function(){
 		var str = $('#search').val();
         $.ajax({
         	type: 'GET',
-        	url: baseUrl+'hod/Off_day_duty_ctrl/off_day_request_ajax/'+ page +'/'+ str,
+        	url: baseUrl+'hod/Off_day_duty_ctrl/off_day_pending_request_ajax/'+ page +'/'+ str,
         	data: {},
         	dataType: 'json',
         	beforeSend: function() {
@@ -280,8 +235,63 @@ $(document).ready(function(){
                     							'</select></td>'+  	
             					'</tr>';
             		});         	
-            		$('#hf_pending_requests_body').html(x);
-            		$('#hf_pending_requests_links').html(response.data.links);
+            		$('#offduty_pending_requests_body').html(x);
+            		$('#offduty_pending_requests_links').html(response.data.links);
+        		}
+        	}
+        });
+	}
+
+	$(document).on('click','.myLinks',function(){
+		var page = $(this).attr('href');
+		var x = page.split('/');
+		if(x[1] == undefined){
+			x[1] = 0;
+		}
+		offDayPendingRequests(x[1]);	
+	});
+
+
+
+
+	$(document).on('click','#previous_requests_tab',function(){
+		offDayRequests(0);	//load off requests	
+	});
+
+	
+	$(document).on('keyup','#search',function(){
+		offDayRequests(0);
+	});
+	
+	function offDayRequests(page){
+		var str = $('#search').val();
+        $.ajax({
+        	type: 'GET',
+        	url: baseUrl+'hod/Off_day_duty_ctrl/off_day_request_ajax/'+ page +'/'+ str,
+        	data: {},
+        	dataType: 'json',
+        	beforeSend: function() {
+        		$('#offduty_requests_body').html('<td class="text-center" ></td>');
+            },
+        	success: function(response){
+        		if(response.status == 200){
+        			var x = '';
+        			var c = parseInt(parseInt(page)+1);
+        			$.each(response.data.final_array,function(key,value){
+            			x = x + '<tr>'+
+            						'<td>'+ parseInt(c++) +'</td>'+
+            						'<td>'+ value.reference_id +'</td>'+
+            						'<td>'+ value.dept_name +'</td>'+
+            						'<td>'+ value.emp_name +'</td>'+
+            						'<td>'+ value.created_at +'</td>'+
+            						'<td>'+ value.date_from +'</td>'+
+            						'<td>'+ value.requirment +'</td>'+
+            						'<td>'+ value.hod_remark +'</td>'+
+            						'<td>'+ value.hod_status +'</td>'+  	
+            					'</tr>';
+            		});         	
+            		$('#offduty_requests_body').html(x);
+            		$('#offduty_requests_links').html(response.data.links);
         		}
         	}
         });
@@ -293,7 +303,7 @@ $(document).ready(function(){
 		if(x[1] == undefined){
 			x[1] = 0;
 		}
-		hfPendingRequests(x[1]);	
+		offDayRequests(x[1]);	
 	});
 	
 });
