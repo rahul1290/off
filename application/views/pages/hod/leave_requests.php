@@ -202,9 +202,13 @@ $(document).ready(function(){
             						'<td>'+ value.emp_name +'</td>'+
             						'<td>'+ value.created_at +'</td>'+
             						'<td>'+ value.date_from +'</td>'+
-            						'<td>'+ value.duration +'</td>'+
-            					    '<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>'+
-            						'<td>'+ value.requirment +'</td>'+
+            						'<td>'+ value.duration +'</td>';
+            						if(value.hr_status == 'pending'){
+            							x = x + '<td>COFF\'s:</br></br>NH/FH\'s:</br></td>';
+            						} else {
+            					    	x = x + '<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>';
+            						}
+            						x = x + '<td>'+ value.requirment +'</td>'+
             						'<td><textarea id="hod_remark_'+ value.id +'">'+ value.hod_remark +'</textarea></td>'+
     								'<td><select class="hod_status" data-rid="'+ value.id +'">'+
                         							'<option value="PENDING" selected>PENDING</option>'+
@@ -262,9 +266,13 @@ $(document).ready(function(){
             						'<td>'+ value.emp_name +'</td>'+
             						'<td>'+ value.created_at +'</td>'+
             						'<td>'+ value.date_from +'</td>'+
-            						'<td>'+ value.duration +'</td>'+
-            					    '<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>'+
-            						'<td>'+ value.requirment +'</td>'+
+            						'<td>'+ value.duration +'</td>';
+            						if(value.hr_status == 'pending'){
+            					    	x = x + '<td>COFF\'s:</br></br>NH/FH\'s:</br></td>';
+            						} else {
+            							x = x + '<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>';
+                					}
+            						x = x +'<td>'+ value.requirment +'</td>'+
             						'<td>'+ value.hod_remark +'</td>'+  	
                     				'<td>'+ value.hod_status +'</td>'+
             					'</tr>';

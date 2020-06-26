@@ -18,7 +18,7 @@ class Hod_model extends CI_Model {
     }
     
     function leave_request($ulist,$ref_id,$offset,$limit){
-        $this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y %H:%i:%s") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y %H:%i:%s") as last_update,(select group_concat(ulr2.reference_id) from users_leave_requests ulr2 WHERE ulr2.request_id = ulr.reference_id AND ulr2.request_type = "OFF_DAY") as coff,
+        $this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y") as last_update,(select group_concat(ulr2.reference_id) from users_leave_requests ulr2 WHERE ulr2.request_id = ulr.reference_id AND ulr2.request_type = "OFF_DAY") as coff,
 						 (select group_concat(ulr2.reference_id) from users_leave_requests ulr2 WHERE ulr2.request_id = ulr.reference_id AND ulr2.request_type = "NH_FH") as nhfhs');
         $this->db->where_in('ulr.ecode',$ulist,false);
         $this->db->join('users u','u.ecode = ulr.ecode');
@@ -48,7 +48,7 @@ class Hod_model extends CI_Model {
     }
     
     function pending_leave_requests($ulist,$str,$offset,$limit){
-        $this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y %H:%i:%s") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y %H:%i:%s") as last_update,(select group_concat(ulr2.reference_id) from users_leave_requests ulr2 WHERE ulr2.request_id = ulr.reference_id AND ulr2.request_type = "OFF_DAY") as coff,
+        $this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y") as last_update,(select group_concat(ulr2.reference_id) from users_leave_requests ulr2 WHERE ulr2.request_id = ulr.reference_id AND ulr2.request_type = "OFF_DAY") as coff,
 						 (select group_concat(ulr2.reference_id) from users_leave_requests ulr2 WHERE ulr2.request_id = ulr.reference_id AND ulr2.request_type = "NH_FH") as nhfhs');
         $this->db->where_in('ulr.ecode',$ulist,false);
         $this->db->join('users u','u.ecode = ulr.ecode');

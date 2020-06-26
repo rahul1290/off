@@ -138,7 +138,7 @@ class Nh_fh_ctrl extends CI_Controller {
 	    $ulist = ltrim($ulist,',');
 	    
 	    $config["base_url"] = "javascript:void(0)";
-	    $config["total_rows"] = $this->Hf_leave_model->total_nhfh_requests($ulist,$str);
+	    $config["total_rows"] = $this->Nh_fh_model->total_nhfh_requests($ulist,$str);
 	    $config["per_page"] = $this->config->item('row_count');
 	    $config["uri_segment"] = $page;
 	    $config['attributes'] = array('class' => 'page-link myLinks');
@@ -159,7 +159,8 @@ class Nh_fh_ctrl extends CI_Controller {
 	    $this->pagination->initialize($config);
 	    
 	    $data["links"] = $this->pagination->create_links();
-	    $records = $this->Hf_leave_model->hf_leave_request($ulist,$str,$config["per_page"],$page);
+	    $records = $this->Nh_fh_model->nhfh_request($ulist,$str,$config["per_page"],$page);
+	   
 	    if(count($records)>0){
 	        $data['final_array'] = array();
 	        foreach($records as $record){
@@ -170,7 +171,7 @@ class Nh_fh_ctrl extends CI_Controller {
 	            $temp['emp_name'] = $record['name'];
 	            $temp['created_at'] = $record['created_at'];
 	            $temp['ecode'] = $record['ecode'];
-	            $temp['date_from'] = $record['date_from'];
+	            $temp['date_from'] = $record['date'];
 	            $temp['requirment'] = $record['requirment'];
 	            $temp['hod_remark'] = ($record['hod_remark'])?$record['hod_remark']:'';
 	            $temp['hod_id'] = $record['hod_id'];

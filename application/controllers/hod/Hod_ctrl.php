@@ -94,6 +94,7 @@ class Hod_ctrl extends CI_Controller {
 	            $temp['duration'] = $this->my_library->day_duration($record['date_from'],$record['date_to']);
 	            $temp['requirment'] = $record['requirment'];
 	            $temp['hod_remark'] = ($record['hod_remark'])?$record['hod_remark']:'';
+	            $temp['hr_status'] = $record['hod_status'];
 	            $temp['hod_id'] = $record['hod_id'];
 	            $temp['hod_remark_date'] = $record['hod_remark_date'];
 	            $temp['wod'] = $record['wod'];
@@ -153,7 +154,7 @@ class Hod_ctrl extends CI_Controller {
 	            $temp['emp_name'] = $record['name'];
 	            $temp['created_at'] = $record['created_at'];
 	            $temp['ecode'] = $record['ecode'];
-	            $temp['date_from'] = $record['date_from'] .' - '. $record['date_to'];
+	            $temp['date_from'] = date('d/m/Y',strtotime($record['date_from'])) .' - '. date('d/m/Y',strtotime($record['date_to']));
 	            $temp['date_to'] = $record['date_to'];
 	            $temp['duration'] = $this->my_library->day_duration($record['date_from'],$record['date_to']);
 	            $temp['requirment'] = $record['requirment'];
@@ -161,6 +162,7 @@ class Hod_ctrl extends CI_Controller {
 	            $temp['hod_id'] = $record['hod_id'];
 	            $temp['hod_status'] = $record['hod_status'];
 	            $temp['hod_remark_date'] = $record['hod_remark_date'];
+	            $temp['hr_status'] = $record['hod_status'];
 	            $temp['wod'] = $record['wod'];
 	            $temp['request_id'] = $record['request_id'];
 	            $temp['status'] = $record['status'];

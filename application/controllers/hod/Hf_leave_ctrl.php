@@ -84,7 +84,7 @@ class Hf_leave_ctrl extends CI_Controller {
 	            $temp['emp_name'] = $record['name'];
 	            $temp['created_at'] = $record['created_at'];
 	            $temp['ecode'] = $record['ecode'];
-	            $temp['date_from'] = $record['date_from'];
+	            $temp['date_from'] = $record['date'];
 	            $temp['requirment'] = $record['requirment'];
 	            $temp['hod_remark'] = ($record['hod_remark'])?$record['hod_remark']:'';
 	            $temp['hod_id'] = $record['hod_id'];
@@ -145,7 +145,7 @@ class Hf_leave_ctrl extends CI_Controller {
 	            $temp['emp_name'] = $record['name'];
 	            $temp['created_at'] = $record['created_at'];
 	            $temp['ecode'] = $record['ecode'];
-	            $temp['date_from'] = $record['date_from'];
+	            $temp['date_from'] = $record['date'];
 	            $temp['requirment'] = $record['requirment'];
 	            $temp['hod_remark'] = ($record['hod_remark'])?$record['hod_remark']:'';
 	            $temp['hod_id'] = $record['hod_id'];

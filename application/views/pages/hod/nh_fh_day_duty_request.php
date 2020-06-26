@@ -21,10 +21,10 @@
       <div class="container-fluid">
 			<ul class="nav nav-tabs">
                 <li class="nav-item">
-                  	<a class="nav-link active" id="#pending_requests_tab" data-toggle="tab" href="#pending_requests">NEW NH/FH AVAIL REQUESTS</a>
+                  	<a class="nav-link active" id="#pending_requests_tab" data-toggle="tab" href="#pending_requests">NEW NH/FH DAY DUTY REQUESTS</a>
                 </li>
                 <li class="nav-item">
-                  	<a class="nav-link" id="previous_requests_tab" data-toggle="tab" href="#previous_requests">PREVIOUS NH/FH AVAIL REQUESTS</a>
+                  	<a class="nav-link" id="previous_requests_tab" data-toggle="tab" href="#previous_requests">PREVIOUS NH/FH DAY DUTY REQUESTS</a>
                 </li>
           	</ul>
           	
@@ -33,7 +33,7 @@
             	  	<div class="col-md-12">
     				<div class="card card-info">
     				  <div class="card-header" style="border-radius:0px;">
-    					<h3 class="card-title">NEW NH/FH REQUESTS</h3>
+    					<h3 class="card-title">NEW NH/FH DAY DUTY REQUESTS</h3>
     				  </div>
     				  <div class="card-body">
     					<div class="table-responsive">
@@ -66,14 +66,16 @@
                 	<div class="col-md-12">
     				<div class="card card-info">
     				  <div class="card-header" style="border-radius:0px;">
-    					<h3 class="card-title">PREVIOUS HF REQUESTS</h3>
+    					<h3 class="card-title">PREVIOUS NH/FH DAY DUTY REQUESTS</h3>
     				  </div>
     				  <div class="card-body">
     					<div class="table-responsive">
-    						<table class="table table-bordered text-center" id="example2">
-    							<thead>	
-    								<tr class="bg-dark">
-    									<th>S.No.</th>
+    						<input id="search" type="text" class="float-right mb-2">
+    						<label class="float-right mr-2" for="search">Search: </label>
+    						<table class="table table-bordered table-striped text-center" id="nhfh_requests_head">
+    							<thead class="bg-dark">
+    								<tr>
+            							<th>S.No.</th>
     									<th>REFERENCE No.</th>
     									<th>DEPARTMENT</th>
     									<th>EMPLOYEE NAME</th>
@@ -82,32 +84,11 @@
     									<th>REASON</th>
     									<th>REMARK</th>
     									<th>HOD STATUS</th>
-    									<th>LAST UPDATE</th>
-    								</tr>
+            						</tr>
     							</thead>
-    							<tbody>
-    								<?php if(count($requests)>0){?>
-    									<?php $c=1; foreach($requests as $request){ ?>
-    										<tr>	
-    											<td><?php echo $c++; ?>.</td>
-    											<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
-    											<td><?php echo $request['dept_name']; ?></td>
-    											<td><?php echo $request['name']; ?></td>
-    											<td><?php echo $request['created_at']; ?></td>
-    											<td><?php echo $request['date']; ?></td>
-    											<td><?php echo strlen($request['requirment']) > 50 ? ucfirst(substr($request['requirment'],0,50))."...<a href='#'>read more</a>" : ucfirst($request['requirment']); ?></td>
-    											<td>
-    												<label><?php echo $request['hod_remark']; ?></label>
-    											</td>
-    											<td>
-    												<?php echo $request['hod_status']; ?>
-    											</td>
-    											<td><?php echo $request['last_update']; ?></td>
-    										</tr>
-    									<?php } ?>
-    								<?php } ?>
-    							</tbody>
+    							<tbody id="nhfh_requests_body"></tbody>
     						</table>
+    						<nav aria-label="Page navigation example" id="nhfh_requests_links"></nav>
     					</div>
     				  </div>
     				</div>
@@ -196,7 +177,6 @@ $(document).ready(function(){
         		if(response.status == 200){
         			var x = '';
         			var c = parseInt(parseInt(page)+1);
-        			console.log('sdf');
         			if(response.data.final_array != undefined){
             			$.each(response.data.final_array,function(key,value){
                 			x = x + '<tr>'+
@@ -220,6 +200,61 @@ $(document).ready(function(){
         				$('#nhfh_pending_requests_body').html('<td colspan="9">No Record found.</td>');
             		}
             		$('#nhfh_pending_requests_links').html(response.data.links);
+        		}
+        	}
+        });
+	}
+
+	$(document).on('click','.myLinks',function(){
+		var page = $(this).attr('href');
+		var x = page.split('/');
+		if(x[1] == undefined){
+			x[1] = 0;
+		}
+		nhfhPendingRequests(x[1]);	
+	});
+
+
+
+
+	nhfhRequests(0);	//load pending requests
+	$(document).on('keyup','#search',function(){
+		nhfhRequests(0);
+	});
+	
+	function nhfhRequests(page){
+		var str = $('#search').val();
+        $.ajax({
+        	type: 'GET',
+        	url: baseUrl+'hod/Nh_fh_ctrl/nhfh_request_ajax/'+ page +'/'+ str,
+        	data: {},
+        	dataType: 'json',
+        	beforeSend: function() {
+        		$('#hf_pending_requests_body').html('<td class="text-center" ></td>');
+            },
+        	success: function(response){
+        		if(response.status == 200){
+        			var x = '';
+        			var c = parseInt(parseInt(page)+1);
+        			if(response.data.final_array != undefined){
+            			$.each(response.data.final_array,function(key,value){
+                			x = x + '<tr>'+
+                						'<td>'+ parseInt(c++) +'</td>'+
+                						'<td>'+ value.reference_id +'</td>'+
+                						'<td>'+ value.dept_name +'</td>'+
+                						'<td>'+ value.emp_name +'</td>'+
+                						'<td>'+ value.created_at +'</td>'+
+                						'<td>'+ value.date_from +'</td>'+
+                						'<td>'+ value.requirment +'</td>'+
+                						'<td>'+ value.hod_remark +'</td>'+
+                						'<td>'+ value.hod_status +'</td>'+  	
+                					'</tr>';
+                		});
+            			$('#nhfh_requests_body').html(x);         	
+        			} else {
+        				$('#nhfh_requests_body').html('<td colspan="9">No Record found.</td>');
+            		}
+            		$('#nhfh_requests_links').html(response.data.links);
         		}
         	}
         });
