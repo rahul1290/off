@@ -64,9 +64,9 @@ $route['hod/nh-fh-day-duty-request'] = 'hod/Nh_fh_ctrl/nh_fh_day_duty_request/';
 $route['hod/nh-fh-day-duty-request/(:any)'] = 'hod/Nh_fh_ctrl/nh_fh_day_duty_request/$1';
 $route['hod/nh-fh-day-duty-update'] = 'hod/Hod_ctrl/nh_fh_day_duty_request_update';
 
-$route['hod/nh-fh-avail-request'] = 'hod/Hod_ctrl/nh_fh_avail_request/';
-$route['hod/nh-fh-avail-request/(:any)'] = 'hod/Hod_ctrl/nh_fh_avail_request/$1';
-$route['hod/nh-fh-avail-request-update'] = 'hod/Hod_ctrl/nh_fh_avail_request_update';
+$route['hod/nh-fh-avail-request'] = 'hod/Nh_fh_avail_ctrl/nh_fh_avail_request/';
+$route['hod/nh-fh-avail-request/(:any)'] = 'hod/Nh_fh_avail_ctrl/nh_fh_avail_request/$1';
+$route['hod/nh-fh-avail-request-update'] = 'hod/Nh_fh_avail_ctrl/nh_fh_avail_request_update';
 
 $route['hod/pl-record'] = 'hod/Hod_ctrl/pl_record/';
 $route['hod/pl-record/(:any)'] = 'hod/Hod_ctrl/pl_record/$1';

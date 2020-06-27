@@ -121,6 +121,18 @@
 <script>
 var baseUrl = $('#baseUrl').val();
 
+loadDoc()
+function loadDoc() {
+	  var xhttp = new XMLHttpRequest();
+	  xhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	      document.getElementById("hf_pending_requests_body").innerHTML = this.responseText;
+	    }
+	  };
+	  xhttp.open("GET", baseUrl+'hod/hf_leave_ctrl/hf_pending_request_ajax/0/', true);
+	  xhttp.send();
+	}
+
 $(document).ready(function(){
 	var previous;
 	var that;
@@ -159,7 +171,6 @@ $(document).ready(function(){
 		}        
     });
 
-
 	hfPendingRequests(0);	//load pending requests
 	$(document).on('keyup','#search',function(){
 		hfPendingRequests(0);
@@ -173,29 +184,33 @@ $(document).ready(function(){
         	data: {},
         	dataType: 'json',
         	beforeSend: function() {
-        		$('#hf_pending_requests_body').html('<td class="text-center" ></td>');
+        		$('#hf_pending_requests_body').html('<td colspan="9" class="text-center">Fatching record.</td>');
             },
         	success: function(response){
         		if(response.status == 200){
         			var x = '';
         			var c = parseInt(parseInt(page)+1);
-        			$.each(response.data.final_array,function(key,value){
-            			x = x + '<tr>'+
-            						'<td>'+ parseInt(c++) +'</td>'+
-            						'<td>'+ value.reference_id +'</td>'+
-            						'<td>'+ value.dept_name +'</td>'+
-            						'<td>'+ value.emp_name +'</td>'+
-            						'<td>'+ value.created_at +'</td>'+
-            						'<td>'+ value.date_from +'</td>'+
-            						'<td>'+ value.requirment +'</td>'+
-            						'<td><textarea id="hod_remark_'+ value.id +'">'+ value.hod_remark +'</textarea></td>'+
-    								'<td><select class="hod_status" data-rid="'+ value.id +'">'+
-                        							'<option value="PENDING" selected>PENDING</option>'+
-                        							'<option value="REJECTED">REJECTED</option>'+
-                        							'<option value="GRANTED">GRANTED</option>'+
-                    							'</select></td>'+  	
-            					'</tr>';
-            		});         	
+        			if(typeof(response.data.final_array) != 'undefined'){
+            			$.each(response.data.final_array,function(key,value){
+                			x = x + '<tr>'+
+                						'<td>'+ parseInt(c++) +'</td>'+
+                						'<td>'+ value.reference_id +'</td>'+
+                						'<td>'+ value.dept_name +'</td>'+
+                						'<td>'+ value.emp_name +'</td>'+
+                						'<td>'+ value.created_at +'</td>'+
+                						'<td>'+ value.date_from +'</td>'+
+                						'<td>'+ value.requirment +'</td>'+
+                						'<td><textarea id="hod_remark_'+ value.id +'">'+ value.hod_remark +'</textarea></td>'+
+        								'<td><select class="hod_status" data-rid="'+ value.id +'">'+
+                            							'<option value="PENDING" selected>PENDING</option>'+
+                            							'<option value="REJECTED">REJECTED</option>'+
+                            							'<option value="GRANTED">GRANTED</option>'+
+                        							'</select></td>'+  	
+                					'</tr>';
+                		});         	
+        			} else {
+        				x = '<td colspan="9" class="text-center">No record found.</td>';
+                	}
             		$('#hf_pending_requests_body').html(x);
             		$('#hf_pending_requests_links').html(response.data.links);
         		}
