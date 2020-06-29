@@ -179,34 +179,7 @@ foreach($links as $link){
             </a>
 		  	
             <ul class="nav nav-treeview">
-              <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('ROSTER',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('hr/plreview');?>" class="nav-link ml-3
-					<?php if($this->uri->segment('2') == 'plreview'){ echo "active"; } ?>
-				">
-				  <i class="far fa-file-pdf"></i>
-                  <p>&nbsp;PL</p>
-                </a>
-              </li>
-              	
-			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('ROSTER',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('hr/roster');?>" class="nav-link ml-3
-					<?php if($this->uri->segment('2') == 'roster'){ echo "active"; } ?>
-				">
-				  <i class="far fa-file-pdf"></i>
-                  <p>&nbsp;ROSTER</p>
-                </a>
-              </li>
-			  
-              <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('HR POLICIES',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('hr/Policies');?>" class="nav-link ml-3
-					<?php if($this->uri->segment('2') == 'Policies'){ echo "active"; } ?>
-				">
-				  <i class="far fa-file-pdf"></i>
-                  <p>&nbsp;POLICIES</p>
-                </a>
-              </li>
-			  
-			  <!-- employee -->
+              <!-- employee -->
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('EMPLOYEE INFORMATION',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('hr/leave-request'); ?>" class="nav-link ml-3
 					<?php if($this->uri->segment('2') == 'leave-request'){ echo "active"; } ?>
@@ -245,6 +218,32 @@ foreach($links as $link){
 				">
 				  <i class="fas fa-biking text-warning mr-1"></i>
                   <p>TOUR REQUESTS</p>
+                </a>
+              </li>
+              <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('ROSTER',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+                <a href="<?php echo base_url('hr/plreview');?>" class="nav-link ml-3
+					<?php if($this->uri->segment('2') == 'plreview'){ echo "active"; } ?>
+				">
+				  <i class="far fa-file-pdf"></i>
+                  <p>&nbsp;PL</p>
+                </a>
+              </li>
+              	
+			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('ROSTER',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+                <a href="<?php echo base_url('hr/roster');?>" class="nav-link ml-3
+					<?php if($this->uri->segment('2') == 'roster'){ echo "active"; } ?>
+				">
+				  <i class="far fa-file-pdf"></i>
+                  <p>&nbsp;ROSTER</p>
+                </a>
+              </li>
+			  
+              <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('HR POLICIES',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+                <a href="<?php echo base_url('hr/Policies');?>" class="nav-link ml-3
+					<?php if($this->uri->segment('2') == 'Policies'){ echo "active"; } ?>
+				">
+				  <i class="far fa-file-pdf"></i>
+                  <p>&nbsp;POLICIES</p>
                 </a>
               </li>
               <li class="divider"><hr class="text-light"></li>

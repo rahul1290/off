@@ -121,18 +121,6 @@
 <script>
 var baseUrl = $('#baseUrl').val();
 
-loadDoc()
-function loadDoc() {
-	  var xhttp = new XMLHttpRequest();
-	  xhttp.onreadystatechange = function() {
-	    if (this.readyState == 4 && this.status == 200) {
-	      document.getElementById("hf_pending_requests_body").innerHTML = this.responseText;
-	    }
-	  };
-	  xhttp.open("GET", baseUrl+'hod/hf_leave_ctrl/hf_pending_request_ajax/0/', true);
-	  xhttp.send();
-	}
-
 $(document).ready(function(){
 	var previous;
 	var that;
