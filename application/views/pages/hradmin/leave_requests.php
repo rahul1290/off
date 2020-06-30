@@ -220,7 +220,7 @@ $(document).ready(function(){
                           	'<div class="form-group row" style="margin-bottom:0px;background-color: aliceblue;">'+
                         		'<label for="inputPassword" class="col-3 col-form-label">Leaves Requested:</label>'+
                         		'<div class="col-9">';
-                        			y = '<b>Reference No:</b>'+ response.data.leave_detail[0]['reference_id'];
+                        			y = '<b>Reference No:</b>'+ response.data.leave_detail[0]['reference_id']+'<br/><b>COFF:</b>';
                         		x = x + y + '</div>'+
                       	    '</div>'+
                       	  '<div class="form-group row" style="margin-bottom:0px;background-color: bisque;">'+
