@@ -71,8 +71,8 @@ class Hr_model extends CI_Model {
             $this->db->join('designation_master desg','desg.id = u.designation_id');
             $data['user_detail'] = $this->db->get_where('users u',array('u.ecode'=>$data['leave_detail'][0]['ecode']))->result_array();
             
-            $data['coff'] = $this->my_library->coff($data['leave_detail'][0]['ecode']);
-            $data['nhfh'] = $this->my_library->nhfh($data['leave_detail'][0]['ecode']);
+            $data['coff'] = $this->my_library->empCoffHr($data['leave_detail'][0]['ecode']);
+            $data['nhfh'] = $this->my_library->empNhfhHr($data['leave_detail'][0]['ecode']);
             
             
             $this->db->select('*');

@@ -49,7 +49,7 @@
 									<?php $c=1; foreach($pending_requests as $request){?>
 										<tr>	
 											<td><?php echo $c++; ?>.</td>
-											<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
+											<td><?php echo $this->my_library->remove_hyphen($request['reference_id']); ?></td>
 											<td><?php echo $request['dept_name']; ?></td>
 											<td><?php echo $request['name']; ?></td>
 											<td><?php echo $request['created_at']; ?></td>
@@ -114,7 +114,7 @@
 									<?php $c=1; foreach($requests as $request){ ?>
 										<tr>	
 											<td><?php echo $c++; ?>.</td>
-											<td><?php echo $request['refrence_id']; ?></td>
+											<td><?php echo $request['reference_id']; ?></td>
 											<td><?php echo $request['dept_name']; ?></td>
 											<td><?php echo $request['name']; ?></td>
 											<td><?php echo $request['created_at']; ?></td>

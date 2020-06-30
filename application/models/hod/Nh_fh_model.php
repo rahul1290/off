@@ -9,8 +9,8 @@ class Nh_fh_model extends CI_Model {
         
         $this->db->where('id',$data['req_id']);
         $this->db->update('users_leave_requests',array(
-            $data['key'] => $data['value'],
-            'hod_id' => $data['hod_id'],
+            'hod_status' => $data['hod_status'],
+            'hod_remark' => $data['hod_remark'],
             'hod_remark_date' => $data['created_at']
         ));
         

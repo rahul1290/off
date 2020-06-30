@@ -83,7 +83,7 @@
 							<?php $c=1; foreach($records as $record){ ?>
 								<tr>
 									<td><?php echo $c++; ?>.</td>
-									<td><?php echo $this->my_library->remove_hyphen($record['refrence_id']); ?></td>
+									<td><?php echo $this->my_library->remove_hyphen($record['reference_id']); ?></td>
 									<td><?php echo $record['created_at']; ?></td>
 									<td><?php echo $record['from_date'].' - '.$record['to_date']; ?></td>
 									<td><?php echo strlen($record['requirment']) > 50 ? substr($record['requirment'],0,50)."...<a href='#'>read more</a>" : $record['requirment']; ?></td>
@@ -110,7 +110,7 @@
 										  }?>"><?php echo $record['hr_status']; ?></td>
 									<td>
 										<?php if($record['hod_status'] == 'PENDING' && $record['hr_status'] == 'PENDING'){ ?>
-										<a href="javascript:void(0);" class="req_cancel" data-id="<?php echo $record['refrence_id']; ?>">CANCEL</a>
+										<a href="javascript:void(0);" class="req_cancel" data-id="<?php echo $record['reference_id']; ?>">CANCEL</a>
 										<?php } ?>
 									</td>
 								</tr>

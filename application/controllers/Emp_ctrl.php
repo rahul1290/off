@@ -202,21 +202,22 @@ class Emp_ctrl extends CI_Controller {
 	        $this->form_validation->set_rules('wod','wod','required');
 			$this->form_validation->set_rules('coff[]','coff','trim|callback_validatecoff');
 			$this->form_validation->set_rules('nhfh[]','Nhfh','trim|callback_validatenhfh');
+			$this->form_validation->set_rules('pl','pl','trim|required');
 	        
 	        $this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
 	        if ($this->form_validation->run() == FALSE) {
 	            $data = array();
-	            $data['coffs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND date_from >= '".date('Y-m-d', strtotime('-3 month'))."' AND request_type = 'OFF_DAY' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
-	            $data['nhfhs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'NH_FH' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
+// 	            $data['coffs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND date_from >= '".date('Y-m-d', strtotime('-3 month'))."' AND request_type = 'OFF_DAY' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
+// 	            $data['nhfhs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'NH_FH' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
 	            
-	            $data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-	            $data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-	            if(count($data['pls'])>0){
-	                $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-	                if($data['pls'][0]['balance'] < 0){
-	                    $data['pls'][0]['balance'] = 0;
-	                }
-	            }
+// 	            $data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
+// 	            $data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
+// 	            if(count($data['pls'])>0){
+// 	                $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
+// 	                if($data['pls'][0]['balance'] < 0){
+// 	                    $data['pls'][0]['balance'] = 0;
+// 	                }
+// 	            }
 	            $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 	            $data['footer'] = $this->load->view('include/footer','',true);
 	            $data['top_nav'] = $this->load->view('include/top_nav','',true);
@@ -240,8 +241,7 @@ class Emp_ctrl extends CI_Controller {
                 $data['date_to'] = $to_date;
                 $data['created_at'] = date('Y-m-d H:i:s');
                 $data['wod'] = $this->input->post('wod');
-                $data['pl'] = $this->input->post('f1_pl');
-        		$data['lop'] = $this->input->post('f1_lop');
+                $data['pl'] = $this->input->post('pl');
                 $coff = $this->input->post('coff');
                 $nhfh = $this->input->post('nhfh');
                 
@@ -264,18 +264,15 @@ class Emp_ctrl extends CI_Controller {
                         $this->db->update('users_leave_requests',array('request_id'=>$data['reference_id'].'-'.$id));
                     }
                     
-                    
-                    
                     $this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your Leave request submitted successfully.</h3>');
-                    
                     redirect('es/leave-request','refresh');
                 }
 	        } 
 	        
 	    } else {
     		$data = array();
-			$data['coffs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND date_from >= '".date('Y-m-d', strtotime('-3 month'))."' AND request_type = 'OFF_DAY' AND (hod_status = 'PENDING' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
-			$data['nhfhs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'NH_FH' AND (hod_status = 'PENDING' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
+    		$data['coffs'] = $this->my_library->emp_coff($this->session->userdata('ecode'));
+			$data['nhfhs'] = $this->my_library->emp_nhfh($this->session->userdata('ecode'));
 			
     		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
     		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));

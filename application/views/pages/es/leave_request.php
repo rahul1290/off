@@ -75,7 +75,7 @@
     								<ul style="list-style: none;">
         								<?php foreach($coffs as $coff){ ?>
         										<li>
-        											<input <?php if(isset($x)){if(in_array($coff['refrence_id'],$x)){ echo "checked"; }} ?> type="checkbox" name="coff[]" class="leave coffs" data-value="<?php echo $coff['refrence_id']; ?>" value="<?php echo $coff['refrence_id']; ?>" /> <?php echo $coff['refrence_id'];?> <b>[<?php echo $this->my_library->sql_datepicker($coff['date_from']); ?>]</b>
+        											<input <?php if(isset($x)){if(in_array($coff['reference_id'],$x)){ echo "checked"; }} ?> type="checkbox" name="coff[]" class="leave coffs" data-value="<?php echo $coff['reference_id']; ?>" value="<?php echo $coff['reference_id']; ?>" /> <?php echo $coff['reference_id'];?> <b>[<?php echo $this->my_library->sql_datepicker($coff['date_from']); ?>]</b>
         										</li>											        
         							    <?php } ?> 
     								</ul>
@@ -84,10 +84,20 @@
 										
                               	<?php if(count($nhfhs)>0){ ?>
                               	<br/><b>NH/FH:</b> <ul style="list-style: none;"><?php foreach($nhfhs as $nhfh){ ?>
-													<li><input <?php if(isset($y)){if(in_array($nhfh['refrence_id'],$y)){ echo "checked"; }} ?> type="checkbox" name="nhfh[]" class="leave nhfhs" data-value="<?php echo $nhfh['refrence_id']; ?>" value="<?php echo $nhfh['refrence_id']; ?>" /> <?php echo $this->my_library->sql_datepicker($nhfh['date_from']); ?></li>											        
+													<li><input <?php if(isset($y)){if(in_array($nhfh['reference_id'],$y)){ echo "checked"; }} ?> type="checkbox" name="nhfh[]" class="leave nhfhs" data-value="<?php echo $nhfh['reference_id']; ?>" value="<?php echo $nhfh['reference_id']; ?>" /> <?php echo $this->my_library->sql_datepicker($nhfh['date_from']); ?></li>											        
 										    <?php } ?> </ul>
 								<?php } ?>
 								<?php echo form_error('nhfh[]'); ?>
+							</td>
+						</tr>
+						<tr>
+							<td><b>PL USED</b></td>
+							<td>
+								<select name="pl" id="pl">
+								<?php for($i=0;$i<=(int)$pls[0]['balance'];$i++){ ?>
+								    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+								<?php } ?>
+								</select>
 							</td>
 						</tr>
 						<tr>
@@ -343,7 +353,7 @@ $(document).ready(function(){
         			$.each(response.data.final_array,function(key,value){
             			x = x + '<tr>'+
             						'<td>'+ parseInt(c++) +'</td>'+
-            						'<td>'+ value.refrence_id +'</td>'+
+            						'<td>'+ value.reference_id +'</td>'+
             						'<td>'+ value.created_at +'</td>'+
             						'<td>'+ value.date_from +'</td>'+
             						//'<td>'+ value.date_to +'</td>'+

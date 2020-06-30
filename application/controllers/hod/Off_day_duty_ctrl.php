@@ -168,7 +168,7 @@ class Off_day_duty_ctrl extends CI_Controller {
 	    $data['value'] = $this->input->post('value');
 	    $data['created_at'] = date('Y-m-d H:i:s');
 	    $data['hod_id'] = $this->session->userdata('ecode');
-	    if($this->Hod_model->off_day_duty_request_update($data)){
+	    if($this->Off_day_duty_model->off_day_duty_request_update($data)){
 	        echo json_encode(array('status'=>200));
 	    }
 	}

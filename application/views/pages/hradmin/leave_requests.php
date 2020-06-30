@@ -196,7 +196,7 @@ $(document).ready(function(){
             	console.log(response);
             	if(response.status == 200){
                 	x  = x +'<form>'+
-                        	  '<div class="form-group row">'+
+                        	  '<div class="form-group row" style="margin-bottom:0px;background-color: aliceblue;">'+
                             	'<label for="staticEmail" class="col-3 col-form-label">Employee Name:</label>'+
                             	'<div class="col-3">'+
                               		response.data.user_detail[0]['name'] +
@@ -207,7 +207,7 @@ $(document).ready(function(){
                             		response.data.user_detail[0]['ecode']+
                             	'</div>'+
                           	  '</div>'+
-                          	  '<div class="form-group row">'+
+                          	  '<div class="form-group row" style="margin-bottom:0px;background-color: bisque;">'+
                             		'<label for="inputPassword" class="col-3 col-form-label">Designation:</label>'+
                             		'<div class="col-3">'+
                             			response.data.user_detail[0]['desg_name']+
@@ -217,19 +217,19 @@ $(document).ready(function(){
                             			response.data.user_detail[0]['dept_name']+
                             		'</div>'+
                           	  '</div>'+
-                          	'<div class="form-group row">'+
+                          	'<div class="form-group row" style="margin-bottom:0px;background-color: aliceblue;">'+
                         		'<label for="inputPassword" class="col-3 col-form-label">Leaves Requested:</label>'+
-                        		'<div class="col-9">'+
-                        			response.data.user_detail[0]['designation_id']+
-                        		'</div>'+
+                        		'<div class="col-9">';
+                        			y = '<b>Reference No:</b>'+ response.data.leave_detail[0]['reference_id'];
+                        		x = x + y + '</div>'+
                       	    '</div>'+
-                      	  '<div class="form-group row">'+
+                      	  '<div class="form-group row" style="margin-bottom:0px;background-color: bisque;">'+
                       		'<label for="inputPassword" class="col-3 col-form-label">Leave Duration:</label>'+
                       		'<div class="col-9">'+
                       			response.data.leave_detail[0]['duration']+
                       		'</div>'+
                     	  '</div>'+
-                    	  '<div class="form-group row">'+
+                    	  '<div class="form-group row" style="margin-bottom:0px;background-color: aliceblue;">'+
                         		'<label for="inputPassword" class="col-3 col-form-label">Week of Day:</label>'+
                         		'<div class="col-9">';
                         			if(response.data.leave_detail[0]['wod'] == '1'){
@@ -249,37 +249,65 @@ $(document).ready(function(){
                             		}
                         		x = x + '</div>'+
                       	  '</div>'+
-                          '<div class="form-group row">'+
+                          '<div class="form-group row" style="margin-bottom:0px;background-color: bisque;">'+
                         		'<label for="inputPassword" class="col-3 col-form-label">Employee Remarks:</label>'+
                         		'<div class="col-9">'+
                         			response.data.leave_detail[0]['requirment']+
                         		'</div>'+
                       	  '</div>'+
-                      	'<div class="form-group row">'+
+                      	'<div class="form-group row" style="margin-bottom:0px;background-color: aliceblue;">'+
                     		'<label for="inputPassword" class="col-3 col-form-label">Hod Remarks:</label>'+
                     		'<div class="col-9">'+
                     			response.data.leave_detail[0]['hod_remark']+
                     		'</div>'+
                   	  	'</div>'+
-                  	  	'<div class="form-group row">'+
+                  	  	'<div class="form-group row" style="margin-bottom:0px;background-color: bisque;">'+
                   			'<label for="inputPassword" class="col-3 col-form-label">HOD Approval Status:</label>'+
                   			'<div class="col-9">'+
                   				response.data.leave_detail[0]['hod_status']+
                   			'</div>'+
                 	  	'</div>'+
                 	  	'<div>'+
-                	  		'<table class="table table-bordred">'+
-                	  			'<tr>'+	
+                	  		'<table class="table table-bordered">'+
+                	  			'<tr class="bg-dark">'+	
                 	  				'<th>Remaining NH/FH:</th>'+
                 	  				'<th>Remaining Comp OFFs:</th>'+
                 	  				'<th>No. of PL Remain:<span id="pls"></span></th>'+
-                	  			+'</tr>'+
-                	  			'<tr>'+
-                	  				'<td>NHFH</td>'+
-                	  				'<td>COFF</td>'+
-                	  				'<td>PL</td>'+
+                	  			'</tr>'+
+                	  			'<tr>';
+                	  			if(response.data.nhfh.length){
+                	  				y = '<td><ul style="list-style:none;">';
+                        	  		$.each(response.data.nhfh,function(key,value){
+                            	  		y = y+'<li><input type="checkbox" class="coff" data-id="'+ value.id +'"> '+ value.date_from +'</li>';
+                            	  	});
+                            	  	y = y + '</ul></td>';
+                            	  	x = x + y;
+                	  			} else {
+                    	  			x = x + '<td>NHFH not found.</td>';
+                    	  		}
+
+                    	  		if(response.data.coff.length){
+                        	  		y = '<td><ul style="list-style:none;">';
+                        	  		$.each(response.data.coff,function(key,value){
+                            	  		y = y+'<li><input type="checkbox" class="coff" data-id="'+ value.id +'"> '+ value.date_from +'</li>';
+                            	  	});
+                            	  	y = y + '</ul></td>';
+                            	  	x = x + y;
+                        	  	} else {
+                        	  		x = x + '<td>COFF not found.</td>';
+                            	}
+                            	
+                            	console.log(response.data.pls[0].balance);
+                	  			x = x +'<td>PL :'+
+                	  					'<select id="pls">';
+                	  						for(i=1;i<=parseInt(response.data.pls[0].balance);i++){
+                    	  						x = x + '<option value="'+ i +'">'+ i +'</option>';
+                    	  					}
+                	  					x = x +'</select>'+
+                	  				'</td>'+
                 	  			'</tr>'+
                 	  		'</table>'+
+                	  		'<div class="text-center"><input type="button" id="submit" class="btn btn-success" value="Ok"><input type="reset" class="btn btn-danger" value="Cancel"></div>'+
                 	  	'</div>'+
                        '</form>';
                        x = x + '</div></div>';

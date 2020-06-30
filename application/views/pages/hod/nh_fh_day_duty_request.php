@@ -121,39 +121,41 @@
 var baseUrl = $('#baseUrl').val();
 
 $(document).ready(function(){
-	$('#example').DataTable();
-	$('#example2').DataTable();
-	
+
 	var previous;
 	var that;
-    $(".hod_status").on('focus', function () {
+	
+    $(document).on('focus','.hod_status',function(){
         previous = $(this).val();
         that = this;
     }).change(function() {
 		var req_id = $(that).data('rid');
 		var status = $(that).val();
-		var c = confirm('Are you sure!');
-		if(c){
-			$.ajax({
-				type: 'POST',
-				url: baseUrl+'hod/nh-fh-day-duty-update/',
-				data: { 
-					'req_id' : req_id,
-					'key' : 'hod_status',
-					'value' : status,
-				},
-				dataType: 'json',
-				beforeSend: function() {},
-				success: function(response){
-					if(response.status == 200){
-						location.reload();
-					} else {
-					}
-				}
-			});
-		} else {
-			$(that).val(previous);
-		}    
+		if(previous != status){
+        	var c = confirm('Are you sure!');
+        	if(c){
+        		remark = $('#hod_remark_'+req_id).val();
+        		$.ajax({
+        			type: 'POST',
+        			url: baseUrl+'hod/nh-fh-day-duty-update/',
+        			data: { 
+        				'req_id' : req_id,
+        				'hod_status' : status,
+        				'hod_remark' : remark,
+        			},
+        			dataType: 'json',
+        			beforeSend: function() {},
+        			success: function(response){
+        				if(response.status == 200){
+        					nhfhPendingRequests(0);
+        				} else {
+        				}
+        			}
+        		});
+        	} else {
+        		$(that).val(previous);
+        	} 
+		}   
     });
 
 
@@ -216,8 +218,10 @@ $(document).ready(function(){
 
 
 
-
-	nhfhRequests(0);	//load pending requests
+	$(document).on('click','#previous_requests_tab',function(){
+		nhfhRequests(0);	//load pending requests
+	});
+	
 	$(document).on('keyup','#search',function(){
 		nhfhRequests(0);
 	});
