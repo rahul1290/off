@@ -1,7 +1,7 @@
 <?php if(!isset($pls[0]['balance'])){
     $pls[0]['balance'] = 0;
 }?>
-<input id="current_pl" type="hidden" value="<?php echo $pls[0]['balance'];?>">
+<input id="current_pl" type="text" value="<?php echo $pls[0]['balance'];?>">
 
    <div class="content-wrapper">	
 	<div class="content-header bg-light mb-3">

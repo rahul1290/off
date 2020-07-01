@@ -83,11 +83,11 @@ class My_library {
 	    return $result;
 	}
 	
-	function pl_applied($ecode){
-	    $this->CI->db->select('ifnull(sum(pl),0) as total');
-	    $result = $this->CI->db->get_where('users_leave_requests',array('ecode'=>$ecode,'hod_Status'=>'PENDING','status'=>1))->result_array();
-	    return $result[0]['total'];
-	}
+// 	function pl_applied($ecode){
+// 	    $this->CI->db->select('ifnull(sum(pl),0) as total');
+// 	    $result = $this->CI->db->get_where('users_leave_requests',array('ecode'=>$ecode,'hod_Status'=>'PENDING','status'=>1))->result_array();
+// 	    return $result[0]['total'];
+// 	}
 	
 // 	function coff($ecode){
 // 	    $this->CI->db->select('pl.*,date_format(ulr.date_from,"%d/%m/%Y") as date');

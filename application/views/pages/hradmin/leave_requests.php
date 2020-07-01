@@ -49,7 +49,9 @@
             							<td class="text-center"><?php echo $requeset['requests']; ?></td>
             							<td class="text-center"><a href="javascript:void(0);"><i class="fas fa-pencil"></i>Edit</a></td>
             						</tr>
-            					<?php } } ?>
+            					<?php } } else { ?>
+            						<td colspan="3">No record found.</td>
+            					<?php } ?>
         					</table>
         				  </div>
         				</div>
@@ -74,13 +76,14 @@
                                 </div>
                               </div>
                               <div class="form-group row">
-                                <label for="inputPassword" class="col-3 col-form-label">Select Leave No.:</label>
+                                <label for="inputPassword" class="col-3 col-form-label">Select Request No.:</label>
                                 <div class="col-9">
                                   <select class="form-control" name="leave_id" id="leave_id">
                                   	<option value="">Select Leave no.</option>
                                   </select>
                                 </div>
                               </div>
+                              <div class="text-center"><input type="button" value="View" id="view" class="btn btn-warning"></div>
                             </form>		
         				  	
         				  </div>
@@ -181,7 +184,7 @@ $(document).ready(function(){
 		});
 	});
 
-	$(document).on('change','#leave_id',function(){
+	$(document).on('click','#view',function(){
 		$.ajax({
         	type: 'POST',
         	url: baseUrl+'Hr_ctrl/leave_detail/',
@@ -195,7 +198,8 @@ $(document).ready(function(){
 			  				'<div class="card-body">';
             	console.log(response);
             	if(response.status == 200){
-                	x  = x +'<form>'+
+                	x  = x +'<form name="f2" id="f2" method="POST" action="<?php echo base_url('Hr_ctrl/leave_request_submit');?>">'+
+                			  '<input type="hidden" name="application_no" value="'+ response.data.leave_detail[0]['reference_id'] +'">' +
                         	  '<div class="form-group row" style="margin-bottom:0px;background-color: aliceblue;">'+
                             	'<label for="staticEmail" class="col-3 col-form-label">Employee Name:</label>'+
                             	'<div class="col-3">'+
@@ -220,8 +224,32 @@ $(document).ready(function(){
                           	'<div class="form-group row" style="margin-bottom:0px;background-color: aliceblue;">'+
                         		'<label for="inputPassword" class="col-3 col-form-label">Leaves Requested:</label>'+
                         		'<div class="col-9">';
-                        			y = '<b>Reference No:</b>'+ response.data.leave_detail[0]['reference_id']+'<br/><b>COFF:</b>';
-                        		x = x + y + '</div>'+
+                        			y = '<table>'+
+                        					'<tr>'+
+                        						'<td><b>Reference No:</b></td>'+
+                        						'<td>'+ response.data.leave_detail[0]['reference_id']+'</td>'+
+                        					'</tr>'+
+                        					'<tr>'+
+                        						'<td><b>COFF:</b></td><td>';
+                                    			if(response.data.coff.length){
+                                        	  		$.each(response.data.coff,function(key,value){
+                                            	  		y = y + value.date_from +',';
+                                            	  	});
+                                        	  	}
+                                        		x = x + y + '</td><tr><td><b>NHFH:</b></td><td>';
+                                        		if(response.data.nhfh.length){
+                                        	  		$.each(response.data.nhfh,function(key,value){
+                                            	  		x = x + value.date_from +',';
+                                            	  	});
+                                	  			}
+                                        		x = x + '</td>'+
+                        					'</tr>'+
+                        					'<tr>'+
+                        						'<td><b>PL:</b></td>'+
+                        						'<td>'+ response.data.leave_detail[0]['pl'] +'</td>'+
+                        					'</tr>'+
+                        				'</table>'+
+                        			'</div>'+
                       	    '</div>'+
                       	  '<div class="form-group row" style="margin-bottom:0px;background-color: bisque;">'+
                       		'<label for="inputPassword" class="col-3 col-form-label">Leave Duration:</label>'+
@@ -278,36 +306,44 @@ $(document).ready(function(){
                 	  			if(response.data.nhfh.length){
                 	  				y = '<td><ul style="list-style:none;">';
                         	  		$.each(response.data.nhfh,function(key,value){
-                            	  		y = y+'<li><input type="checkbox" class="coff" data-id="'+ value.id +'"> '+ value.date_from +'</li>';
+                            	  		y = y+'<li><input type="checkbox" name="nhfh[]" data-id="'+ value.id +'" value="'+ value.reference_id +'"> '+ value.date_from +'</li>';
                             	  	});
                             	  	y = y + '</ul></td>';
                             	  	x = x + y;
                 	  			} else {
-                    	  			x = x + '<td>NHFH not found.</td>';
+                    	  			x = x + '<td>No Remaining NHFH.</td>';
                     	  		}
 
                     	  		if(response.data.coff.length){
                         	  		y = '<td><ul style="list-style:none;">';
                         	  		$.each(response.data.coff,function(key,value){
-                            	  		y = y+'<li><input type="checkbox" class="coff" data-id="'+ value.id +'"> '+ value.date_from +'</li>';
+                            	  		y = y+'<li><input type="checkbox" name="coff[]" data-id="'+ value.id +'" value="'+ value.reference_id +'"> '+ value.date_from +'</li>';
                             	  	});
                             	  	y = y + '</ul></td>';
                             	  	x = x + y;
                         	  	} else {
-                        	  		x = x + '<td>COFF not found.</td>';
+                        	  		x = x + '<td>No Remaining COFF.</td>';
                             	}
                             	
                             	console.log(response.data.pls[0].balance);
-                	  			x = x +'<td>PL :'+
-                	  					'<select id="pls">';
-                	  						for(i=1;i<=parseInt(response.data.pls[0].balance);i++){
+                	  			x = x +'<td>PL:&nbsp;'+
+                	  					'<select id="pls" name="pls">';
+                	  						for(i=0;i<=parseInt(response.data.pls[0].balance);i++){
                     	  						x = x + '<option value="'+ i +'">'+ i +'</option>';
                     	  					}
-                	  					x = x +'</select>'+
+                	  					x = x +'</select><br/>'+
+                	  					'LOP:&nbsp;<select id="lop" name="lop">';
+                	  					for(i=0;i<=100;i++){
+                	  						x = x + '<option value="'+ i +'">'+ i +'</option>';
+                	  					}
+                	  					x = x + '</select>'+
                 	  				'</td>'+
                 	  			'</tr>'+
                 	  		'</table>'+
-                	  		'<div class="text-center"><input type="button" id="submit" class="btn btn-success" value="Ok"><input type="reset" class="btn btn-danger" value="Cancel"></div>'+
+                	  		'<div class="text-center">'+
+                	  			'<input type="button" id="submit" class="btn btn-success" value="Ok">'+
+                	  			'<input type="reset" class="btn btn-danger" value="Cancel">'+
+                	  		'</div>'+
                 	  	'</div>'+
                        '</form>';
                        x = x + '</div></div>';
@@ -317,8 +353,37 @@ $(document).ready(function(){
         	} 
 		});
 	});
-	
 
+
+
+
+	$(document).on('click','#submit',function(){
+		var myForm = document.getElementById('f2');
+		var formData = new FormData(myForm);
+		$.ajax({
+	        	type: 'POST',
+	        	url: baseUrl+'Hr_ctrl/leave_request_submit',
+	        	data: formData,
+	        	dataType: 'json',
+	        	beforeSend: function() {
+	        		$('#leave_requests_body').html('<td colspan="13" class="text-center">Record fatching.</td>');
+	            },
+	        	success: function(response){
+		        	if(response.status =200){
+			        	alert(response.msg);
+			        	location.reload();
+			        } else {
+			        	alert(response.msg);
+				    }
+	        	},
+	        	processData: false,
+			    contentType: false
+		 });
+	});
+
+
+	
+	///pagination
 	requests(0);
 	$(document).on('keyup','#search2',function(){
 		requests(0);

@@ -207,17 +207,6 @@ class Emp_ctrl extends CI_Controller {
 	        $this->form_validation->set_error_delimiters('<div class="error text-danger">', '</div>');
 	        if ($this->form_validation->run() == FALSE) {
 	            $data = array();
-// 	            $data['coffs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND date_from >= '".date('Y-m-d', strtotime('-3 month'))."' AND request_type = 'OFF_DAY' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
-// 	            $data['nhfhs'] = $this->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$this->session->userdata('ecode')."' AND request_type = 'NH_FH' AND (hod_status = 'GRANTED' OR hr_status = 'GRANTED') AND request_id IS NULL")->result_array();
-	            
-// 	            $data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-// 	            $data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-// 	            if(count($data['pls'])>0){
-// 	                $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-// 	                if($data['pls'][0]['balance'] < 0){
-// 	                    $data['pls'][0]['balance'] = 0;
-// 	                }
-// 	            }
 	            $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 	            $data['footer'] = $this->load->view('include/footer','',true);
 	            $data['top_nav'] = $this->load->view('include/top_nav','',true);
@@ -227,8 +216,7 @@ class Emp_ctrl extends CI_Controller {
 	            $data['title'] = $this->config->item('project_title').' | Leave Request';
 	            $data['head'] = $this->load->view('common/head',$data,true);
 	            $data['footer'] = $this->load->view('common/footer',$data,true);
-	            $this->load->view('layout_master',$data); 
-	            
+	            $this->load->view('layout_master',$data);
 	        }
 	        else {
                 $from_date = $this->my_library->mydate($this->input->post('from_date'));
@@ -274,15 +262,7 @@ class Emp_ctrl extends CI_Controller {
     		$data['coffs'] = $this->my_library->emp_coff($this->session->userdata('ecode'));
 			$data['nhfhs'] = $this->my_library->emp_nhfh($this->session->userdata('ecode'));
 			
-    		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-    		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-			if(count($data['pls'])>0){
-    		  $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-    		  if($data['pls'][0]['balance'] < 0){
-    		      $data['pls'][0]['balance'] = 0;
-    		  }
-    		}
-    		
+    		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));    		
             $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
     		$data['footer'] = $this->load->view('include/footer','',true);
     		$data['top_nav'] = $this->load->view('include/top_nav','',true);

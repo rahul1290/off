@@ -134,7 +134,7 @@ class Hr_ctrl extends CI_Controller {
 	}
 
 	////////////////////////////////LEAVE Requests//////////////////
-	function leave_request($ref_id = null){
+	function leave_request($ref_id = null,$status = null){
 	    $data = array();
 	    $data['requesets'] = $this->Hr_model->total_leave_pending_request();
 	    $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
@@ -148,6 +148,20 @@ class Hr_ctrl extends CI_Controller {
 	    $data['head'] = $this->load->view('common/head',$data,true);
 	    $data['footer'] = $this->load->view('common/footer',$data,true);
 	    $this->load->view('layout_master',$data);
+	}
+	
+	
+	function leave_request_submit(){
+	    $data['application_no'] = $this->input->post('application_no');
+	    $data['nhfh'] = $this->input->post('nhfh');
+	    $data['coff'] = $this->input->post('coff');
+	    $data['pls'] = $this->input->post('pls');
+	    $data['lop'] = $this->input->post('lop');
+	    if($this->Hr_model->leave_request_submit($data)){
+	        echo json_encode(array('data'=>'Record updated successfully.','status'=>200));
+	    } else {
+	        echo json_encode(array('data'=>'Record not updated.','status'=>500));
+	    }
 	}
 	
 	
@@ -170,6 +184,7 @@ class Hr_ctrl extends CI_Controller {
 	        echo json_encode(array('msg'=>'No record found.','status'=>500));
 	    }
 	}
+	
 	
 	
 	function leave_request_ajax($page=0,$str=''){
@@ -245,45 +260,7 @@ class Hr_ctrl extends CI_Controller {
 	    }
 	}
 	
-	////////////////////////////////HALF day requests
-	function hf_leave_request($ref_id = null){
-		$data = array();
-		$data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
-		
-		$users = $this->Emp_model->get_employee($this->session->userdata('ecode'));			
-		$ulist = '';
-		foreach($users as $user) {
-			$ulist = $ulist.",'".$user['ecode']."'";
-		}
-		$ulist = ltrim($ulist,',');
-		
-		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
-		$data['footer'] = $this->load->view('include/footer','',true);
-		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside',$data,true);
-		$data['notepad'] = $this->load->view('include/shift_timing','',true);
-		$data['pending_requests'] = $this->Hr_model->hf_leave_pending_request($ulist,$ref_id);
-		//print_r($data['pending_requests']); die;
-		$data['requests'] = $this->Hr_model->hf_leave_request($ulist,$ref_id);
-		$data['body'] = $this->load->view('pages/hradmin/hf_leave_requests',$data,true);
-		//===============common===============//
-		$data['title'] = $this->config->item('project_title').' | HF Day Leave Requests';
-		$data['head'] = $this->load->view('common/head',$data,true);
-		$data['footer'] = $this->load->view('common/footer',$data,true);
-		$this->load->view('layout_master',$data);
-	}
-	
-	function hf_leave_request_update(){
-	    $data['req_id'] = $this->input->post('req_id');
-	    $data['key'] = $this->input->post('key');
-	    $data['value'] = $this->input->post('value');
-	    $data['hr_id']	= $this->session->userdata('ecode');
-	    $data['created_at'] = date('Y-m-d H:i:s');
-	    if($this->Hr_model->hf_leave_request_update($data)){
-	        echo json_encode(array('status'=>200));
-	    }
-	}
-	
+
 	//////////////////////////off day duty 
 	function off_day_duty_request($ref_id = null){		
 		$data = array();

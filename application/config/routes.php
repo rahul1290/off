@@ -84,7 +84,7 @@ $route['hr/leave-request'] = 'Hr_ctrl/leave_request';
 $route['hr/leave-request/(:any)'] = 'Hr_ctrl/leave_request/$1';
 $route['hr/leave-request-update'] = 'Hr_ctrl/leave_request_update';
 
-$route['hr/hf-leave-request'] = 'Hr_ctrl/hf_leave_request';
+$route['hr/hf-leave-request'] = 'hr/Hf_leave_ctrl/hf_leave_request';
 $route['hr/hf-leave-request/(:any)'] = 'Hr_ctrl/hf_leave_request/$1';
 $route['hr/hf-leave-request-update'] = 'Hr_ctrl/hf_leave_request_update';
 

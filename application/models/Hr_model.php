@@ -85,39 +85,60 @@ class Hr_model extends CI_Model {
     }
     
     
+    function leave_request_submit($data){
+        $this->db->trans_begin();
+        
+        $this->db->where('reference_id',$data['application_no']);
+        $this->db->update('users_leave_requests',array(
+                                    'hr_status'=>'GRANTED',
+                                    'hr_id' => $this->session->userdata('ecode'),
+                                    'hr_remark'=>'',
+                                    'hr_remark_date'=>date('y-m-d H:i:s'),
+                                    'pl'=>$data['pls'],
+                                    'lop'=>$data['lop'])
+            );
+        
+        if(isset($data['coff'])){
+            if(count($data['coff'])>0){ 
+                $this->db->where_in('reference_id',$data['coff']);
+                $this->db->update('users_leave_requests',array('request_id'=>$data['application_no']));
+            }
+        }
+       
+        if(isset($data['nhfh'])){
+            if(count($data['nhfh'])>0){
+                $this->db->where_in('reference_id',$data['nhfh']);
+                $this->db->update('users_leave_requests',array('request_id'=>$data['application_no']));
+            }
+        }
+        
+        if($data['pls']>0){
+            $this->db->select('ecode');
+            $empDetail = $this->db->get_where('users_leave_requests',array('reference_id'=>$data['application_no']))->result_array();
+            $pls = $this->my_library->pl_calculator($empDetail[0]['ecode']);
+            
+            $this->db->insert("pl_management",array(
+                'type' => 'PL',
+                'refrence_no' => $data['application_no'],
+                'ecode' => $empDetail[0]['ecode'],
+                'credit' => NULL,
+                'debit' => $pls[0]['balance'] - $data['pls'],
+                'date' => date('Y-m-d H:i:s'),
+                'created_at' => date('Y-m-d H:i:s'),
+                'created_by' => $this->session->userdata('ecode'),
+                'status' => 1
+            ));
+        }
+        
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
     
     
-    
-    
-	///////////////HALF DAY REQUESTS
-    function hf_leave_request($ulist,$ref_id){
-		$this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y") as created_at,DATE_FORMAT(ulr.hr_remark_date,"%d/%m/%Y %H:%i:%s") as last_update,,u1.name as hod_name');
-		$this->db->where_in('ulr.ecode',$ulist,false);
-		$this->db->join('users u','u.ecode = ulr.ecode');
-		$this->db->join('users u1','u1.ecode = ulr.hr_id','LEFT');
-		$this->db->join('department_master dm','dm.id = u.department_id');
-		$this->db->order_by('created_at','desc');
-		if($ref_id != null){
-			$this->db->where('ulr.reference_id',$ref_id);
-		}
-		$result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'HALF','ulr.hod_status'=>'GRANTED','ulr.hr_status<>'=>'PENDING','ulr.status'=>1))->result_array();
-		return $result;
-	}
-	
-	function hf_leave_pending_request($ulist,$ref_id){
-		$this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y") as created_at,DATE_FORMAT(ulr.hr_remark_date,"%d/%m/%Y %H:%i:%s") as last_update');
-		//$this->db->where_in('ulr.ecode',$ulist,false);
-		$this->db->join('users u','u.ecode = ulr.ecode');
-		$this->db->join('department_master dm','dm.id = u.department_id');
-		if($ref_id != null){
-			$this->db->where('ulr.reference_id',$ref_id);
-		}
-		$result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'HALF',
-		'ulr.hod_status'=>'GRANTED',
-		'ulr.hr_status'=>'PENDING','ulr.status'=>1))->result_array();
-		return $result;
-	}
-	
 	function leave_request_update($data){
 	    $this->db->trans_begin();
 	    if($data['value'] == 'REJECTED') {   
@@ -196,32 +217,6 @@ class Hr_model extends CI_Model {
 		$result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'NH_FH','ulr.hod_status<>'=>'PENDING','ulr.hr_status'=>'PENDING','ulr.status'=>1))->result_array();
 		//print_r($this->db->last_query()); die;
 		return $result;
-	}
-	
-	function hf_leave_request_update($data){
-	    $this->db->trans_begin();
-//     	    if($data['value'] == 'REJECTED'){
-//     	        $reference_no = $this->my_library->leave_request_refno($data['req_id']);
-    	        
-//     	        $this->db->where('refrence_no',$reference_no);
-//     	        $this->db->update('pl_management',array('status'=>0));
-//     	    }
-    	    
-    		$this->db->where('id',$data['req_id']);
-    		$this->db->update('users_leave_requests',array(
-    						$data['key'] => $data['value'],
-    						'hr_id' => $data['hr_id'],
-    						'hr_remark_date' => $data['created_at']
-    						)
-    		);
-    		
-		if ($this->db->trans_status() === FALSE){
-		    $this->db->trans_rollback();
-		} else {
-		    $this->db->trans_commit();
-		    //$this->db->trans_rollback();
-		    return true;
-		}
 	}
 	
 }
