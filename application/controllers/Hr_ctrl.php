@@ -134,24 +134,14 @@ class Hr_ctrl extends CI_Controller {
 	}
 
 	////////////////////////////////LEAVE Requests//////////////////
-	function leave_request($ref_id = null){
+	function leave_request($ref_id = null,$status = null){
 	    $data = array();
-	    $data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
-	    
-	    $users = $this->Emp_model->get_employee($this->session->userdata('ecode'));
-	    $ulist = '';
-	    foreach($users as $user) {
-	        $ulist = $ulist.",'".$user['ecode']."'";
-	    }
-	    $ulist = ltrim($ulist,',');
-	    
+	    $data['requesets'] = $this->Hr_model->total_leave_pending_request();
 	    $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 	    $data['footer'] = $this->load->view('include/footer','',true);
 	    $data['top_nav'] = $this->load->view('include/top_nav','',true);
 	    $data['aside'] = $this->load->view('include/aside',$data,true);
 	    $data['notepad'] = $this->load->view('include/shift_timing','',true);
-	    //$data['pending_requests'] = $this->Hr_model->leave_pending_request($ulist,$ref_id);
-	    //$data['requests'] = $this->Hr_model->leave_request($ulist,$ref_id);
 	    $data['body'] = $this->load->view('pages/hradmin/leave_requests',$data,true);
 	    //===============common===============//
 	    $data['title'] = $this->config->item('project_title').' | Leave Requests';
@@ -160,66 +150,42 @@ class Hr_ctrl extends CI_Controller {
 	    $this->load->view('layout_master',$data);
 	}
 	
-	function leave_pending_request_ajax($page=0,$str=''){
-	    $config = array();
-	    $config["base_url"] = "javascript:void(0)";
-	    $config["total_rows"] = $this->Hr_model->total_leave_pending_request($str);
-	    $config["per_page"] = $this->config->item('row_count');
-	    $config["uri_segment"] = $page;
-	    $config['attributes'] = array('class' => 'page-link myLinks');
-	    
-	    $config['full_tag_open'] = '<ul class="pagination justify-content-center">';
-	    $config['full_tag_close'] = '</ul>';
-	    $config['num_tag_open'] = '<li class="page-item">';
-	    $config['num_tag_close'] = '</li>';
-	    $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="javascript:void(0);">';
-	    $config['cur_tag_close'] = '</a></li>';
-	    $config['prev_tag_open'] = '<li class="page-item">';
-	    $config['prev_tag_close'] = '</li>';
-	    $config['next_tag_open'] = '<li class="page-item">';
-	    $config['next_tag_close'] = '</li>';
-	    $config['last_tag_open'] = '<li class="page-item">';
-	    $config['last_tag_close'] = '</li>';
-	    $config['first_tag_open'] = '<li class="page-item">';
-	    $config['first_tag_close'] = '</li>';
-	    
-	    $this->pagination->initialize($config);
-	    
-	    $data["links"] = $this->pagination->create_links();
-	    $records = $this->Hr_model->leave_pending_request($str,$config["per_page"],$page);
-	    if(count($records)>0){
-	        $data['final_array'] = array();
-	        foreach($records as $record){
-	            $temp = array();
-	            $temp['id'] = $record['id'];
-	            $temp['request_type'] = $record['request_type'];
-	            $temp['refrence_id'] = $this->my_library->remove_hyphen($record['refrence_id']);
-	            $temp['ecode'] = $record['ecode'];
-	            $temp['duration'] = $this->my_library->day_duration($record['date_from'],$record['date_to']);
-	            $temp['requirment'] = $record['requirment'];
-	            $temp['date_from'] = date("d-/m/Y", strtotime($record['date_from'])) .' - '. date("d/m/Y", strtotime($record['date_to']));
-	            $temp['date_to'] = $record['date_to'];
-	            $temp['hod_remark'] = ($record['hod_remark'])?$record['hod_remark']:'';
-	            $temp['hod_status'] = $record['hod_status'];
-	            $temp['hod_id'] = $record['hod_id'];
-	            $temp['hod_remark_date'] = $record['hod_remark_date'];
-	            $temp['hr_remark'] = $record['hr_remark'];
-	            $temp['hr_status'] = $record['hr_status'];
-	            $temp['hr_id'] = $record['hr_id'];
-	            $temp['hr_remark_date'] = $record['hr_remark_date'];
-	            $temp['created_at'] = $record['created_at'];
-	            $temp['wod'] = $record['wod'];
-	            $temp['request_id'] = $record['request_id'];
-	            $temp['pl'] = $record['pl'];
-	            $temp['lop'] = $record['lop'];
-	            $temp['status'] = $record['status'];
-	            $temp['NHFH'] = ($record['nhfhs'])?$record['nhfhs']:'-';
-	            $temp['COFF'] = ($record['coff'])?$record['coff']:'-';
-	            $data['final_array'][] = $temp;
-	        }
+	
+	function leave_request_submit(){
+	    $data['application_no'] = $this->input->post('application_no');
+	    $data['nhfh'] = $this->input->post('nhfh');
+	    $data['coff'] = $this->input->post('coff');
+	    $data['pls'] = $this->input->post('pls');
+	    $data['lop'] = $this->input->post('lop');
+	    if($this->Hr_model->leave_request_submit($data)){
+	        echo json_encode(array('data'=>'Record updated successfully.','status'=>200));
+	    } else {
+	        echo json_encode(array('data'=>'Record not updated.','status'=>500));
 	    }
-	    echo json_encode(array('data'=>$data,'status'=>200));
 	}
+	
+	
+	function get_leave_ids(){
+	    $data['dept_id'] = $this->input->post('dept_id');
+	    $result = $this->Hr_model->get_leave_ids($data);
+	    if(count($result)>0){
+	        echo json_encode(array('data'=>$result,'msg'=>'','status'=>200));
+	    } else {
+	        echo json_encode(array('msg'=>'No record found.','status'=>500));
+	    }
+	}
+	
+	function leave_detail(){
+	    $data['ref_id'] = $this->input->post('ref_id');
+	    $result = $this->Hr_model->leave_detail($data);
+	    if(count($result)>0){
+	        echo json_encode(array('data'=>$result,'msg'=>'','status'=>200));
+	    } else {
+	        echo json_encode(array('msg'=>'No record found.','status'=>500));
+	    }
+	}
+	
+	
 	
 	function leave_request_ajax($page=0,$str=''){
 	    $config = array();
@@ -254,7 +220,7 @@ class Hr_ctrl extends CI_Controller {
 	            $temp = array();
 	            $temp['id'] = $record['id'];
 	            $temp['request_type'] = $record['request_type'];
-	            $temp['refrence_id'] = $this->my_library->remove_hyphen($record['refrence_id']);
+	            $temp['reference_id'] = $this->my_library->remove_hyphen($record['reference_id']);
 	            $temp['ecode'] = $record['ecode'];
 	            $temp['duration'] = $this->my_library->day_duration($record['date_from'],$record['date_to']);
 	            $temp['requirment'] = $record['requirment'];
@@ -294,45 +260,7 @@ class Hr_ctrl extends CI_Controller {
 	    }
 	}
 	
-	////////////////////////////////HALF day requests
-	function hf_leave_request($ref_id = null){
-		$data = array();
-		$data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
-		
-		$users = $this->Emp_model->get_employee($this->session->userdata('ecode'));			
-		$ulist = '';
-		foreach($users as $user) {
-			$ulist = $ulist.",'".$user['ecode']."'";
-		}
-		$ulist = ltrim($ulist,',');
-		
-		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
-		$data['footer'] = $this->load->view('include/footer','',true);
-		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside',$data,true);
-		$data['notepad'] = $this->load->view('include/shift_timing','',true);
-		$data['pending_requests'] = $this->Hr_model->hf_leave_pending_request($ulist,$ref_id);
-		//print_r($data['pending_requests']); die;
-		$data['requests'] = $this->Hr_model->hf_leave_request($ulist,$ref_id);
-		$data['body'] = $this->load->view('pages/hradmin/hf_leave_requests',$data,true);
-		//===============common===============//
-		$data['title'] = $this->config->item('project_title').' | HF Day Leave Requests';
-		$data['head'] = $this->load->view('common/head',$data,true);
-		$data['footer'] = $this->load->view('common/footer',$data,true);
-		$this->load->view('layout_master',$data);
-	}
-	
-	function hf_leave_request_update(){
-	    $data['req_id'] = $this->input->post('req_id');
-	    $data['key'] = $this->input->post('key');
-	    $data['value'] = $this->input->post('value');
-	    $data['hr_id']	= $this->session->userdata('ecode');
-	    $data['created_at'] = date('Y-m-d H:i:s');
-	    if($this->Hr_model->hf_leave_request_update($data)){
-	        echo json_encode(array('status'=>200));
-	    }
-	}
-	
+
 	//////////////////////////off day duty 
 	function off_day_duty_request($ref_id = null){		
 		$data = array();
