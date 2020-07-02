@@ -7,9 +7,9 @@ $query_builder = TRUE;
 
 $db['sqlsrv'] = array(
 	'dsn'	=> '',
-	// 'hostname' => '192.168.25.2,4050',
-    // 'username' => 'ibcportal',
-    // 'password' => 'portal@ibc24',
+	'hostname' => '192.168.25.2,4050',
+    'username' => 'ibcportal',
+    'password' => 'portal@ibc24',
 	
     
 //     'hostname' => '192.168.25.13',
@@ -56,15 +56,15 @@ $db['production'] = array(
 
 $db['staging'] = array(
 	'dsn'	=> '',
-	// 'hostname' => '192.168.25.239',
-	// 'username' => 'root',
-	// 'password' => '#SBmmpl123$',
-	// 'database' => 'emp_portal_stag',
+	'hostname' => '192.168.25.239',
+	'username' => 'root',
+	'password' => '#SBmmpl123$',
+	'database' => 'emp_portal_stag',
 	
-	'hostname' => 'localhost',
-    'username' => 'root',
-    'password' => '',
-	'database' => 'ibc24',
+	// 'hostname' => 'localhost',
+    // 'username' => 'root',
+    // 'password' => '',
+	// 'database' => 'ibc24',
 	
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
