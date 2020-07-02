@@ -166,7 +166,7 @@ class My_library {
 	
 	
 	function getMailIds($ecode){
-	    $this->CI->db->select('ui.company_mailid');
+	    $this->CI->db->select('DISTINCT(ui.company_mailid)');
 	    $this->CI->db->join('users u','u.ecode = ur.ecode');
 	    $this->CI->db->join('user_info ui','ui.ecode = u.ecode');
 	    $result = $this->CI->db->get_where('user_rules ur',array(
@@ -176,7 +176,7 @@ class My_library {
 	    return $result;
 	}
 	    
-	function sentmail($mail_body,$sendto){
+	function sentmail($sub="emp2",$mail_body,$sendto){
 	    if($this->CI->config->item('mail')){
     		$tos = '';
     		foreach($sendto as $send){
@@ -197,7 +197,7 @@ class My_library {
     		$this->CI->load->library('email', $config);		
     		$this->CI->email->from('No_reply@ibc24.in');
     		$this->CI->email->to("'".$ids."'");
-    		$this->CI->email->subject('Half day request');
+    		$this->CI->email->subject($sub);
     		$this->CI->email->message($mail_body);
     		
     		

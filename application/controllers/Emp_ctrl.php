@@ -246,44 +246,12 @@ class Emp_ctrl extends CI_Controller {
                     
                     $this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your Leave request submitted successfully.</h3>');
                     
-                    
-                    //$this->my_library->sentmail('testing',)
-//                     $config = Array(
-//                             'protocol' => 'smtp',
-//                             'smtp_host' => 'mail.ibc24.in',
-//                             'smtp_port' => 465,
-//                             // 'smtp_user' => 'emailer@ibc24.in',
-//                             // 'smtp_pass' => 'emailer',
-//                             'smtp_user' => 'rahul1.sinha@ibc24.in',
-//                             'smtp_pass' => 'rahul1',
-//                             // 'smtp_user' => 'No_reply@ibc24.in',
-//                             // 'smtp_pass' => 'ibc@24',
-//                             'mailtype'  => 'html',
-//                             'wordwrap' 	=> TRUE,
-//                             'charset'   => 'utf-8'
-//                         );
-//                         $this->email->set_mailtype("html");
-//                         $this->load->library('email', $config);
-//                         $this->email->from('Emp2@ibc24.in');
-//                         $this->email->to('rahul1.sinha@ibc24.in');
-//                         $this->email->subject('IT Report - '.date('F',strtotime("-1 month")));
-//                         $this->email->message('emailer test');
-//                         if (!$this->email->send()){
-//                             echo $this->email->print_debugger();
-//                         } else {
-//                             print_r('mail send');
-//                             print_r($mail);
-//                         }
-                    
-                    
-                    
+                    $mailIds = $this->my_library->getMailIds($this->session->userdata('ecode'));
+                    $this->my_library->sentmail('Emp2 testing',$mailIds);                    
                     redirect('es/leave-request','refresh');
                 }
 	        }
 	    } else {
-	        $mailIds = $this->my_library->getMailIds($this->session->userdata('ecode'));
-	        $this->my_library->sentmail('Emp2 testing',$mailIds);
-	        die;
     		$data = array();
     		$data['coffs'] = $this->my_library->emp_coff($this->session->userdata('ecode'));
 			$data['nhfhs'] = $this->my_library->emp_nhfh($this->session->userdata('ecode'));
@@ -392,14 +360,6 @@ class Emp_ctrl extends CI_Controller {
 				if ($this->form_validation->run() == FALSE){
 					$data = array();
 					$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-					$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-					if(count($data['pls'])>0){
-					    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-					    if($data['pls'][0]['balance'] < 0){
-					        $data['pls'][0]['balance'] = 0;
-					    }
-					}
-					
 					$data['footer'] = $this->load->view('include/footer','',true);
 					$data['top_nav'] = $this->load->view('include/top_nav','',true);
 					$data['aside'] = $this->load->view('include/aside','',true);
@@ -416,14 +376,6 @@ class Emp_ctrl extends CI_Controller {
 					$date = $this->my_library->mydate($this->input->post('half_day_date'));
 					
 					$pls = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-					$pl_aplied = $this->my_library->pl_applied($this->session->userdata('ecode'));
-					$balance = $pls[0]['balance'] - $pl_aplied;
-					
-				    if($balance > 0) {
-				        $data['pl'] = '0.5';
-				    } else {
-				        $data['lop'] = '0.5';
-				    }
 				    
 					$data['date_from'] = $date;
 					$data['date_to'] = $date;
@@ -436,16 +388,11 @@ class Emp_ctrl extends CI_Controller {
 						$this->db->where('id',$id);
 						$this->db->update('users_leave_requests',array('reference_id'=>$data['reference_id'].'-'.$id));
 						
-						// //send mail to reporting persone
-						// $mail['name'] = $this->session->userdata('username').$this->session->userdata('ecode');
-						// $mail['department'] = $this->my_library->department_code($this->session->userdata('ecode'));
-						// $mail['date'] = $this->my_library->sql_datepicker($date);
-						// $mail['footer'] = $this->load->view('include/footer','',true);
-						// $mail['head'] = $this->load->view('common/head',$mail,true);
-						// $mail['body'] = $this->load->view('mail_template/half_day',$mail,true);
-						// $mail['footer'] = $this->load->view('common/footer',$mail,true);
-						// $mail_body = $this->load->view('layout_master',$mail,true);
-						// $this->my_library->sentmail($mail_body,$this->my_library->reporting_to_mailid($this->session->userdata('ecode')));
+						$mailIds = $this->my_library->getMailIds($this->session->userdata('ecode'));
+						$this->my_library->sentmail('Emp2 Half day testing',$mailIds);  
+						
+						$mailIds = $this->my_library->getMailIds($this->session->userdata('ecode'));
+						$this->my_library->sentmail('Emp2 HF testing',$mailIds);
 						
 						$this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your HALF day duty request send successfully.</h3>');
 					} else {
@@ -460,15 +407,6 @@ class Emp_ctrl extends CI_Controller {
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
 			$data['aside'] = $this->load->view('include/aside',$data,true);
 			$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-			$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-			if(count($data['pls'])>0){
-			    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-			    if($data['pls'][0]['balance'] < 0){
-			        $data['pls'][0]['balance'] = 0;
-			    }
-			}
-			//$data['notepad'] = $this->load->view('include/shift_timing','',true);
-			//$data['requests'] = $this->Emp_model->hf_leave_requests($this->session->userdata('ecode'));
 			$data['body'] = $this->load->view('pages/es/hf_leave_request',$data,true);
 			//===============common===============//
 			$data['title'] = $this->config->item('project_title').' | HF Leave Request';
@@ -567,15 +505,6 @@ class Emp_ctrl extends CI_Controller {
 					$data['top_nav'] = $this->load->view('include/top_nav','',true);
 					$data['aside'] = $this->load->view('include/aside','',true);
 					$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-					$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-					if(count($data['pls'])>0){
-					    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-					    if($data['pls'][0]['balance'] < 0){
-					        $data['pls'][0]['balance'] = 0;
-					    }
-					}
-// 					$data['notepad'] = $this->load->view('include/shift_timing','',true);
-// 					$data['requests'] = $this->Emp_model->off_day_duty_form($this->session->userdata('ecode'));
 					$data['body'] = $this->load->view('pages/es/off_day_duty_form',$data,true);
 					//===============common===============//
 					$data['title'] = $this->config->item('project_title').' | OFF DAY DUTY FORM';
@@ -598,6 +527,9 @@ class Emp_ctrl extends CI_Controller {
 						$this->db->where('id',$id);
 						$this->db->update('users_leave_requests',array('reference_id'=>$data['reference_id'].'-'.$id));
 					
+						$mailIds = $this->my_library->getMailIds($this->session->userdata('ecode'));
+						$this->my_library->sentmail('Emp2 off day duty testing',$mailIds);
+						
 						$this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your OFF day duty request send successfully.</h3>');
 					} else {
 						$this->session->set_flashdata('msg', '<h3 class="bg-info p-2 text-center">warning! Database issue, Please contact to IT team.</h3>');
@@ -612,13 +544,6 @@ class Emp_ctrl extends CI_Controller {
 				$data['top_nav'] = $this->load->view('include/top_nav','',true);
 				$data['aside'] = $this->load->view('include/aside',$data,true);
 				$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-				$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-				if(count($data['pls'])>0){
-				    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-				    if($data['pls'][0]['balance'] < 0){
-				        $data['pls'][0]['balance'] = 0;
-				    }
-				}
 				$data['body'] = $this->load->view('pages/es/off_day_duty_form',$data,true);
 				//===============common===============//
 				$data['title'] = $this->config->item('project_title').' | OFF DAY DUTY FORM';
@@ -798,13 +723,6 @@ class Emp_ctrl extends CI_Controller {
 				$data['aside'] = $this->load->view('include/aside','',true);
 				$data['nhfh_days'] = $this->Nh_fh_model->get_nhfh();
 				$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-				$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-				if(count($data['pls'])>0){
-				    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-				    if($data['pls'][0]['balance'] < 0){
-				        $data['pls'][0]['balance'] = 0;
-				    }
-				}
 				$data['nh_fh_requests'] = $this->Nh_fh_model->user_nhfh_requests($this->session->userdata('ecode'));
 				
 				//$data['open'] = 'true';
@@ -846,15 +764,7 @@ class Emp_ctrl extends CI_Controller {
 			$data['nhfh_days'] = $this->Nh_fh_model->get_nhfh();
             
 			$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-			$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-			if(count($data['pls'])>0){
-			    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-			    if($data['pls'][0]['balance'] < 0){
-			        $data['pls'][0]['balance'] = 0;
-			    }
-			}
 			$data['nh_fh_requests'] = $this->Nh_fh_model->user_nhfh_requests($this->session->userdata('ecode'));
-			//$data['open'] = 'true';
 			$data['notepad'] = $this->load->view('include/shift_timing','',true);
 			$data['body'] = $this->load->view('pages/es/nh_fh_day_duty_form',$data,true);
 			//===============common===============//
@@ -915,13 +825,6 @@ class Emp_ctrl extends CI_Controller {
 		$data['records'] = $this->db->get_where('users_leave_requests ulr',array('ulr.ecode'=>$ecode,'ulr.status'=>1))->result_array();
 		
 		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-		if(count($data['pls'])>0){
-		    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-		    if($data['pls'][0]['balance'] < 0){
-		        $data['pls'][0]['balance'] = 0;
-		    }
-		}
 		$data['title'] = $this->config->item('project_title').'| All Report';
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
@@ -950,14 +853,6 @@ class Emp_ctrl extends CI_Controller {
 	            $data['nh_fh_requests'] = $this->Nh_fh_model->user_nhfh_requests($this->session->userdata('ecode'));
 	            
 	            $data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-	            $data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-	            if(count($data['pls'])>0){
-	                $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-	                if($data['pls'][0]['balance'] < 0){
-	                    $data['pls'][0]['balance'] = 0;
-	                }
-	            }
-	            
 	            $data['notepad'] = $this->load->view('include/shift_timing','',true);
 	            $data['body'] = $this->load->view('pages/es/nh_fh_avail_form',$data,true);
 	            //===============common===============//
@@ -969,6 +864,10 @@ class Emp_ctrl extends CI_Controller {
 	            $data['nhfh_date'] = $this->input->post('nhfh_date');
 	            $data['requirment'] = $this->input->post('requirment');
 	            if($this->Nh_fh_model->nh_fh_avail($data)){
+	                
+	                $mailIds = $this->my_library->getMailIds($this->session->userdata('ecode'));
+	                $this->my_library->sentmail('Emp2 NHFH avail testing',$mailIds);         
+	                
 	                $this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your NH/FH AVAIL Request submitted successfully.</h3>');
 	                redirect(base_url('es/NH-FH-Avail-Form'),'refresh');
 	            } else {
@@ -987,14 +886,6 @@ class Emp_ctrl extends CI_Controller {
     		$data['nh_fh_avail_requests'] = $this->Nh_fh_model->user_nhfh_avail_requests($this->session->userdata('ecode'));
     		
     		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-    		$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-    		if(count($data['pls'])>0){
-    		    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-    		    if($data['pls'][0]['balance'] < 0){
-    		        $data['pls'][0]['balance'] = 0;
-    		    }
-    		}
-    		
     		$data['notepad'] = $this->load->view('include/shift_timing','',true);
     		$data['body'] = $this->load->view('pages/es/nh_fh_avail_form',$data,true);
     		//===============common===============//
@@ -1035,16 +926,7 @@ class Emp_ctrl extends CI_Controller {
 			$data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
 			$data['users'] = $this->Emp_model->get_employee($this->session->userdata('ecode'));
 			$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
-			
 			$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-			$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-			if(count($data['pls'])>0){
-			    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-			    if($data['pls'][0]['balance'] < 0){
-			        $data['pls'][0]['balance'] = 0;
-			    }
-			}
-			
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
 			$data['aside'] = $this->load->view('include/aside',$data,true);

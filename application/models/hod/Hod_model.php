@@ -71,6 +71,7 @@ class Hod_model extends CI_Model {
         $this->db->update('users_leave_requests',array(
             'hod_remark' => $data['hod_remark'],
             'hod_status' => $data['hod_status'],
+            'hod_id' => $this->session->userdata('ecode'),
             'hod_remark_date' => $data['created_at']
         ));
         

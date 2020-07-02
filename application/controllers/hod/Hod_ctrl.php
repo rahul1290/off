@@ -176,15 +176,37 @@ class Hod_ctrl extends CI_Controller {
 	}
 	
 	function leave_request_update(){
+	    $data = array();
 	    $data['req_id'] = $this->input->post('req_id');
 	    $data['hod_remark'] = $this->input->post('hod_remark');
 	    $data['hod_status'] = $this->input->post('hod_status');
 	    $data['created_at'] = date('Y-m-d H:i:s');
 	    $data['hod_id'] = $this->session->userdata('ecode');
+	    
 	    if($this->Hod_model->leave_request_update($data)){
-	        echo json_encode(array('status'=>200));
+	        $data1 = array();
+	        if($data['hod_status'] == 'GRANTED'){
+	            $data1['app_status'] = 'GRANTED';
+	        } else {
+	            $data1['app_status'] = 'REJECTED';
+	        }
+	            
+            $this->db->select('ulr.*,u.name,ui.company_mailid');
+            $this->db->join('users u','u.ecode = ulr.ecode');
+            $this->db->join('user_info ui','ui.ecode = u.ecode');
+            $data1['leave_detail'] = $this->db->get_where('users_leave_requests ulr',array('ulr.id'=>$data['req_id']))->result_array();
+            
+            $data1['title'] = $this->config->item('project_title').' | mail body';
+            $data1['head'] = $this->load->view('common/head',$data1,true);
+            $data1['footer'] = $this->load->view('common/footer',$data1,true);
+            $data1['body'] = $this->load->view('pages/hod/mail_body/leave_request',$data1,true);
+            $body = $this->load->view('layout_master',$data1,'',true);
+            
+            $this->my_library->sentmail('Leave Request By '.$data1['leave_detail'][0]['name'],$body,$data1['leave_detail'][0]['company_mailid']);
+	        echo json_encode(array('status'=>200));   
 	    }
 	}
+	
 	//////////////////////////////////////// LEAVE REQUESTS ////////////////////////////////////////////
 	
 	//pl request
