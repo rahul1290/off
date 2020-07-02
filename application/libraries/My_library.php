@@ -177,12 +177,14 @@ class My_library {
 	}
 	    
 	function sentmail($sub="emp2",$mail_body,$sendto){
+		
 	    if($this->CI->config->item('mail')){
     		$tos = '';
     		foreach($sendto as $send){
     			$tos = $tos.$send['company_mailid'].',';
     		}
     		$ids = rtrim($tos,',');
+			
     		$config = Array(
                 'protocol' => 'smtp',
                 'smtp_host' => 'mail.ibc24.in',
@@ -204,8 +206,8 @@ class My_library {
             if (!$this->CI->email->send()){
                 echo $this->CI->email->print_debugger();
             } else {
-    			echo $this->CI->email->print_debugger();
-    			print_r('mail send');
+    			//echo $this->CI->email->print_debugger();
+    			return true;
     		}
 	    } else {
 	        return true;

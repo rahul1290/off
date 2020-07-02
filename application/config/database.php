@@ -89,10 +89,10 @@ $db['staging'] = array(
 	'password' => '#SBmmpl123$',
 	'database' => 'emp_portal_stag',
 	
-// 	'hostname' => 'localhost',
-//     'username' => 'root',
-//     'password' => '',
-// 	'database' => 'ibc24',
+	// 'hostname' => 'localhost',
+    // 'username' => 'root',
+    // 'password' => '',
+	// 'database' => 'ibc24',
 	
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

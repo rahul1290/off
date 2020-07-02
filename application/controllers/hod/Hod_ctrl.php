@@ -200,9 +200,11 @@ class Hod_ctrl extends CI_Controller {
             $data1['head'] = $this->load->view('common/head',$data1,true);
             $data1['footer'] = $this->load->view('common/footer',$data1,true);
             $data1['body'] = $this->load->view('pages/hod/mail_body/leave_request',$data1,true);
-            $body = $this->load->view('layout_master',$data1,'',true);
+            $body = $this->load->view('layout_master',$data1,true);
             
-            $this->my_library->sentmail('Leave Request By '.$data1['leave_detail'][0]['name'],$body,array($data1['leave_detail'][0]['company_mailid']));
+
+            $this->my_library->sentmail('Leave Request By '.$data1['leave_detail'][0]['name'],$body,array(array('company_mailid'=>$data1['leave_detail'][0]['company_mailid'])));
+
 	        echo json_encode(array('status'=>200));   
 	    }
 	}
