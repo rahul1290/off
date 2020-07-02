@@ -81,7 +81,6 @@ class Hr_ctrl extends CI_Controller {
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
 			$data['aside'] = $this->load->view('include/aside','',true);
-			//$data['notepad'] = $this->load->view('include/notepad','',true);
 			$data['body'] = $this->load->view('pages/hradmin/roaster',$data,true);
 			//===============common===============//
 			$data['title'] = $this->config->item('project_title').' | Roaster';

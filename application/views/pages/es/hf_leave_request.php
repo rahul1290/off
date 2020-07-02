@@ -83,8 +83,6 @@
 								<th>REQUEST SUBMIT DATE</th>
 								<th>HALF TAKEN DATE</th>
 								<th>REASON</th>
-								<th>PL</th>
-								<th>LOP</th>
 								<th>HOD REMARK</th>
 								<th>HOD STATUS</th>
 								<th>HR REMARKS</th>
@@ -215,12 +213,10 @@ $(document).ready(function(){
         			$.each(response.data.final_array,function(key,value){
             			x = x + '<tr>'+
             						'<td>'+ parseInt(c++) +'</td>'+
-            						'<td>'+ value.refrence_id +'</td>'+
+            						'<td>'+ value.reference_id +'</td>'+
             						'<td>'+ value.created_at +'</td>'+
             						'<td>'+ value.date_from +'</td>'+
             						'<td>'+ value.requirment +'</td>'+
-            						'<td>'+ value.pl +'</td>'+
-            						'<td>'+ value.lop +'</td>'+
             						'<td>'+ value.hod_remark +'</td>';
             						var bgcolor = '';
             						if(value.hod_status == 'REJECTED'){
