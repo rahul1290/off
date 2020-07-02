@@ -78,14 +78,7 @@ class Emp_ctrl extends CI_Controller {
 			$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 			
 			$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
-			$data['pl_aplied'] = $this->my_library->pl_applied($this->session->userdata('ecode'));
-			if(count($data['pls']) > 0){
-			    $data['pls'][0]['balance'] = $data['pls'][0]['balance'] - $data['pl_aplied'];
-			    if($data['pls'][0]['balance'] < 0){
-			        $data['pls'][0]['balance'] = 0;
-			    }
-			}
-			
+
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
 			$data['aside'] = $this->load->view('include/aside',$data,true);
@@ -241,7 +234,6 @@ class Emp_ctrl extends CI_Controller {
                     $this->db->where('id',$id);
                     $this->db->update('users_leave_requests',array('reference_id'=>$data['reference_id'].'-'.$id));
                     
-                    
                     if($coff != ''){
                         $this->db->where_in('reference_id',$coff);
                         $this->db->update('users_leave_requests',array('request_id'=>$data['reference_id'].'-'.$id));
@@ -253,6 +245,37 @@ class Emp_ctrl extends CI_Controller {
                     }
                     
                     $this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your Leave request submitted successfully.</h3>');
+                    
+                    
+                    $config = Array(
+                            'protocol' => 'smtp',
+                            'smtp_host' => 'mail.ibc24.in',
+                            'smtp_port' => 465,
+                            // 'smtp_user' => 'emailer@ibc24.in',
+                            // 'smtp_pass' => 'emailer',
+                            'smtp_user' => 'rahul1.sinha@ibc24.in',
+                            'smtp_pass' => 'rahul1',
+                            // 'smtp_user' => 'No_reply@ibc24.in',
+                            // 'smtp_pass' => 'ibc@24',
+                            'mailtype'  => 'html',
+                            'wordwrap' 	=> TRUE,
+                            'charset'   => 'utf-8'
+                        );
+                        $this->email->set_mailtype("html");
+                        $this->load->library('email', $config);
+                        $this->email->from('No_reply@ibc24.in');
+                        $this->email->to('rahul1.sinha@ibc24.in');
+                        $this->email->subject('IT Report - '.date('F',strtotime("-1 month")));
+                        $this->email->message('emailer test');
+                        if (!$this->email->send()){
+                            echo $this->email->print_debugger();
+                        } else {
+                            print_r('mail send');
+                            print_r($mail);
+                        }
+                    
+                    
+                    
                     redirect('es/leave-request','refresh');
                 }
 	        } 
