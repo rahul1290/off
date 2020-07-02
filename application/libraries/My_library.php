@@ -9,6 +9,7 @@ class My_library {
 		$this->CI->load->helper('url');
 		$this->CI->load->library('session');
 		$this->CI->load->database();
+		$this->CI->load->library('email');
     }
 	
 	function mydate($date){
@@ -192,7 +193,7 @@ class My_library {
     			'wordwrap' 	=> TRUE,
                 'charset'   => 'utf-8'
             );
-    		$this->email->set_mailtype("html");
+    		$this->CI->email->set_mailtype("html");
     		$this->CI->load->library('email', $config);		
     		$this->CI->email->from('No_reply@ibc24.in');
     		$this->CI->email->to("'".$ids."'");
