@@ -176,7 +176,7 @@ class My_library {
 	}
 	    
 	function sentmail($mail_body,$sendto){
-	    if($this->config->item('mail')){
+	    if($this->CI->config->item('mail')){
     		$tos = '';
     		foreach($sendto as $send){
     			$tos = $tos.$send['company_mailid'].',';
