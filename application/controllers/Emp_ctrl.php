@@ -247,40 +247,43 @@ class Emp_ctrl extends CI_Controller {
                     $this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your Leave request submitted successfully.</h3>');
                     
                     
-                    $config = Array(
-                            'protocol' => 'smtp',
-                            'smtp_host' => 'mail.ibc24.in',
-                            'smtp_port' => 465,
-                            // 'smtp_user' => 'emailer@ibc24.in',
-                            // 'smtp_pass' => 'emailer',
-                            'smtp_user' => 'rahul1.sinha@ibc24.in',
-                            'smtp_pass' => 'rahul1',
-                            // 'smtp_user' => 'No_reply@ibc24.in',
-                            // 'smtp_pass' => 'ibc@24',
-                            'mailtype'  => 'html',
-                            'wordwrap' 	=> TRUE,
-                            'charset'   => 'utf-8'
-                        );
-                        $this->email->set_mailtype("html");
-                        $this->load->library('email', $config);
-                        $this->email->from('No_reply@ibc24.in');
-                        $this->email->to('rahul1.sinha@ibc24.in');
-                        $this->email->subject('IT Report - '.date('F',strtotime("-1 month")));
-                        $this->email->message('emailer test');
-                        if (!$this->email->send()){
-                            echo $this->email->print_debugger();
-                        } else {
-                            print_r('mail send');
-                            print_r($mail);
-                        }
+                    //$this->my_library->sentmail('testing',)
+//                     $config = Array(
+//                             'protocol' => 'smtp',
+//                             'smtp_host' => 'mail.ibc24.in',
+//                             'smtp_port' => 465,
+//                             // 'smtp_user' => 'emailer@ibc24.in',
+//                             // 'smtp_pass' => 'emailer',
+//                             'smtp_user' => 'rahul1.sinha@ibc24.in',
+//                             'smtp_pass' => 'rahul1',
+//                             // 'smtp_user' => 'No_reply@ibc24.in',
+//                             // 'smtp_pass' => 'ibc@24',
+//                             'mailtype'  => 'html',
+//                             'wordwrap' 	=> TRUE,
+//                             'charset'   => 'utf-8'
+//                         );
+//                         $this->email->set_mailtype("html");
+//                         $this->load->library('email', $config);
+//                         $this->email->from('Emp2@ibc24.in');
+//                         $this->email->to('rahul1.sinha@ibc24.in');
+//                         $this->email->subject('IT Report - '.date('F',strtotime("-1 month")));
+//                         $this->email->message('emailer test');
+//                         if (!$this->email->send()){
+//                             echo $this->email->print_debugger();
+//                         } else {
+//                             print_r('mail send');
+//                             print_r($mail);
+//                         }
                     
                     
                     
                     redirect('es/leave-request','refresh');
                 }
-	        } 
-	        
+	        }
 	    } else {
+	        $mailIds = $this->my_library->getMailIds($this->session->userdata('ecode'));
+	        $this->my_library->sentmail('Emp2 testing',$mailIds);
+	        die;
     		$data = array();
     		$data['coffs'] = $this->my_library->emp_coff($this->session->userdata('ecode'));
 			$data['nhfhs'] = $this->my_library->emp_nhfh($this->session->userdata('ecode'));
