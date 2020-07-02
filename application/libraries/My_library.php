@@ -162,38 +162,52 @@ class My_library {
 	function remove_hyphen($str){
 	    return str_replace('-', '/', $str);
 	}
-
+	
+	
+	function getMailIds($ecode){
+	    $this->CI->db->select('ui.company_mailid');
+	    $this->CI->db->join('users u','u.ecode = ur.ecode');
+	    $this->CI->db->join('user_info ui','ui.ecode = u.ecode');
+	    $result = $this->CI->db->get_where('user_rules ur',array(
+	        'ur.r_ecode'=> $ecode,
+	        'ur.ecode<>'=>$ecode
+	    ))->result_array();
+	    return $result;
+	}
+	    
 	function sentmail($mail_body,$sendto){
-		$tos = '';
-		foreach($sendto as $send){
-			$tos = $tos.$send['company_mailid'].',';
-		}
-		$ids = rtrim($tos,',');
-		$config = Array(
-            'protocol' => 'smtp',
-            'smtp_host' => 'mail.ibc24.in',
-            'smtp_port' => 25,
-			'smtp_user' => 'rahul1.sinha@ibc24.in',
-            'smtp_pass' => 'rahul1',
-            'mailtype'  => 'html',
-			'wordwrap' 	=> TRUE,
-            'charset'   => 'utf-8'
-        );
-		$this->CI->load->library('email', $config);
-		$this->CI->email->initialize($config);		
-		//$this->CI->email->attach($this->export_record());
-		$this->CI->email->set_mailtype("html");
-		$this->CI->email->from('No_reply@ibc24.in');
-		$this->CI->email->to("'".$ids."'");
-		$this->CI->email->subject('Half day request');
-		$this->CI->email->message($mail_body);
-		
-		
-        if (!$this->CI->email->send()){
-            echo $this->CI->email->print_debugger();
-        } else {
-			echo $this->CI->email->print_debugger();
-			print_r('mail send');
-		}	
+	    if($this->config->item('mail')){
+    		$tos = '';
+    		foreach($sendto as $send){
+    			$tos = $tos.$send['company_mailid'].',';
+    		}
+    		$ids = rtrim($tos,',');
+    		$config = Array(
+                'protocol' => 'smtp',
+                'smtp_host' => 'mail.ibc24.in',
+                'smtp_port' => 465,
+    			'smtp_user' => 'rahul1.sinha@ibc24.in',
+                'smtp_pass' => 'rahul1',
+                'mailtype'  => 'html',
+    			'wordwrap' 	=> TRUE,
+                'charset'   => 'utf-8'
+            );
+    		$this->email->set_mailtype("html");
+    		$this->CI->load->library('email', $config);		
+    		$this->CI->email->from('No_reply@ibc24.in');
+    		$this->CI->email->to("'".$ids."'");
+    		$this->CI->email->subject('Half day request');
+    		$this->CI->email->message($mail_body);
+    		
+    		
+            if (!$this->CI->email->send()){
+                echo $this->CI->email->print_debugger();
+            } else {
+    			echo $this->CI->email->print_debugger();
+    			print_r('mail send');
+    		}
+	    } else {
+	        return true;
+	    }
 	}
 }
