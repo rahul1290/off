@@ -88,7 +88,7 @@ $route['hr/hf-leave-request'] = 'hr/Hf_leave_ctrl/hf_leave_request';
 $route['hr/hf-leave-request/(:any)'] = 'Hr_ctrl/hf_leave_request/$1';
 $route['hr/hf-leave-request-update'] = 'Hr_ctrl/hf_leave_request_update';
 
-$route['hr/off-day-duty-request'] = 'Hr_ctrl/off_day_duty_request/';
+$route['hr/off-day-duty-request'] = 'hr/Off_day_duty_ctrl/off_day_duty_request/';
 $route['hr/off-day-duty-request/(:any)'] = 'Hr_ctrl/off_day_duty_request/$1';
 $route['hr/off-day-duty-update'] = 'Hr_ctrl/off_day_duty_request_update';
 
