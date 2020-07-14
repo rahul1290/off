@@ -22,10 +22,10 @@
       <div class="container-fluid">
 			 <ul class="nav nav-tabs">
     			<li class="nav-item">
-                	<a class="nav-link active" id="#pending_requests_tab" data-toggle="tab" href="#pending_requests">NEW HF REQUESTS</a>
+                	<a class="nav-link active" id="#pending_requests_tab" data-toggle="tab" href="#pending_requests">NEW OFF DAY DUTY REQUESTS</a>
                 </li>
                 <li class="nav-item">
-                	<a class="nav-link" id="previous_requests_tab" data-toggle="tab" href="#previous_requests">PREVIOUS HF REQUESTS</a>
+                	<a class="nav-link" id="previous_requests_tab" data-toggle="tab" href="#previous_requests">PREVIOUS OFF DAY DUTY REQUESTS</a>
                 </li>
              </ul>
              		

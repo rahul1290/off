@@ -76,6 +76,7 @@ class My_library {
 		}	
 	}
 	
+	
 	function pl_calculator($ecode){
 	    $this->CI->db->select('*');
 	    $this->CI->db->order_by('date','desc');

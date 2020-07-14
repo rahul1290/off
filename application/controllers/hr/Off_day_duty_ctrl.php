@@ -35,7 +35,7 @@ class Off_day_duty_ctrl extends CI_Controller {
 	    //$data['pending_requests'] = $this->Hf_leave_model->hf_leave_pending_request($ulist,$ref_id);
 	    $data['pending_requests'] = $this->Off_day_duty_model->total_off_day_duty_pending_request();
 	    $data['requests'] = $this->Off_day_duty_model->off_day_duty_request($ulist,$ref_id);
-	    $data['body'] = $this->load->view('pages/hradmin/off_day_duty_requests',$data,true);
+	    $data['body'] = $this->load->view('pages/hradmin/off_day_duty_request',$data,true);
 	    //===============common===============//
 	    $data['title'] = $this->config->item('project_title').' | HF Day Leave Requests';
 	    $data['head'] = $this->load->view('common/head',$data,true);

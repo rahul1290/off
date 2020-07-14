@@ -16,6 +16,7 @@ class Cab_ctrl extends CI_Controller {
         }
     }
     
+    
     public function valid_number($str){
         $this->form_validation->set_message('username_check', 'The {field} field can not be the word "test"');
         return FALSE;
@@ -69,17 +70,29 @@ class Cab_ctrl extends CI_Controller {
                 $count = $this->Cab_model->cabrequest_count();
                 $x = (int)$count[0]['total'] + 1;
                 
-                $insert_data['ecode'] = $this->session->userdata('ecode');
-                $insert_data['request_date'] = date('Y-m-d H:i:s');
-                $insert_data['from_date'] = date('Y-m-d',strtotime($this->input->post('from_date')));
-                $insert_data['to_date'] = date('Y-m-d',strtotime($this->input->post('to_date')));
-                $insert_data['type'] = $this->input->post('pickdrop');
-                $insert_data['time'] = $this->input->post('time');
-                $insert_data['area'] = $this->input->post('zone');
-                $insert_data['address'] = $this->input->post('address');
-                $insert_data['reqest_id'] = 'IBC24/'.date('Y').'/'.$this->my_library->department_code($this->session->userdata('ecode')).'/'.$x;
-                $insert_data['cab_status'] = 'REJECTED';
                 
+                $insert_data = array();
+                
+                $diff = date_diff(date_create(date('Y-m-d',strtotime(str_replace('/', '-', $this->input->post('from_date'))))),date_create(date('Y-m-d',strtotime(str_replace('/', '-', $this->input->post('to_date'))))));
+                $x = $diff->format("%a") + 1;
+                
+                $from_Date = date('Y-m-d',strtotime(str_replace('/', '-', $this->input->post('from_date'))));
+                for($i=0;$i<$x;$i++){
+                    $temp = array();
+                    $from_Date = date('Y-m-d',strtotime(date('Y-m-d',strtotime(str_replace('/', '-', $this->input->post('from_date')))).'+'.$i.' day'));
+                    $temp['ecode'] = $this->session->userdata('ecode');
+                    $temp['request_date'] = date('Y-m-d H:i:s');
+                    $temp['from_date'] = $from_Date;
+                    $temp['to_date'] = $from_Date;
+                    $temp['type'] = $this->input->post('pickdrop');
+                    $temp['time'] = $this->input->post('time');
+                    $temp['area'] = $this->input->post('zone');
+                    $temp['address'] = $this->input->post('address');
+                    $temp['cab_status'] = 'PENDING';
+                    $temp['action_taken_by'] = $this->session->userdata('ecode');
+                    
+                    $insert_data[] = $temp;
+                }
                 $this->Cab_model->cab_request_submit($insert_data);
                 $this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your Cab request submitted successfully.</h3>');
                 redirect('es/cab','refresh');
@@ -103,6 +116,10 @@ class Cab_ctrl extends CI_Controller {
     }
     
     
+    function view_requests(){
+        $result = $this->Cab_model->view_requests();
+        echo json_encode(array('data'=>$result,'status'=>200));
+    }
     
     //////////////////////ajax calls////////////////////////////////
     function cab_timing(){
