@@ -28,6 +28,7 @@ $route['es/Attendance-Record'] = 'Emp_ctrl/attendance/';
 
 $route['es/cab'] = 'Cab_ctrl/index/';
 $route['es/cab/requests'] = 'Cab_ctrl/view_requests/';
+$route['es/cab/requests_detail'] = 'Cab_ctrl/request_detail/';
 
 
 ///////	KRA ////////////////////

@@ -121,7 +121,21 @@ class Cab_ctrl extends CI_Controller {
         echo json_encode(array('data'=>$result,'status'=>200));
     }
     
+    
     //////////////////////ajax calls////////////////////////////////
+    function request_detail(){
+        $data = array();
+        $data['type'] = $this->input->post('type');
+        $data['area'] = $this->input->post('area');
+        $data['time'] = $this->input->post('time');
+        $result = $this->Cab_model->request_detail($data);
+        if(count($result)>0){
+            echo json_encode(array('data'=>$result,'status'=>200));
+        } else {
+            echo json_encode(array('msg'=>'no record found.','status'=>500));
+        }
+    }
+    
     function cab_timing(){
         $data['type'] = $this->input->post('method');
         $result = $this->Cab_model->cab_timing($data);

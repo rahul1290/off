@@ -187,23 +187,84 @@ foreach($links as $link){
      	
      	<div id="view_update_panel" class="tab-pane active"><br>
      		<div class="row">
-     			<div class="col-4" id="view_update_panel_body">
+     			<div class="col-5" id="view_update_panel_body" style="height: 320px;overflow-y:scroll;">
          		</div>
          		
-         		<div class="col-8">
+         		<div class="offset-1 col-6">
          		
-         			<div class="card" style="width: 18rem;">
+         			<div class="card">
                       	<div class="card-body">
-                        	<label>Date:</label> <span>01/07/2020</span>
-                        	<label>Select Pickup/Droping:</label> 
-                        		<span>
-                        			<select></select>
-                        		</span>
-                        	<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        	<a href="#" class="btn btn-primary">Go somewhere</a>
+                      		<table class="table table-bordered">
+                      			<tr>
+                      				<td><b>Date:</b></td>
+                      				<td><?php echo date('d/m/Y'); ?></td>
+                      			</tr>
+                      			<tr>
+                      				<td><b>Select Pickup/Droping:</b></td>
+                      				<td>
+                      					<select id="pick_drop">
+                      						<option value="0">Select pick/drop</option>
+                            				<option value="drop">DROPING</option>
+                            				<option value="pick">PICKUP</option>
+                            			</select>
+                      				</td>
+                      			</tr>
+                      			<tr>
+                      				<td><b>Select Area:</b></td>
+                      				<td>
+                      					<select id="area">
+                      						<option value="0">Select Area</option>
+                            			</select>
+                      				</td>
+                      			</tr>
+                      			<tr>
+                      				<td><b>Select Time:</b></td>
+                      				<td>
+                      					<select id="time">
+                      						<option value="0">Select Time</option>
+                            			</select>
+                      				</td>
+                      			</tr>
+                      			<tr>
+                      				<td></td>
+                      				<td><input class="btn btn-success" type="button" id="requests_view" value="View"></td>
+                      			</tr>
+                      		</table>
+                        	
+                    		<label></label>
+                    		<span>
+                    			
+                    		</span>
                       	</div>
                     </div>
                     
+         		</div>
+         		
+         		<div class="col-12">
+         			<div class="card">
+                      	<div class="card-body">
+                      		<div class="table-responsive">
+                      			<table class="table table-striped table-bordered">
+                      				<thead>
+                          				<tr class="bg-dark">
+                          					<th>Employee Name</th>
+                          					<th>Employee Code</th>
+                          					<th>Gender</th>
+                          					<th>Time</th>
+                          					<th>Location</th>
+                          					<th>Address</th>
+                          					<th>Contact No.</th>
+                          					<th>Vehicle No</th>
+                          					<th>Driver Name</th>
+                          					<th>Assign</th>
+                          				</tr>
+                      				</thead>
+                      				<tbody id="CabRequests">
+                      				</tbody>
+                      			</table>
+                      		<div>
+                      	</div>
+                    </div>
          		</div>
      		</div>
      	</div>
@@ -340,30 +401,72 @@ $(document).ready(function(){
 			beforeSend: function() {},
 			success: function(response){
 				if(response.status == 200){
-					var x = '<table class="table table-bordered table-striped">'+
-             					'<thead><tr class="bg-dark">'+
-             						'<th>DATE</th>'+
-             						'<th>PICKUP REQ.</th>'+
-             						'<th>DROP REQ.</th>'+
-             						'<th>View</th>'+
-             					'</tr></thead><tbody>';
-         					
-         			$.each(response.data,function(key,value){
-             			x = x + '<tr>'+
-             						'<td>'+ value.from_date +'</td>'+
-             						'<td>'+ value.pickup +'</td>'+
-             						'<td>'+ value.DROPS +'</td>'+
-             						'<td>view</td>'+
-             					'</tr>';	
-             		});
-             		
-             		x = x + '</tbody></table>';
+					var x = '<div class="card">'+
+                      			'<div class="card-body">'+
+                                  	'<table class="table table-bordered table-striped">'+
+                             					'<thead><tr class="bg-dark">'+
+                             						'<th>DATE</th>'+
+                             						'<th>PICKUP REQ.</th>'+
+                             						'<th>DROP REQ.</th>'+
+                             						'<th>View</th>'+
+                             					'</tr></thead><tbody>';
+                         					
+                         			$.each(response.data,function(key,value){
+                             			x = x + '<tr>'+
+                             						'<td>'+ value.from_date +'</td>'+
+                             						'<td>'+ value.pickup +'</td>'+
+                             						'<td>'+ value.DROPS +'</td>'+
+                             						'<td>view</td>'+
+                             					'</tr>';	
+                             		});
+                             		
+                             		x = x + '</tbody></table>'+
+                             	'</div>'+
+                             '</div>';
 					$('#view_update_panel_body').html(x);
 				}	
 			}
 		});
 	});
 
+	$(document).on('click','#requests_view',function(){
+		var type = $('#pick_drop').val();
+		var area = $('#area').val();
+		var time = $('#time').val(); 
+		
+		$.ajax({
+			type: 'POST',
+			url: baseUrl+'es/cab/requests_detail',
+			data: {
+				'type' : type,
+				'area' : area,
+				'time' : time
+			},
+			dataType: 'json',
+			beforeSend: function() {},
+			success: function(response){
+				if(response.status == 200){
+					var x = '';
+					$.each(response.data,function(key,value){
+						x = x + '<tr>'+
+            						'<td>'+ value.name +'</td>'+
+                  					'<td>'+ value.ecode +'</td>'+
+                  					'<td>'+ value.gender +'</td>'+
+                  					'<td>'+ value.time +'</td>'+
+                  					'<td>'+ value.area +'</td>'+
+                  					'<td>'+ value.address +'</td>'+
+                  					'<td>'+ value.contact_no +'</td>'+
+                  					'<td></td>'+
+                  					'<td></td>'+
+                  					'<td><input type="button" value="Assign"></td>'+
+								+'</tr>';
+					}); 
+					$('#CabRequests').html(x);
+				}
+			}
+		});
+	});
+	
 });
 </script>
 </body>

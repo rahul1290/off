@@ -50,4 +50,22 @@ class Cab_model extends CI_Model {
         $result = $this->db->get_where('cab_requests',array('cab_status'=>'PENDING','status'=>1))->result_array();
         return $result;
     }
+    
+    function request_detail($data){
+        $this->db->select('cr.*,u.name,u.ecode,u.gender,ui.contact_no');
+        if($data['type'] != '0'){
+            $this->db->where('cr.area',$data['type']);
+        }
+        if($data['area'] != '0'){
+            $this->db->where('cr.area',$data['area']);
+        }
+        if($data['time'] != '0'){
+            $this->db->where('cr.time',$data['time']);
+        }
+        $this->db->join('users u','u.ecode = cr.ecode');
+        $this->db->join('user_info ui','ui.ecode = u.ecode');
+        //$this->db->join('')
+        $result = $this->db->get_where('cab_requests cr',array('cr.cab_status'=>'PENDING','cr.status'=>1))->result_array();
+        return $result;
+    }
 }
