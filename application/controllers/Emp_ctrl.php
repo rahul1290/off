@@ -794,31 +794,31 @@ class Emp_ctrl extends CI_Controller {
 		if($ecode == null){
 			$ecode = $this->session->userdata('ecode');
 		}
-		if($this->input->get('from_date')){
-			$from_date = date('Y-m-d', strtotime(str_replace('/', '-', $this->input->get('from_date'))));
-		} else {
-			$from_date = date("d-m-Y", strtotime("first day of previous month"));
-		}
+// 		if($this->input->get('from_date')){
+// 			$from_date = date('Y-m-d', strtotime(str_replace('/', '-', $this->input->get('from_date'))));
+// 		} else {
+// 			$from_date = date("d-m-Y", strtotime("first day of previous month"));
+// 		}
 			
-		if($this->input->get('to_date')){
-			$to_date = date('Y-m-d', strtotime(str_replace('/', '-', $this->input->get('to_date'))));
-		} else {
-			$to_date = date("t/m/Y", strtotime(date('Y-m-d')));
-		}
-		$type = $this->input->get('report_type');
+// 		if($this->input->get('to_date')){
+// 			$to_date = date('Y-m-d', strtotime(str_replace('/', '-', $this->input->get('to_date'))));
+// 		} else {
+// 			$to_date = date("t/m/Y", strtotime(date('Y-m-d')));
+// 		}
+// 		$type = $this->input->get('report_type');
 		
 		$this->db->select('ulr.*,date_format(ulr.created_at,"%d/%m/%Y") as created_at,
                             (select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = ulr.reference_id and c.request_type in ("NH_FH")) as NHFH,
                             (select GROUP_CONCAT(c.date_from) from users_leave_requests c WHERE c.request_id = ulr.reference_id and c.request_type in ("OFF_DAY")) as COFF,
                             date_format(ulr.date_from,"%d/%m/%Y") as from_date,date_format(ulr.date_to,"%d/%m/%Y") as to_date');
-		if(isset($from_date)){
-			$this->db->where('ulr.created_at >=',$from_date);
-			$this->db->where('ulr.created_at <=',$to_date);
-		}
-		if(isset($type) && $type != 'All'){
-			$this->db->where('ulr.request_type',$type);
-		}
-		$this->db->order_by('id','desc');
+// 		if(isset($from_date)){
+// 			$this->db->where('ulr.created_at >=',$from_date);
+// 			$this->db->where('ulr.created_at <=',$to_date);
+// 		}
+// 		if(isset($type) && $type != 'All'){
+// 			$this->db->where('ulr.request_type',$type);
+// 		}
+		$this->db->order_by('id,request_type','desc');
 		$data['records'] = $this->db->get_where('users_leave_requests ulr',array('ulr.ecode'=>$ecode,'ulr.status'=>1))->result_array();
 		
 		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));
