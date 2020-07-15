@@ -66,7 +66,7 @@ $colors = array('#ff6347','#ff6347','#1e90ff','#3cb371','#808080','#6a5acd','#ee
 					        
 					        
 					        $url = str_replace("{{baseurl}}",base_url(),$link["url"]);
-					        $url = str_replace("{{empportal_url}}",'http://192.168.25.34/EmployeePortal/PCR/Message.aspx?',$url);
+					        $url = str_replace("{{empportal_url}}",$this->config->item('empportal_url'),$url);
 					        $url = str_replace("{{userId}}",base64_encode($this->session->userdata('ecode')),$url);
 					        
 					        
