@@ -34,7 +34,7 @@
           		<div id="pending_requests" class="tab-pane active"><br>
           			<div class="row">
           			<div class="col-5">
-        				<div class="card card-info">
+        				<div class="card card-info" style="height: 250px; overflow-y:scroll;">
         				  <div class="card-body">			
         				  	<table class="table-bordered table-striped" width="100%">
         				  		<tr class="bg-dark text-center">
@@ -90,10 +90,10 @@
         				</div>
         			 </div>
         			 </div>
+        			 <hr/>
         			 
         			 
-        			 
-        			 <div id="form_detail"></div>
+        			 <div class="col-8" id="form_detail"></div>
         			 
         			 
         			 
@@ -182,6 +182,10 @@ $(document).ready(function(){
                 $('#leave_id').html(x);
         	} 
 		});
+	});
+
+	$(document).on('change','#leave_id,#department_id',function(){
+		$('#form_detail').html('');
 	});
 
 	$(document).on('click','#view',function(){

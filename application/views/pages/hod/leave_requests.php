@@ -52,7 +52,7 @@
     									<th>REQUEST SUBMIT DATE</th>
     									<th>LEAVE DATE'S</th>
     									<th>LEAVE DURATION</th>
-    									<th>LEAVE ADJUSTMENT'S</th>
+    									<!-- <th>LEAVE ADJUSTMENT'S</th>  -->
     									<th>REASON</th>
     									<th>REMARK</th>
     									<th>HOD STATUS</th>
@@ -90,7 +90,7 @@
     									<th>REQUEST SUBMIT DATE</th>
     									<th>LEAVE DATE'S</th>
     									<th>LEAVE DURATION</th>
-    									<th>LEAVE ADJUSTMENT'S</th>
+    							     <!-- <th>LEAVE ADJUSTMENT'S</th> -->
     									<th>REASON</th>
     									<th>REMARK</th>
     									<th>HOD STATUS</th>
@@ -203,11 +203,11 @@ $(document).ready(function(){
             						'<td>'+ value.created_at +'</td>'+
             						'<td>'+ value.date_from +'</td>'+
             						'<td>'+ value.duration +'</td>';
-            						if(value.hr_status == 'pending'){
-            							x = x + '<td>COFF\'s:</br></br>NH/FH\'s:</br></td>';
-            						} else {
-            					    	x = x + '<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>';
-            						}
+//             						if(value.hr_status == 'pending'){
+//             							x = x + '<td>COFF\'s:</br></br>NH/FH\'s:</br></td>';
+//             						} else {
+//             					    	x = x + '<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>';
+//             						}
             						x = x + '<td>'+ value.requirment +'</td>'+
             						'<td><textarea id="hod_remark_'+ value.id +'">'+ value.hod_remark +'</textarea></td>'+
     								'<td><select class="hod_status" data-rid="'+ value.id +'">'+
@@ -267,11 +267,11 @@ $(document).ready(function(){
             						'<td>'+ value.created_at +'</td>'+
             						'<td>'+ value.date_from +'</td>'+
             						'<td>'+ value.duration +'</td>';
-            						if(value.hr_status == 'pending'){
-            					    	x = x + '<td>COFF\'s:</br></br>NH/FH\'s:</br></td>';
-            						} else {
-            							x = x + '<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>';
-                					}
+//             						if(value.hr_status == 'pending'){
+//             					    	x = x + '<td>COFF\'s:</br></br>NH/FH\'s:</br></td>';
+//             						} else {
+//             							x = x + '<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>';
+//                 					}
             						x = x +'<td>'+ value.requirment +'</td>'+
             						'<td>'+ value.hod_remark +'</td>'+  	
                     				'<td>'+ value.hod_status +'</td>'+

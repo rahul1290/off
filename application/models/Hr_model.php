@@ -44,6 +44,8 @@ class Hr_model extends CI_Model {
         $result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'LEAVE',
             'ulr.hod_status'=>'GRANTED',
             'ulr.hr_status'=>'PENDING','ulr.status'=>1))->result_array();
+        
+        print_r($this->db->last_query()); die;
         return $result;
     }
     
