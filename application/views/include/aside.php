@@ -98,17 +98,6 @@ foreach($links as $link){
                   <p>TOUR REQUEST FORM</p>
                 </a>
               </li> */ ?>
-			  
-			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('ALL REPORT',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
-                <a href="<?php echo base_url('es/All-Report'); ?>" class="nav-link ml-3
-					<?php if($this->uri->segment('2') == 'All-Report'){ echo "active"; } ?>
-				">
-                  
-				  <i class="fas fa-street-view text-danger mr-1"></i>
-                  <p>ALL REPORT</p>
-                </a>
-              </li>
-			  
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('NH/FH AVAIL FORM',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('es/NH-FH-Avail-Form');?>" class="nav-link ml-3
 					<?php if($this->uri->segment('2') == 'NH-FH-Avail-Form'){ echo "active"; } ?>
@@ -124,6 +113,15 @@ foreach($links as $link){
 				">
 				  <i class="fab fa-product-hunt text-light mr-1"></i>
                   <p>PL SUMMARY REPORT</p>
+                </a>
+              </li>
+              <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('ALL REPORT',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+                <a href="<?php echo base_url('es/All-Report'); ?>" class="nav-link ml-3
+					<?php if($this->uri->segment('2') == 'All-Report'){ echo "active"; } ?>
+				">
+                  
+				  <i class="fas fa-street-view text-danger mr-1"></i>
+                  <p>ALL REPORT</p>
                 </a>
               </li>
             </ul>
