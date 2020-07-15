@@ -27,32 +27,50 @@
     <div class="content">
       <div class="container-fluid">
 		  
-		  <?php /*
-		  <div class="offset-md-1 col-md-10">
-			<form name="f2" method="GET" action="<?php echo base_url('es/All-Report');?>">
-				<div class="row mb-3">
-				<span class="col">
-					  <select class="form-control" name="report_type" id="report_type">
-						<option value="All">ALL REPORT</option>
-						<option value="OFF_DAY" <?php if($this->input->get('report_type') == 'OFF_DAY'){ echo "selected"; }?>>OFF DAY DUTY</option>
-						<option value="NH_FH" <?php if($this->input->get('report_type') == 'NH_FH'){ echo "selected"; }?>>NH/FH DAY DUTY</option>
-						<option value="HALF" <?php if($this->input->get('report_type') == 'HALF'){ echo "selected"; }?>>HALF DAY DUTY</option>
-					  </select>
-				</span>
-				<span class="col">
-					  <input type="text" name="from_date" id="from_date" class="form-control datepicker" value="<?php if(isset($fromdate)){ echo $fromdate; } else { echo date('01-m-Y'); }?>" autocomplete="off">
-				</span>
-				<span class="col">
-					  <input type="text" name="to_date" id="to_date" class="form-control datepicker" value="<?php if(isset($todate)){ echo $todate; } else { echo date("d/m/Y", strtotime(date('Y-m-d'))); } ?>" autocomplete="off">
-				</span>
-				<span class="col">
-					<input type="submit" value="Search" class="btn btn-secondary">
-					<a href="<?php echo base_url('es/All-Report');?>" class="btn btn-secondary">Reset</a>
-				</span>
-				</div>
-			</form>
+		  <div class="form-group row">
+			<label for="department" class="col-sm-2 col-form-label">Department</label>
+			<div class="col-sm-10">
+			  <select class="form-control" name="department" id="department">
+				<option value="0">Select Department</option>
+				<?php 
+				foreach($departments as $department){ ?>
+					<option value="<?php echo $department['id'];?>"
+					<?php if($this->uri->segment(3) == ''){  
+					       if($department['id'] == $this->session->userdata('department_id')) { echo "selected"; } } 
+					      else {
+					        if($department['id'] == $this->uri->segment(3)) { echo "selected"; }
+					      } ?>>
+					   <?php echo $department['dept_name'];?>
+					</option>
+				<?php } ?>
+			  </select>
+			</div>
 		  </div>
-		  */ ?>
+		  
+		  <div class="form-group row">
+			<label for="employee" class="col-sm-2 col-form-label">Employee Name</label>
+			<div class="col-sm-10">
+			  <select class="form-control" name="employee" id="employee">
+				<option value="0">Select Employee</option>
+				<?php 
+					foreach($users as $user){ ?>
+						<option value="<?php echo $user['ecode']; ?>"
+						<?php if($this->uri->segment(4) == ''){ 
+						          if($user['ecode'] == $this->session->userdata('ecode')) { echo "selected"; } }
+						      else {
+						          if($user['ecode'] == $this->uri->segment(4)) { echo "selected"; }
+						      }?>>
+						  <?php echo $user['name']; ?></option>
+				<?php } ?>
+			  </select>
+			</div>
+		  </div>
+		  
+		  <div class="offset-2 col-sm-10">
+		  	<input type="button" id="getDetail" value="View" class="btn btn-default">
+		  	<input type="button" value="Cancel" class="btn btn-danger">
+		  </div>
+		  <hr/>
 		
 		<ul class="nav nav-tabs">
         	<li class="nav-item">
@@ -84,9 +102,6 @@
       			<?php if(count($records)>0){ ?>	
         		  <div class="col-md-12">
         			<div class="card card-info">
-        			  <div class="card-header" style="border-radius:0px;">
-        				<span class="float-right">Current Remaining Pl's : <?php echo $pls[0]['balance']; ?></span>
-        			  </div>
         			  <div class="card-body">
         				<div class="table-responsive">
         					<table class="table table-bordered table-striped" id="example">
@@ -163,9 +178,6 @@
       			<?php if(count($records)>0){ ?>	
         		  <div class="col-md-12">
         			<div class="card card-info">
-        			  <div class="card-header" style="border-radius:0px;">
-        				<span class="float-right">Current Remaining Pl's : <?php echo $pls[0]['balance']; ?></span>
-        			  </div>
         			  <div class="card-body">
         				<div class="table-responsive">
         					<table class="table table-bordered table-striped" id="example">
@@ -236,9 +248,6 @@
       			<?php if(count($records)>0){ ?>	
         		  <div class="col-md-12">
         			<div class="card card-info">
-        			  <div class="card-header" style="border-radius:0px;">
-        				<span class="float-right">Current Remaining Pl's : <?php echo $pls[0]['balance']; ?></span>
-        			  </div>
         			  <div class="card-body">
         				<div class="table-responsive">
         					<table class="table table-bordered table-striped" id="example">
@@ -310,9 +319,6 @@
       			<?php if(count($records)>0){ ?>	
         		  <div class="col-md-12">
         			<div class="card card-info">
-        			  <div class="card-header" style="border-radius:0px;">
-        				<span class="float-right">Current Remaining Pl's : <?php echo $pls[0]['balance']; ?></span>
-        			  </div>
         			  <div class="card-body">
         				<div class="table-responsive">
         					<table class="table table-bordered table-striped" id="example">
@@ -381,9 +387,6 @@
       			<?php if(count($records)>0){ ?>	
         		  <div class="col-md-12">
         			<div class="card card-info">
-        			  <div class="card-header" style="border-radius:0px;">
-        				<span class="float-right">Current Remaining Pl's : <?php echo $pls[0]['balance']; ?></span>
-        			  </div>
         			  <div class="card-body">
         				<div class="table-responsive">
         					<table class="table table-bordered table-striped" id="example">
@@ -459,9 +462,6 @@
     		  	<?php if(count($records)>0){ ?>	
         		  <div class="col-md-12">
         			<div class="card card-info">
-        			  <div class="card-header" style="border-radius:0px;">
-        				<span class="float-right">Current Remaining Pl's : <?php echo $pls[0]['balance']; ?></span>
-        			  </div>
         			  <div class="card-body">
         				<div class="table-responsive">
         					<table class="table table-bordered table-striped" id="example">
@@ -567,5 +567,12 @@ $('#example').DataTable();
         	}
 		});
 	});
+
+	$(document).on('click','#getDetail',function(){
+		var department = $('#department').val();
+		var employee = $('#employee').val();
+		window.location=baseUrl+'es/All-Report/'+ department +'/'+employee;
+	});
+	
 </script>
 </body>

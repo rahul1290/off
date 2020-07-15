@@ -22,6 +22,7 @@ $route['es/off-day-duty-form'] = 'Emp_ctrl/off_day_duty_form/';
 $route['es/nh-fh-day-duty-form'] = 'Emp_ctrl/nh_fh_day_duty_form/';
 $route['es/Tour-Request-Form'] = 'Emp_ctrl/tour_request_form/';
 $route['es/All-Report'] = 'Emp_ctrl/all_report/';
+$route['es/All-Report/(:any)/(:any)'] = 'Emp_ctrl/all_report/$1/$2';
 $route['es/NH-FH-Avail-Form'] = 'Emp_ctrl/nh_fh_avail_form/';
 $route['es/PL-Summary-Report'] = 'Emp_ctrl/pl_summary_report/';
 $route['es/Attendance-Record'] = 'Emp_ctrl/attendance/';
