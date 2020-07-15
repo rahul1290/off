@@ -461,7 +461,7 @@ class Etl_ctrl extends CI_Controller {
     		foreach($results as $result){
     			$temp = array();
     			$temp['request_type'] = 'OFF_DAY';
-    			$temp['refrence_id'] = $result['ID'];
+    			$temp['reference_id'] = $result['ID'];
     			$temp['ecode'] = $result['EmpCode'];
     			$temp['requirment'] = $result['Requirement'];
     			$temp['date_from'] = $result['Date1'];
@@ -496,7 +496,7 @@ class Etl_ctrl extends CI_Controller {
     		foreach($results as $result){
     			$temp = array();
     			$temp['request_type'] = 'LEAVE';
-    			$temp['refrence_id'] = $result['Emp_Req_No'];
+    			$temp['reference_id'] = $result['Emp_Req_No'];
     			$temp['ecode'] = $result['Emp_Code'];
     			$temp['requirment'] = $result['LReason'];
     			$temp['date_from'] = $result['Leave_From'];
@@ -638,7 +638,7 @@ class Etl_ctrl extends CI_Controller {
         	$insert_record = array();
     		foreach($results as $result){
     			$temp['request_type'] = 'HALF';
-    			$temp['refrence_id'] = $result['ID'];
+    			$temp['reference_id'] = $result['ID'];
     			$temp['ecode'] = $result['EmpCode'];
     			$temp['requirment'] = $result['Reason'];
     			$temp['date_from'] = $result['RDate'];
@@ -676,7 +676,7 @@ class Etl_ctrl extends CI_Controller {
     		$insert_record = array();
     		foreach($results as $result){
     			$temp['request_type'] = 'NH_FH';
-    			$temp['refrence_id'] = $result['ID'];
+    			$temp['reference_id'] = $result['ID'];
     			$temp['ecode'] = $result['EmpCode'];
     			$temp['requirment'] = $result['Requirement'];
     			$temp['date_from'] = $result['Date1'];
@@ -715,7 +715,7 @@ class Etl_ctrl extends CI_Controller {
 	        foreach($results as $result){
 	            $temp = array();
 	            $temp['request_type'] = 'NH_FH_AVAIL';
-	            $temp['refrence_id'] = $result['ID'];
+	            $temp['reference_id'] = $result['ID'];
 	            $temp['ecode'] = $result['EmpCode'];
 	            $temp['requirment'] = $result['Requirement'];
 	            $temp['date_from'] = $this->my_library->mydate(substr($result['workoffday'], 0,10));
