@@ -50,7 +50,7 @@ class Nh_fh_model extends CI_Model {
 	
 	function user_nhfh_requests($ecode){
 		$this->db->select('*,date_format(created_at,"%d/%m/%Y") as created_at,date_format(date_from,"%d/%m/%Y") as date');
-		$this->db->order_by('id','asc');
+		$this->db->order_by('id','desc');
 		$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'request_type'=>'NH_FH','status'=>1))->result_array();
 		return $result;
 	}
@@ -69,7 +69,7 @@ class Nh_fh_model extends CI_Model {
 	    $date = $this->db->get_where('nh_fh_master',array('id'=>$data['nhfh_date'],'status'=>1))->result_array();
 	    
 	    $ref['request_type'] = 'NH_FH_AVAIL';
-	    $ref['refrence_id'] = 'NH_HF_AVAIL-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
+	    $ref['reference_id'] = 'NH_HF_AVAIL-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
 	    
 	    if(count($date)>0){    //if nh/fh date axist 
     	    $this->db->select('*');
@@ -84,7 +84,7 @@ class Nh_fh_model extends CI_Model {
                if(!count($result)>0){  // if user already applied
                    $this->db->insert('users_leave_requests',array(
                        'request_type'   => 'NH_FH_AVAIL',
-                       'refrence_id'    => $ref['refrence_id'],
+                       'reference_id'    => $ref['reference_id'],
                        'ecode'          => $this->session->userdata('ecode'),
                        'requirment'     => $data['requirment'],
                        'date_from'      => $date[0]['nhfh_date'],
@@ -94,7 +94,7 @@ class Nh_fh_model extends CI_Model {
                    
                    $x = $this->db->insert_id();
                    $this->db->where('id',$x);
-                   $this->db->update('users_leave_requests',array('refrence_id'=>$ref['refrence_id'].'-'.$x));
+                   $this->db->update('users_leave_requests',array('reference_id'=>$ref['reference_id'].'-'.$x));
                    return true; 
                } else {
                    return false;
