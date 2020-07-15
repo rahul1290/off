@@ -247,7 +247,7 @@ class Emp_ctrl extends CI_Controller {
                     $this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your Leave request submitted successfully.</h3>');
                     
                     $mailIds = $this->my_library->getMailIds($this->session->userdata('ecode'));
-                    $this->my_library->sentmail('Emp2 testing',$mailIds);                    
+                    //$this->my_library->sentmail('Emp2 testing',$mailIds);                    
                     redirect('es/leave-request','refresh');
                 }
 	        }
@@ -389,10 +389,7 @@ class Emp_ctrl extends CI_Controller {
 						$this->db->update('users_leave_requests',array('reference_id'=>$data['reference_id'].'-'.$id));
 						
 						$mailIds = $this->my_library->getMailIds($this->session->userdata('ecode'));
-						$this->my_library->sentmail('Emp2 Half day testing',$mailIds);  
-						
-						$mailIds = $this->my_library->getMailIds($this->session->userdata('ecode'));
-						$this->my_library->sentmail('Emp2 HF testing',$mailIds);
+						//$this->my_library->sentmail('Emp2 HF testing',$mailIds);
 						
 						$this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your HALF day duty request send successfully.</h3>');
 					} else {
@@ -528,7 +525,7 @@ class Emp_ctrl extends CI_Controller {
 						$this->db->update('users_leave_requests',array('reference_id'=>$data['reference_id'].'-'.$id));
 					
 						$mailIds = $this->my_library->getMailIds($this->session->userdata('ecode'));
-						$this->my_library->sentmail('Emp2 off day duty testing',$mailIds);
+						//$this->my_library->sentmail('Emp2 off day duty testing',$mailIds);
 						
 						$this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your OFF day duty request send successfully.</h3>');
 					} else {
@@ -866,7 +863,7 @@ class Emp_ctrl extends CI_Controller {
 	            if($this->Nh_fh_model->nh_fh_avail($data)){
 	                
 	                $mailIds = $this->my_library->getMailIds($this->session->userdata('ecode'));
-	                $this->my_library->sentmail('Emp2 NHFH avail testing',$mailIds);         
+	                //$this->my_library->sentmail('Emp2 NHFH avail testing',$mailIds);         
 	                
 	                $this->session->set_flashdata('msg', '<h3 class="bg-success p-2 text-center">Your NH/FH AVAIL Request submitted successfully.</h3>');
 	                redirect(base_url('es/NH-FH-Avail-Form'),'refresh');

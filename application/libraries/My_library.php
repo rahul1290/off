@@ -178,7 +178,6 @@ class My_library {
 	}
 	    
 	function sentmail($sub="emp2",$mail_body,$sendto){
-		
 	    if($this->CI->config->item('mail')){
     		$tos = '';
     		foreach($sendto as $send){
