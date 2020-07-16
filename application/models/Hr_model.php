@@ -44,8 +44,6 @@ class Hr_model extends CI_Model {
         $result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'LEAVE',
             'ulr.hod_status'=>'GRANTED',
             'ulr.hr_status'=>'PENDING','ulr.status'=>1))->result_array();
-        
-        print_r($this->db->last_query()); die;
         return $result;
     }
     
@@ -92,12 +90,12 @@ class Hr_model extends CI_Model {
         
         $this->db->where('reference_id',$data['application_no']);
         $this->db->update('users_leave_requests',array(
-                                    'hr_status'=>'GRANTED',
-                                    'hr_id' => $this->session->userdata('ecode'),
-                                    'hr_remark'=>'',
-                                    'hr_remark_date'=>date('y-m-d H:i:s'),
-                                    'pl'=>$data['pls'],
-                                    'lop'=>$data['lop'])
+                                'hr_status'=>'GRANTED',
+                                'hr_id' => $this->session->userdata('ecode'),
+                                'hr_remark'=>'',
+                                'hr_remark_date'=>date('y-m-d H:i:s'),
+                                'pl'=>$data['pls'],
+                                'lop'=>$data['lop'])
             );
         
         if(isset($data['coff'])){
@@ -124,7 +122,8 @@ class Hr_model extends CI_Model {
                 'refrence_no' => $data['application_no'],
                 'ecode' => $empDetail[0]['ecode'],
                 'credit' => NULL,
-                'debit' => $pls[0]['balance'] - $data['pls'],
+                'debit' => $data['pls'],
+                'balance' => $pls[0]['balance'] - $data['pls'],
                 'date' => date('Y-m-d H:i:s'),
                 'created_at' => date('Y-m-d H:i:s'),
                 'created_by' => $this->session->userdata('ecode'),

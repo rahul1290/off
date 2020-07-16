@@ -258,7 +258,7 @@ $(document).ready(function(){
                       	  '<div class="form-group row" style="margin-bottom:0px;background-color: bisque;">'+
                       		'<label for="inputPassword" class="col-3 col-form-label">Leave Duration:</label>'+
                       		'<div class="col-9">'+
-                      			response.data.leave_detail[0]['duration']+
+                      		response.data.leave_detail[0]['date_from'] +' TO '+ response.data.leave_detail[0]['date_to'] +' <b>: '+ response.data.leave_detail[0]['duration']+'</b>'+
                       		'</div>'+
                     	  '</div>'+
                     	  '<div class="form-group row" style="margin-bottom:0px;background-color: aliceblue;">'+
