@@ -343,6 +343,10 @@ $(document).ready(function(){
                 	  					x = x + '</select>'+
                 	  				'</td>'+
                 	  			'</tr>'+
+                	  			'<tr>'+
+                	  				'<td>Hod Remark</td>'+
+                	  				'<td colspan="2"><textarea class="form-control" name="hr_remark" id="hr_remark"></textarea></td>'+
+                	  			'</tr>'+
                 	  		'</table>'+
                 	  		'<div class="text-center">'+
                 	  			'<input type="button" id="submit" class="btn btn-success" value="Ok">'+
@@ -410,7 +414,7 @@ $(document).ready(function(){
         			$.each(response.data.final_array,function(key,value){
             			x = x + '<tr>'+
             						'<td>'+ parseInt(c++) +'</td>'+
-            						'<td>'+ value.refrence_id +'</td>'+
+            						'<td>'+ value.reference_id +'</td>'+
             						'<td>'+ value.created_at +'</td>'+
             						'<td>'+ value.date_from +'</td>'+
             						//'<td>'+ value.date_to +'</td>'+
@@ -421,14 +425,8 @@ $(document).ready(function(){
             						'<td>COFF\'s:</br>'+ value.COFF +'</br>NH/FH\'s:</br>'+ value.NHFH +'</td>'+
             						'<td>'+ value.hod_remark +'</td>'+
             						'<td>'+ value.hod_status +'</td>'+
-    							  	'<td><textarea name="" id="" data-rid="'+ value.id +'" class="hr_remark form-control"></textarea></td>'+
-        						  	'<td>'+
-        								'<select class="hr_status" name="hr_status" data-rid="'+ value.id +'">'+
-											'<option value="PENDING" selected>PENDING</option>'+
-											'<option  value="REJECTED">REJECTED</option>'+
-											'<option  value="GRANTED">GRANTED</option>'+
-										'</select>'+
-    						      	'</td>'+  	
+    							  	'<td>'+ value.hr_remark +'</td>'+
+    							  	'<td>'+ value.hr_status +'</td>'+  	
             					'</tr>';
             		});         	
             		$('#leave_requests_body').html(x);

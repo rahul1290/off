@@ -156,6 +156,7 @@ class Hr_ctrl extends CI_Controller {
 	    $data['coff'] = $this->input->post('coff');
 	    $data['pls'] = $this->input->post('pls');
 	    $data['lop'] = $this->input->post('lop');
+	    $data['hr_remark'] = $this->input->post('hr_remark');
 	    if($this->Hr_model->leave_request_submit($data)){
 	        echo json_encode(array('msg'=>'Record updated successfully.','status'=>200));
 	    } else {

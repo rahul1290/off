@@ -34,7 +34,7 @@
               		
               		<div class="row">
                   		<div class="col-5">
-            				<div class="card card-info">
+            				<div class="card card-info" style="height: 250px; overflow-y:scroll;">
             				  <div class="card-body">
             					<table class="table table-bordered">
             						<tr class="bg-dark text-center">
@@ -92,6 +92,7 @@
             			</div>
         			</div>
               	</div>
+              	<hr/>
               	
               	<div id="previous_requests" class="tab-pane fade"><br>
               		
@@ -155,7 +156,7 @@
               	</div>
               	
               	
-              	<div id="form_detail"></div>
+              	<div class="col-8" id="form_detail"></div>
               	
               </div>
 			  

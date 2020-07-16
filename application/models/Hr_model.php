@@ -92,7 +92,7 @@ class Hr_model extends CI_Model {
         $this->db->update('users_leave_requests',array(
                                 'hr_status'=>'GRANTED',
                                 'hr_id' => $this->session->userdata('ecode'),
-                                'hr_remark'=>'',
+                                'hr_remark'=>$data['hr_remark'],
                                 'hr_remark_date'=>date('y-m-d H:i:s'),
                                 'pl'=>$data['pls'],
                                 'lop'=>$data['lop'])

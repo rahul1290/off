@@ -501,8 +501,6 @@ class Etl_ctrl extends CI_Controller {
     			$temp['requirment'] = $result['LReason'];
     			$temp['date_from'] = $result['Leave_From'];
     			$temp['date_to'] = $result['Leave_to'];
-    			$temp['hod_remark'] = $result['HOD_Remarks'];
-    			$temp['hod_status'] = $result['HOD_Approval'];
     			$temp['hod_id'] = '';
     			$string = $result['OFF_Taken'];
     			$string2 = $result['HR_Remarks'];
@@ -607,21 +605,76 @@ class Etl_ctrl extends CI_Controller {
     			    }
     			}
     			
+    			$status_code = $result['Final_Status'];
+    			if($status_code == 'A'){
+    			    $temp['hod_remark'] = $result['HOD_Remarks'];
+    			    $temp['hod_status'] = $result['HOD_Approval'];
+    			    $temp['hod_remark_date'] = $result['Approval_Date'];
+    			    $temp['hr_remark'] = $result['HR_Remarks'];
+    			    $temp['hr_status'] = $result['HR_Approval'];
+    			    $temp['hr_id'] = '';
+    			    $temp['hr_remark_date'] = $result['HR_Approval_Date'];
+    			    $temp['status'] = 1;
+    			}
+    			else if($status_code == 'R'){
+    			    $temp['hod_remark'] = '';
+    			    $temp['hod_status'] = 'PENDING';
+    			    $temp['hod_remark_date'] = '';
+    			    $temp['hr_remark'] = '';
+    			    $temp['hr_status'] = '';
+    			    $temp['hr_id'] = '';
+    			    $temp['hr_remark_date'] = '';
+    			    $temp['status'] = 1;                 //pending
+    			}
+    			else if($status_code == 'X'){
+    			    $temp['hod_remark'] = '';
+    			    $temp['hod_status'] = 'PENDING';
+    			    $temp['hod_remark_date'] = '';
+    			    $temp['hr_remark'] = '';
+    			    $temp['hr_status'] = '';
+    			    $temp['hr_id'] = '';
+    			    $temp['hr_remark_date'] = '';
+    			    $temp['status'] = 2;             //cancel self
+    			}
+    			else if($status_code == 'XA'){
+    			    $temp['hod_remark'] = $result['HOD_Remarks'];
+    			    $temp['hod_status'] = 'REJECTED';
+    			    $temp['hod_remark_date'] = $result['Approval_Date'];
+    			    $temp['hr_remark'] = '';
+    			    $temp['hr_status'] = '';
+    			    $temp['hr_id'] = '';
+    			    $temp['hr_remark_date'] = '';
+    			    $temp['status'] = 3;         // cancel hod
+    			}
+    			else if($status_code == 'XH'){
+    			    $temp['hod_remark'] = $result['HOD_Remarks'];
+    			    $temp['hod_status'] = $result['HOD_Approval'];
+    			    $temp['hod_remark_date'] = $result['Approval_Date'];
+    			    $temp['hr_remark'] = $result['HR_Remarks'];
+    			    $temp['hr_status'] = 'REJECTED';
+    			    $temp['hr_id'] = '';
+    			    $temp['hr_remark_date'] = $result['HR_Approval_Date'];
+    			    $temp['status'] = 4;         //cancel HR
+    			} else {
+    			    $temp['hod_remark'] = $result['HOD_Remarks'];
+    			    $temp['hod_status'] = $result['HOD_Approval'];
+    			    $temp['hod_remark_date'] = $result['Approval_Date'];
+    			    $temp['hr_remark'] = $result['HR_Remarks'];
+    			    $temp['hr_status'] = $result['HR_Approval'];
+    			    $temp['hr_id'] = '';
+    			    $temp['hr_remark_date'] = $result['HR_Approval_Date'];
+    			    $temp['status'] = 1;         //pending
+    			}
     			
-    			$temp['hod_remark_date'] = $result['Approval_Date'];
-    			$temp['hr_remark'] = $result['HR_Remarks'];
-    			$temp['hr_status'] = $result['HR_Approval'];
-    			$temp['hr_id'] = '';
-    			$temp['hr_remark_date'] = $result['HR_Approval_Date'];
     			$temp['created_at'] = $result['App_Date'];
     			$temp['wod'] = $result['WODay'];
     			$temp['request_id'] = '';
     			$temp['pl'] = $result['PLTaken'];
     			$temp['lop'] = '';
-    			$temp['status'] = 1;
     			
     			$insert_record[] = $temp;
     		}
+    		
     		if($this->db->insert_batch('users_leave_requests',$insert_record))
     			return true;
     		else	
@@ -681,20 +734,61 @@ class Etl_ctrl extends CI_Controller {
     			$temp['requirment'] = $result['Requirement'];
     			$temp['date_from'] = $result['Date1'];
     			$temp['date_to'] = $result['Date1'];
-    			$temp['hod_remark'] = $result['HODRemarks'];
-    			$temp['hod_status'] = $result['HODApp'];
-    			$temp['hod_id'] = NULL;
-    			$temp['hod_remark_date'] = NULL;
-    			$temp['hr_remark'] = '';
-    			$temp['hr_status'] = $result['HRStatus'];
-    			$temp['hr_id'] = '';
-    			$temp['hr_remark_date'] = NULL;
-    			$temp['created_at'] = $result['AppDate'];
+    			
+    			if($result['Status'] == 'R'){                    ///peding
+    			    $temp['hod_remark'] = '';
+    			    $temp['hod_status'] = 'PENDING';
+    			    $temp['hod_id'] = NULL;
+    			    $temp['hod_remark_date'] = NULL;
+    			    $temp['hr_remark'] = '';
+    			    $temp['hr_status'] = 'PENDING';
+    			    $temp['hr_id'] = '';
+    			    $temp['hr_remark_date'] = NULL;
+    			    $temp['created_at'] = $result['AppDate'];
+    			    $temp['status'] = 1;
+    			    
+    			} else if($result['Status'] == 'A'){            /// HOD aproved
+    			    $temp['hod_remark'] = $result['HODRemarks'];
+    			    $temp['hod_status'] = $result['HODApp'];
+    			    $temp['hod_id'] = NULL;
+    			    $temp['hod_remark_date'] = NULL;
+    			    $temp['hr_remark'] = '';
+    			    $temp['hr_status'] = 'PENDING';
+    			    $temp['hr_id'] = '';
+    			    $temp['hr_remark_date'] = NULL;
+    			    $temp['created_at'] = $result['AppDate'];
+    			    $temp['status'] = 1;
+    			    
+    			}else if($result['Status'] == 'X'){          //  HOD rejected
+    			    $temp['hod_remark'] = $result['HODRemarks'];
+    			    $temp['hod_status'] = $result['HODApp'];
+    			    $temp['hod_id'] = NULL;
+    			    $temp['hod_remark_date'] = NULL;
+    			    $temp['hr_remark'] = '';
+    			    $temp['hr_status'] = 'PENDING';
+    			    $temp['hr_id'] = '';
+    			    $temp['hr_remark_date'] = NULL;
+    			    $temp['created_at'] = $result['AppDate'];
+    			    $temp['status'] = 3;
+    			    
+    			} else {
+    			    $temp['hod_remark'] = $result['HODRemarks'];
+    			    $temp['hod_status'] = $result['HODApp'];
+    			    $temp['hod_id'] = NULL;
+    			    $temp['hod_remark_date'] = NULL;
+    			    $temp['hr_remark'] = '';
+    			    $temp['hr_status'] = $result['HRStatus'];
+    			    $temp['hr_id'] = '';
+    			    $temp['hr_remark_date'] = NULL;
+    			    $temp['created_at'] = $result['AppDate'];
+    			    $temp['status'] = 1;
+    			}
+    			
+    			
     			$temp['wod'] = NULL;
     			$temp['request_id'] = '';
     			$temp['pl'] = NULL;
     			$temp['lop'] = '';
-    			$temp['status'] = 1;
     			$insert_record[] = $temp;
     		}
     		if($this->db->insert_batch('users_leave_requests',$insert_record))
