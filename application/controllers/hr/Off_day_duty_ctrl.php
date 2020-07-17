@@ -64,23 +64,35 @@ class Off_day_duty_ctrl extends CI_Controller {
 	    }
 	}
 	
-	function request_detail(){
-	    $data['ref_id'] = $this->input->post('ref_id');
-	    $result = $this->Off_day_duty_model->request_detail($data);
+	
+	function request_list(){
+	    $data['dept_id'] = $this->input->post('dept_id');
+	    $result = $this->Off_day_duty_model->request_list($data);
 	    if(count($result)>0){
-	        echo json_encode(array('data'=>$result,'msg'=>'','status'=>200));
+	        echo json_encode(array('data'=>$result,'msg'=>'requests list.','status'=>200));
 	    } else {
-	        echo json_encode(array('msg'=>'No record found.','status'=>500));
+	        echo json_encode(array('msg'=>'requests list.','status'=>500));
 	    }
 	}
 	
-	function get_off_day_duty_ids(){
-	    $data['dept_id'] = $this->input->post('dept_id');
-	    $result = $this->Off_day_duty_model->get_off_day_duty_ids($data);
-	    if(count($result)>0){
-	        echo json_encode(array('data'=>$result,'msg'=>'','status'=>200));
-	    } else {
-	        echo json_encode(array('msg'=>'No record found.','status'=>500));
-	    }
-	}
+// 	function request_detail(){
+// 	    $data['ref_id'] = $this->input->post('ref_id');
+// 	    $result = $this->Off_day_duty_model->request_detail($data);
+// 	    if(count($result)>0){
+// 	        echo json_encode(array('data'=>$result,'msg'=>'','status'=>200));
+// 	    } else {
+// 	        echo json_encode(array('msg'=>'No record found.','status'=>500));
+// 	    }
+// 	}
+	
+	
+// 	function get_off_day_duty_ids(){
+// 	    $data['dept_id'] = $this->input->post('dept_id');
+// 	    $result = $this->Off_day_duty_model->get_off_day_duty_ids($data);
+// 	    if(count($result)>0){
+// 	        echo json_encode(array('data'=>$result,'msg'=>'','status'=>200));
+// 	    } else {
+// 	        echo json_encode(array('msg'=>'No record found.','status'=>500));
+// 	    }
+// 	}
 }

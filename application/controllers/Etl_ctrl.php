@@ -466,15 +466,67 @@ class Etl_ctrl extends CI_Controller {
     			$temp['requirment'] = $result['Requirement'];
     			$temp['date_from'] = $result['Date1'];
     			$temp['date_to'] = $result['Date1'];
-    			$temp['hod_remark'] = $result['HODRemarks'];
-    			$temp['hod_status'] = $result['HODApp'];
-    			$temp['hod_id'] = '';
-    			$temp['hod_remark_date'] = '';
-    			$temp['hr_remark'] = '';
-    			$temp['hr_status'] = $result['HRStatus'];
-    			$temp['hr_id'] = '';
-    			$temp['hr_remark_date'] = '';
     			$temp['created_at'] = $result['AppDate'];
+    			$temp['status'] = 1;
+    			
+    			if($result['Status'] == 'R'){
+    			    $temp['hod_remark'] = null;
+    			    $temp['hod_status'] = 'PENDING';
+    			    $temp['hod_id'] = null;
+    			    $temp['hod_remark_date'] = null;
+    			    $temp['hr_remark'] = null;
+    			    $temp['hr_status'] = 'PENDING';
+    			    $temp['hr_id'] = null;
+    			    $temp['hr_remark_date'] = null;
+    			    $temp['request_status_code'] = 1;
+    			} 
+    			else if($result['Status'] == 'A'){
+    			    $temp['hod_remark'] = $result['HODRemarks'];
+    			    $temp['hod_status'] = 'GRANTED';
+    			    $temp['hod_id'] = null;
+    			    $temp['hod_remark_date'] = null;
+    			    $temp['hr_remark'] = null;
+    			    $temp['hr_status'] = 'PENDING';
+    			    $temp['hr_id'] = null;
+    			    $temp['hr_remark_date'] = null;
+    			    $temp['request_status_code'] = 2;
+    			}
+    			else if($result['Status'] == 'av'){
+    			    $temp['hod_remark'] = $result['HODRemarks'];
+    			    $temp['hod_status'] = 'GRANTED';
+    			    $temp['hod_id'] = null;
+    			    $temp['hod_remark_date'] = $result['AppDate'];
+    			    $temp['hr_remark'] = null;
+    			    $temp['hr_status'] = 'GRANTED';
+    			    $temp['hr_id'] = null;
+    			    $temp['hr_remark_date'] = $result['AppDate'];
+    			    $temp['request_status_code'] = 3;
+    			}
+    			else if($result['Status'] == 'XH'){
+    			    $temp['hod_remark'] = $result['HODRemarks'];
+    			    $temp['hod_status'] = 'REJECTED';
+    			    $temp['hod_id'] = null;
+    			    $temp['hod_remark_date'] = null;
+    			    $temp['hr_remark'] = null;
+    			    $temp['hr_status'] = null;
+    			    $temp['hr_id'] = null;
+    			    $temp['hr_remark_date'] = null;
+    			    $temp['request_status_code'] = 4;
+    			}
+    			else if($result['Status'] == 'X'){
+    			    $temp['hod_remark'] = null;
+    			    $temp['hod_status'] = null;
+    			    $temp['hod_id'] = null;
+    			    $temp['hod_remark_date'] = null;
+    			    $temp['hr_remark'] = null;
+    			    $temp['hr_status'] = null;
+    			    $temp['hr_id'] = null;
+    			    $temp['hr_remark_date'] = null;
+    			    $temp['request_status_code'] = 6;
+    			    $temp['status'] = 0;
+    			}
+    			
+    			
     			$insert_record[] = $temp;
     		}
     		
@@ -604,6 +656,7 @@ class Etl_ctrl extends CI_Controller {
     			        }
     			    }
     			}
+    			$temp['status'] = 1;
     			
     			$status_code = $result['Final_Status'];
     			if($status_code == 'A'){
@@ -614,58 +667,58 @@ class Etl_ctrl extends CI_Controller {
     			    $temp['hr_status'] = $result['HR_Approval'];
     			    $temp['hr_id'] = '';
     			    $temp['hr_remark_date'] = $result['HR_Approval_Date'];
-    			    $temp['status'] = 1;
+    			    $temp['request_status_code'] = 3;            //approved
     			}
     			else if($status_code == 'R'){
-    			    $temp['hod_remark'] = '';
+    			    $temp['hod_remark'] = null;
     			    $temp['hod_status'] = 'PENDING';
-    			    $temp['hod_remark_date'] = '';
-    			    $temp['hr_remark'] = '';
-    			    $temp['hr_status'] = '';
-    			    $temp['hr_id'] = '';
-    			    $temp['hr_remark_date'] = '';
-    			    $temp['status'] = 1;                 //pending
+    			    $temp['hod_remark_date'] = null;
+    			    $temp['hr_remark'] = null;
+    			    $temp['hr_status'] = 'PENDING';
+    			    $temp['hr_id'] = null;
+    			    $temp['hr_remark_date'] = null;
+    			    $temp['request_status_code'] = 1;            //pending
     			}
     			else if($status_code == 'X'){
-    			    $temp['hod_remark'] = '';
-    			    $temp['hod_status'] = 'PENDING';
-    			    $temp['hod_remark_date'] = '';
-    			    $temp['hr_remark'] = '';
-    			    $temp['hr_status'] = '';
-    			    $temp['hr_id'] = '';
-    			    $temp['hr_remark_date'] = '';
-    			    $temp['status'] = 2;             //cancel self
+    			    $temp['hod_remark'] = null;
+    			    $temp['hod_status'] = null;
+    			    $temp['hod_remark_date'] = null;
+    			    $temp['hr_remark'] = null;
+    			    $temp['hr_status'] = null;
+    			    $temp['hr_id'] = null;
+    			    $temp['hr_remark_date'] = null;
+    			    $temp['request_status_code'] = 6;            //self cancel
     			}
     			else if($status_code == 'XA'){
     			    $temp['hod_remark'] = $result['HOD_Remarks'];
     			    $temp['hod_status'] = 'REJECTED';
     			    $temp['hod_remark_date'] = $result['Approval_Date'];
-    			    $temp['hr_remark'] = '';
-    			    $temp['hr_status'] = '';
-    			    $temp['hr_id'] = '';
-    			    $temp['hr_remark_date'] = '';
-    			    $temp['status'] = 3;         // cancel hod
+    			    $temp['hr_remark'] = null;
+    			    $temp['hr_status'] = null;
+    			    $temp['hr_id'] = null;
+    			    $temp['hr_remark_date'] = null;
+    			    $temp['request_status_code'] = 4;        //cancel HOD
     			}
     			else if($status_code == 'XH'){
     			    $temp['hod_remark'] = $result['HOD_Remarks'];
-    			    $temp['hod_status'] = $result['HOD_Approval'];
+    			    $temp['hod_status'] = 'GRANTED';
     			    $temp['hod_remark_date'] = $result['Approval_Date'];
     			    $temp['hr_remark'] = $result['HR_Remarks'];
     			    $temp['hr_status'] = 'REJECTED';
     			    $temp['hr_id'] = '';
     			    $temp['hr_remark_date'] = $result['HR_Approval_Date'];
-    			    $temp['status'] = 4;         //cancel HR
+    			    $temp['request_status_code'] = 5;        //cancel HR
     			} else {
     			    $temp['hod_remark'] = $result['HOD_Remarks'];
-    			    $temp['hod_status'] = $result['HOD_Approval'];
+    			    $temp['hod_status'] = 'PENDING';
     			    $temp['hod_remark_date'] = $result['Approval_Date'];
     			    $temp['hr_remark'] = $result['HR_Remarks'];
-    			    $temp['hr_status'] = $result['HR_Approval'];
+    			    $temp['hr_status'] = 'PENDING';
     			    $temp['hr_id'] = '';
     			    $temp['hr_remark_date'] = $result['HR_Approval_Date'];
-    			    $temp['status'] = 1;         //pending
+    			    $temp['request_status_code'] = '';
+    			    $temp['status'] = 0;
     			}
-    			
     			$temp['created_at'] = $result['App_Date'];
     			$temp['wod'] = $result['WODay'];
     			$temp['request_id'] = '';
@@ -696,20 +749,64 @@ class Etl_ctrl extends CI_Controller {
     			$temp['requirment'] = $result['Reason'];
     			$temp['date_from'] = $result['RDate'];
     			$temp['date_to'] = $result['RDate'];
-    			$temp['hod_remark'] = $result['Remarks'];
-    			$temp['hod_status'] = $result['AppStatus'];
-    			$temp['hod_id'] = NULL;
-    			$temp['hod_remark_date'] = NULL;
-    			$temp['hr_remark'] = $result['HRRemarks'];
-    			$temp['hr_status'] = $result['HRStatus'];
-    			$temp['hr_id'] = '';
-    			$temp['hr_remark_date'] = NULL;
     			$temp['created_at'] = $result['UDate'];
     			$temp['wod'] = NULL;
-    			$temp['request_id'] = '';
+    			$temp['request_id'] = null;
     			$temp['pl'] = NULL;
     			$temp['lop'] = '';
     			$temp['status'] = 1;
+    			
+    			
+    			if($result['Status'] == 'R' && $result['HRStatus'] == 'P'){
+    			    $temp['hod_remark'] = null;
+    			    $temp['hod_status'] = 'PENDING';
+    			    $temp['hod_remark_date'] = null;
+    			    $temp['hr_remark'] = null;
+    			    $temp['hr_status'] = 'PENDING';
+    			    $temp['hr_id'] = null;
+    			    $temp['hr_remark_date'] = null;
+    			    $temp['request_status_code'] = 1;
+    			} 
+    			else if($result['Status'] == 'A' && $result['HRStatus'] == 'P'){
+    			    $temp['hod_remark'] = $result['Remarks'];
+    			    $temp['hod_status'] = 'GRANTED';
+    			    $temp['hod_remark_date'] = $result['HOD_APP_date'];
+    			    $temp['hr_remark'] = $result['HRRemarks'];
+    			    $temp['hr_status'] = 'PENDING';
+    			    $temp['hr_id'] = null;
+    			    $temp['hr_remark_date'] = $result['HOD_APP_date'];
+    			    $temp['request_status_code'] = 2;
+    			}
+    			else if($result['Status'] == 'A' && $result['HRStatus'] == 'D'){
+    			    $temp['hod_remark'] = $result['Remarks'];
+    			    $temp['hod_status'] = 'GRANTED';
+    			    $temp['hod_remark_date'] = $result['HOD_APP_date'];
+    			    $temp['hr_remark'] = $result['HRRemarks'];
+    			    $temp['hr_status'] = 'GRANTED';
+    			    $temp['hr_id'] = null;
+    			    $temp['hr_remark_date'] = $result['HOD_APP_date'];
+    			    $temp['request_status_code'] = 2;
+    			}
+    			else if($result['Status'] == 'X' && $result['HRStatus'] == 'P'){
+    			    $temp['hod_remark'] = null;
+    			    $temp['hod_status'] = null;
+    			    $temp['hod_remark_date'] = null;
+    			    $temp['hr_remark'] = null;
+    			    $temp['hr_status'] = null;
+    			    $temp['hr_id'] = null;
+    			    $temp['hr_remark_date'] = null;
+    			    $temp['request_status_code'] = 3;
+    			}
+    			else {
+    			    $temp['hod_remark'] = null;
+    			    $temp['hod_status'] = null;
+    			    $temp['hod_remark_date'] = null;
+    			    $temp['hr_remark'] = null;
+    			    $temp['hr_status'] = null;
+    			    $temp['hr_id'] = null;
+    			    $temp['hr_remark_date'] = null;
+    			    $temp['request_status_code'] = null;
+    			}
     			$insert_record[] = $temp;
     		}
     		if($this->db->insert_batch('users_leave_requests',$insert_record))
@@ -734,8 +831,9 @@ class Etl_ctrl extends CI_Controller {
     			$temp['requirment'] = $result['Requirement'];
     			$temp['date_from'] = $result['Date1'];
     			$temp['date_to'] = $result['Date1'];
+    			$temp['status'] = 1;
     			
-    			if($result['Status'] == 'R'){                    ///peding
+    			if($result['Status'] == 'R'){                    
     			    $temp['hod_remark'] = '';
     			    $temp['hod_status'] = 'PENDING';
     			    $temp['hod_id'] = NULL;
@@ -745,9 +843,9 @@ class Etl_ctrl extends CI_Controller {
     			    $temp['hr_id'] = '';
     			    $temp['hr_remark_date'] = NULL;
     			    $temp['created_at'] = $result['AppDate'];
-    			    $temp['status'] = 1;
+    			    $temp['request_status_code'] = 1;            ///peding
     			    
-    			} else if($result['Status'] == 'A'){            /// HOD aproved
+    			} else if($result['Status'] == 'A'){            
     			    $temp['hod_remark'] = $result['HODRemarks'];
     			    $temp['hod_status'] = $result['HODApp'];
     			    $temp['hod_id'] = NULL;
@@ -757,21 +855,34 @@ class Etl_ctrl extends CI_Controller {
     			    $temp['hr_id'] = '';
     			    $temp['hr_remark_date'] = NULL;
     			    $temp['created_at'] = $result['AppDate'];
-    			    $temp['status'] = 1;
+    			    $temp['request_status_code'] = 2;                     /// HOD aproved
     			    
-    			}else if($result['Status'] == 'X'){          //  HOD rejected
-    			    $temp['hod_remark'] = $result['HODRemarks'];
-    			    $temp['hod_status'] = $result['HODApp'];
+    			} else if($result['Status'] == 'X'){          
+    			    $temp['hod_remark'] = NULL;
+    			    $temp['hod_status'] = NULL;
     			    $temp['hod_id'] = NULL;
     			    $temp['hod_remark_date'] = NULL;
-    			    $temp['hr_remark'] = '';
-    			    $temp['hr_status'] = 'PENDING';
+    			    $temp['hr_remark'] = null;
+    			    $temp['hr_status'] = NULL;
     			    $temp['hr_id'] = '';
     			    $temp['hr_remark_date'] = NULL;
     			    $temp['created_at'] = $result['AppDate'];
-    			    $temp['status'] = 3;
+    			    $temp['request_status_code'] = 6;                         //  HOD rejected
     			    
-    			} else {
+    			} else if($result['Status'] == 'av'){
+    			    $temp['hod_remark'] = $result['HODRemarks'];
+    			    $temp['hod_status'] = 'GRANTED';
+    			    $temp['hod_id'] = NULL;
+    			    $temp['hod_remark_date'] = NULL;
+    			    $temp['hr_remark'] = null;
+    			    $temp['hr_status'] = 'GRANTED';
+    			    $temp['hr_id'] = '';
+    			    $temp['hr_remark_date'] = NULL;
+    			    $temp['created_at'] = $result['AppDate'];
+    			    $temp['request_status_code'] = 6;                         //  HOD rejected
+    			    
+    			}
+    			else {
     			    $temp['hod_remark'] = $result['HODRemarks'];
     			    $temp['hod_status'] = $result['HODApp'];
     			    $temp['hod_id'] = NULL;

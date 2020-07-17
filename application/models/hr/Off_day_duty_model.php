@@ -40,42 +40,61 @@ class Off_day_duty_model extends CI_Model {
         $this->db->join('users u','u.ecode = ulr.ecode');
         $this->db->join('department_master dm','dm.id = u.department_id');
         $this->db->group_by('dm.id');
+        $this->db->where('ulr.request_id IS NULL', null, false);
         $result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'OFF_DAY',
             'ulr.hod_status'=>'GRANTED',
-            'ulr.hr_status'=>'PENDING','ulr.status'=>1))->result_array();
+            'ulr.hr_status'=>'PENDING',
+            'ulr.date_from >' => date('Y-m-d', strtotime("-60 days")),
+            'ulr.status'=>1))->result_array();
         return $result;
     }
     
-    function get_off_day_duty_ids($data){
-        $this->db->select('ulr.id,ulr.reference_id');
+    
+    function request_list($data) {
+        $this->db->select('dm.id,dm.dept_name,u.name,ulr.*');
         $this->db->where('u.is_active','YES');
         $this->db->join('users u','u.ecode = ulr.ecode');
         $this->db->join('department_master dm','dm.id = u.department_id');
-        $this->db->where('dm.id',$data['dept_id']);
+        $this->db->where('ulr.request_id IS NULL', null, false);
         $result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'OFF_DAY',
             'ulr.hod_status'=>'GRANTED',
-            'ulr.hr_status'=>'PENDING','ulr.status'=>1))->result_array();
+            'ulr.hr_status'=>'PENDING',
+            'ulr.date_from >' => date('Y-m-d', strtotime("-60 days")),
+            'dm.id' => $data['dept_id'],
+            'ulr.status'=>1))->result_array();
         return $result;
     }
     
-    function request_detail($parms){
-        $this->db->select('*');
-        $data['leave_detail'] = $this->db->get_where('users_leave_requests',array('id'=>$parms['ref_id'],'status'=>1))->result_array();
+//     function get_off_day_duty_ids($data){
+//         $this->db->select('ulr.id,ulr.reference_id');
+//         $this->db->where('u.is_active','YES');
+//         $this->db->join('users u','u.ecode = ulr.ecode');
+//         $this->db->join('department_master dm','dm.id = u.department_id');
+//         $this->db->where('dm.id',$data['dept_id']);
+//         $result = $this->db->get_where('users_leave_requests ulr',array('request_type'=>'OFF_DAY',
+//             'ulr.hod_status'=>'GRANTED',
+//             'ulr.hr_status'=>'PENDING','ulr.status'=>1))->result_array();
+//         return $result;
+//     }
+    
+//     function request_detail($parms){
+//         $this->db->select('*');
+//         $data['leave_detail'] = $this->db->get_where('users_leave_requests',array('id'=>$parms['ref_id'],'status'=>1))->result_array();
         
-        if(count($data['leave_detail'])>0){
-            $data['leave_detail'][0]['duration'] = $this->my_library->day_duration($data['leave_detail'][0]['date_from'],$data['leave_detail'][0]['date_to']);
-            $this->db->select('u.*,dm.dept_name,desg.desg_name');
-            $this->db->join('department_master dm','dm.id = u.department_id');
-            $this->db->join('designation_master desg','desg.id = u.designation_id');
-            $data['user_detail'] = $this->db->get_where('users u',array('u.ecode'=>$data['leave_detail'][0]['ecode']))->result_array();
+//         if(count($data['leave_detail'])>0){
+//             $data['leave_detail'][0]['duration'] = $this->my_library->day_duration($data['leave_detail'][0]['date_from'],$data['leave_detail'][0]['date_to']);
+//             $this->db->select('u.*,dm.dept_name,desg.desg_name');
+//             $this->db->join('department_master dm','dm.id = u.department_id');
+//             $this->db->join('designation_master desg','desg.id = u.designation_id');
+//             $data['user_detail'] = $this->db->get_where('users u',array('u.ecode'=>$data['leave_detail'][0]['ecode']))->result_array();
             
-            $this->db->select('*');
-            $this->db->limit(1);
-            $this->db->order_by('id','desc');
-            $data['pls'] = $this->db->get_where('pl_management',array('ecode'=>$data['leave_detail'][0]['ecode']))->result_array();
-        }
-        return $data;
-    }
+//             $this->db->select('*');
+//             $this->db->limit(1);
+//             $this->db->order_by('id','desc');
+//             $data['pls'] = $this->db->get_where('pl_management',array('ecode'=>$data['leave_detail'][0]['ecode']))->result_array();
+//         }
+//         return $data;
+//     }
     
     function off_day_duty_request_submit($data){
         $this->db->trans_begin();

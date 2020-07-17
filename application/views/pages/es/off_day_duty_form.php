@@ -87,10 +87,8 @@
 								<th>REFERENCE No.</th>
 								<th>REQUEST SUBMIT DATE</th>
 								<th>OFF DAY DUTY DATE</th>
-								<th>REASON</th>
-								<th>HOD REMARK</th>	
+								<th>REASON</th>	
 								<th>HOD STATUS</th>
-								<th>HR REMARKS</th>
 								<th>HR STATUS</th>
 							</tr>
 						</thead>
@@ -188,11 +186,10 @@ $(document).ready(function(){
         			$.each(response.data.final_array,function(key,value){
             			x = x + '<tr>'+
             						'<td>'+ parseInt(c++) +'</td>'+
-            						'<td>'+ value.refrence_id +'</td>'+
+            						'<td>'+ value.reference_id +'</td>'+
             						'<td>'+ value.created_at +'</td>'+
             						'<td>'+ value.date_from +'</td>'+
-            						'<td>'+ value.requirment +'</td>'+
-            						'<td>'+ value.hod_remark +'</td>';
+            						'<td>'+ value.requirment +'</td>';
             						var bgcolor = '';
             						if(value.hod_status == 'REJECTED'){
             							bgcolor = 'bg-danger';
@@ -201,8 +198,7 @@ $(document).ready(function(){
                     				}else if(value.hod_status == 'PENDING'){
                 						bgcolor = 'bg-warning';
                     				}
-            						x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
-            						'<td>'+ value.hr_remark +'</td>';
+            						x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>';
             						var bgcolor = '';
             						if(value.hr_status == 'REJECTED'){
             							bgcolor = 'bg-danger';

@@ -151,9 +151,7 @@
             							<th>REASON</th>
             							<th>LEAVE DURATION</th>
             							<th>LEAVE ADJUSTMENT</th>
-            							<th>HOD REMARK</th>
             							<th>HOD STATUS</th>
-            							<th>HR REMARK</th>
     									<th>HR STATUS</th>
             						</tr>
     							</thead>
@@ -364,7 +362,6 @@ $(document).ready(function(){
             						} else {
                 						x = x + '<td></td>';
                 					}
-            						x = x + '<td>'+ value.hod_remark +'</td>';
             						var bgcolor = '';
             						if(value.hod_status == 'REJECTED'){
             							bgcolor = 'bg-danger';
@@ -374,8 +371,7 @@ $(document).ready(function(){
                 						bgcolor = 'bg-warning';
                     				}
                     				
-            						x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
-            							  '<td>'+ value.hod_remark +'</td>';
+            						x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>';
                 					var bgcolor = '';
             						if(value.hr_status == 'REJECTED'){
             							bgcolor = 'bg-danger';

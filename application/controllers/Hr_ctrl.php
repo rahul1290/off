@@ -261,7 +261,7 @@ class Hr_ctrl extends CI_Controller {
 	}
 	
 	///NH FH DAY DUTY REQUEST
-	function nh_fh_day_duty_request($ref_id = null){		
+	function nh_fh_day_duty_request($ref_id = null){
 		$data = array();
 		$data['departments'] = $this->Department_model->get_employee_department($this->session->userdata('ecode'));
 		

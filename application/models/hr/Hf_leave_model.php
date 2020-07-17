@@ -71,7 +71,7 @@ class Hf_leave_model extends CI_Model {
             
             $this->db->select('*');
             $this->db->limit(1);
-            $this->db->order_by('id','desc');
+            $this->db->order_by('date','desc');
             $data['pls'] = $this->db->get_where('pl_management',array('ecode'=>$data['leave_detail'][0]['ecode']))->result_array();   
         }
         return $data;
