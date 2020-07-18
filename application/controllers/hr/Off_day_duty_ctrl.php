@@ -32,9 +32,8 @@ class Off_day_duty_ctrl extends CI_Controller {
 	    $data['top_nav'] = $this->load->view('include/top_nav','',true);
 	    $data['aside'] = $this->load->view('include/aside',$data,true);
 	    $data['notepad'] = $this->load->view('include/shift_timing','',true);
-	    //$data['pending_requests'] = $this->Hf_leave_model->hf_leave_pending_request($ulist,$ref_id);
 	    $data['pending_requests'] = $this->Off_day_duty_model->total_off_day_duty_pending_request();
-	    $data['requests'] = $this->Off_day_duty_model->off_day_duty_request($ulist,$ref_id);
+	    
 	    $data['body'] = $this->load->view('pages/hradmin/off_day_duty_request',$data,true);
 	    //===============common===============//
 	    $data['title'] = $this->config->item('project_title').' | HF Day Leave Requests';
@@ -67,32 +66,22 @@ class Off_day_duty_ctrl extends CI_Controller {
 	
 	function request_list(){
 	    $data['dept_id'] = $this->input->post('dept_id');
-	    $result = $this->Off_day_duty_model->request_list($data);
-	    if(count($result)>0){
-	        echo json_encode(array('data'=>$result,'msg'=>'requests list.','status'=>200));
+	    $results = $this->Off_day_duty_model->request_list($data);
+	    if(count($results)>0){
+	        $final_array = array();
+	        foreach($results as $result){
+	            $temp = array();
+	            $temp['reference_id'] = $this->my_library->remove_hyphen($result['reference_id']);
+	            $temp['dept_name'] = $result['dept_name'];
+	            $temp['name'] = $result['name'];
+	            $temp['ecode'] = $result['ecode'];
+	            $temp['date_from'] = date('d/m/Y',strtotime($result['date_from']));
+	            $temp['hod_remark'] = $result['hod_remark'];
+	            $final_array[] = $temp;
+	        }
+	        echo json_encode(array('data'=>$final_array,'msg'=>'requests list.','status'=>200));
 	    } else {
 	        echo json_encode(array('msg'=>'requests list.','status'=>500));
 	    }
 	}
-	
-// 	function request_detail(){
-// 	    $data['ref_id'] = $this->input->post('ref_id');
-// 	    $result = $this->Off_day_duty_model->request_detail($data);
-// 	    if(count($result)>0){
-// 	        echo json_encode(array('data'=>$result,'msg'=>'','status'=>200));
-// 	    } else {
-// 	        echo json_encode(array('msg'=>'No record found.','status'=>500));
-// 	    }
-// 	}
-	
-	
-// 	function get_off_day_duty_ids(){
-// 	    $data['dept_id'] = $this->input->post('dept_id');
-// 	    $result = $this->Off_day_duty_model->get_off_day_duty_ids($data);
-// 	    if(count($result)>0){
-// 	        echo json_encode(array('data'=>$result,'msg'=>'','status'=>200));
-// 	    } else {
-// 	        echo json_encode(array('msg'=>'No record found.','status'=>500));
-// 	    }
-// 	}
 }

@@ -892,7 +892,7 @@ class Etl_ctrl extends CI_Controller {
     			    $temp['hr_id'] = '';
     			    $temp['hr_remark_date'] = NULL;
     			    $temp['created_at'] = $result['AppDate'];
-    			    $temp['status'] = 1;
+    			    $temp['status'] = 0;
     			}
     			
     			

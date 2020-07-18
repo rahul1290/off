@@ -153,9 +153,16 @@ class Emp_ctrl extends CI_Controller {
 	
 	function validatecoff($str){
 	    $from_date = date('Y-m-d', strtotime(str_replace('/', '-',$_POST['from_date'])));
+	    
 	    if($str != ''){
     	    $dates = $this->db->query("select date_from from users_leave_requests where reference_id = '".$str."' AND status = 1")->result_array();
-    	    $coff_date = date('Y-m-d', strtotime("+3 months", strtotime($dates[0]['date_from'])));
+    	    if(count($dates)>0){
+    	        $coff_date = date('Y-m-d', strtotime("+3 months", strtotime($dates[0]['date_from'])));
+    	    } else {
+    	        $str = str_replace('/', '-', $str);
+    	        $dates = $this->db->query("select date_from from users_leave_requests where reference_id = '".$str."' AND status = 1")->result_array();
+    	        $coff_date = date('Y-m-d', strtotime("+3 months", strtotime($dates[0]['date_from'])));
+    	    }
     	    
     	    $diff = date_diff(date_create($from_date),date_create($coff_date));
     	    //$x = $diff->format("%R%a");
@@ -215,7 +222,7 @@ class Emp_ctrl extends CI_Controller {
                 $from_date = $this->my_library->mydate($this->input->post('from_date'));
                 $to_date = $this->my_library->mydate($this->input->post('to_date'));
                 $data['request_type'] = 'LEAVE';
-                $data['reference_id'] = 'LEAVE-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
+                $data['reference_id'] = 'IBC24-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
                 $data['ecode'] = $this->session->userdata('ecode');
                 $data['requirment'] = $this->input->post('reason');
                 $data['date_from'] = $from_date;
@@ -223,6 +230,7 @@ class Emp_ctrl extends CI_Controller {
                 $data['created_at'] = date('Y-m-d H:i:s');
                 $data['wod'] = $this->input->post('wod');
                 $data['pl'] = $this->input->post('pl');
+                $data['request_status_code'] = 1;    //pending
                 $coff = $this->input->post('coff');
                 $nhfh = $this->input->post('nhfh');
                 
@@ -255,8 +263,7 @@ class Emp_ctrl extends CI_Controller {
     		$data = array();
     		$data['coffs'] = $this->my_library->emp_coff($this->session->userdata('ecode'));
 			$data['nhfhs'] = $this->my_library->emp_nhfh($this->session->userdata('ecode'));
-			
-    		$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));    		
+			$data['pls'] = $this->my_library->pl_calculator($this->session->userdata('ecode'));    		
             $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
     		$data['footer'] = $this->load->view('include/footer','',true);
     		$data['top_nav'] = $this->load->view('include/top_nav','',true);
@@ -516,8 +523,9 @@ class Emp_ctrl extends CI_Controller {
 					$data['date_from'] = $date;
 					$data['date_to'] = $date;
 					$data['request_type'] = 'OFF_DAY';
-					$data['reference_id'] = 'OFF_DAY-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
+					$data['reference_id'] = 'CO-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
 					$data['created_at'] = date('Y-m-d H:i:s');
+					$data['request_status_code'] = 1;              //pending
 					
 					if($this->db->insert('users_leave_requests',$data)){ 
 						$id = $this->db->insert_id();

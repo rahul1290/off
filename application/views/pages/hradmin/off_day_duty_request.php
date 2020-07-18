@@ -20,7 +20,7 @@
     <div class="content">
       <div class="container-fluid">
        		
-      		<div class="col-6">
+      		<div class="offset-2 col-8">
 				<table class="table table-bordered table-striped">
 					<thead>
 					<tr class="bg-dark text-center">
@@ -44,28 +44,7 @@
 					<?php }?>
 					</tbody>
 				</table>
-			</div>
-			<hr/>
-			<div class="col-12">
-				<div class="table-responsive" id="request_panel" style="display: none;">
-    				<table class="table table-bordered table-striped">
-    					<thead class="bg-info text-center">
-    						<tr>
-    							<th>S.No.</th>
-    							<th>Request Id</th>
-    							<th>Department</th>
-    							<th>Name</th>
-    							<th>EmpCode</th>
-    							<th>Date</th>
-    							<th>HOD Remark</th>
-    						</tr>
-    					</thead>
-    					<tbody id="req_detail" class="text-center">
-    					</tbody>
-    				</table>
-				</div>
-			</div>
-             
+			</div> 
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content -->
@@ -86,6 +65,28 @@
   ?>
 </div>
 
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Request Detail</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="request_body" style="max-height:500px;overflow-y:scroll;">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+   </div>
+
+
 <script>
 var baseUrl = $('#baseUrl').val();
 
@@ -100,11 +101,22 @@ $(document).ready(function(){
             },
         	dataType: 'json',
         	beforeSend: function() {
-            	$('#request_panel').hide();
+            	$('#request_body').html('').hide();
             },
         	success: function(response){
             	if(response.status == 200){
-                	var x = '';
+                	var x = '<table class="table table-bordered table-striped"><thead class="bg-dark text-center">'+
+								'<tr>'+
+									'<th>S.No.</th>'+
+									'<th>Request Id</th>'+
+									'<th>Department</th>'+
+									'<th>Name</th>'+
+									'<th>EmpCode</th>'+
+									'<th>Date</th>'+
+									'<th>HOD Remark</th>'+
+								'</tr>'+
+							'</thead>'+
+							'<tbody>';
                 	$.each(response.data,function(key,value){
                     	x = x + '<tr>'+
                     				'<td>'+ parseInt(key+1) +'.</td>'+
@@ -116,8 +128,11 @@ $(document).ready(function(){
         							'<td>'+ value.hod_remark +'</td>'+
                     			'</tr>';
                     });
-                    $('#req_detail').html(x);
-                    $('#request_panel').show();
+                	x = x + '</tbody></table>';
+                	$('#request_body').html(x).show();
+        			$('#exampleModal').modal({
+        				'show':true
+        			});
                 }
         	} 
 		});

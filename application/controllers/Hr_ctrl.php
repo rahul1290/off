@@ -277,14 +277,23 @@ class Hr_ctrl extends CI_Controller {
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
 		$data['aside'] = $this->load->view('include/aside',$data,true);
 		$data['notepad'] = $this->load->view('include/shift_timing','',true);
-		$data['pending_requests'] = $this->Hr_model->nh_fh_day_duty_pending_request($ulist,$ref_id);
-		$data['requests'] = $this->Hr_model->nh_fh_day_duty_request($ulist,$ref_id);
+		$data['requests'] = $this->Hr_model->nh_fh_day_duty_pending_request($ulist,$ref_id);
 		$data['body'] = $this->load->view('pages/hradmin/nh_fh_day_duty_request',$data,true);
 		
 		$data['title'] = $this->config->item('project_title').' | OFF Day Duty Requests';
 		$data['head'] = $this->load->view('common/head',$data,true);
 		$data['footer'] = $this->load->view('common/footer',$data,true);
 		$this->load->view('layout_master',$data);
+	}
+	
+	function nh_fh_day_duty_requestList(){
+	    $data['dept_id'] = $this->input->post('dept_id');
+	    $result = $this->Hr_model->nh_fh_day_duty_requestList($data);
+	    if(count($result)>0){
+	        echo json_encode(array('data'=>$result,'status'=>200));
+	    } else {
+	        echo json_encode(array('status'=>500));
+	    }
 	}
 	
 	///HR POLICIES

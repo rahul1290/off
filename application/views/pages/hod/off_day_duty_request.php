@@ -168,34 +168,35 @@ $(document).ready(function(){
 	var previous;
 	var that;
 	$(document).on('focus','.hod_status',function(){
-    //$(".hod_status").on('focus', function () {
         previous = $(this).val();
         that = this;
     }).change(function() {
-		var req_id = $(that).data('rid');
-		var status = $(that).val();
-		var c = confirm('Are you sure!');
-		if(c){
-			$.ajax({
-				type: 'POST',
-				url: baseUrl+'hod/off-day-duty-update/',
-				data: { 
-					'req_id' : req_id,
-					'key' : 'hod_status',
-					'value' : status,
-				},
-				dataType: 'json',
-				beforeSend: function() {},
-				success: function(response){
-					if(response.status == 200){
-						location.reload(true);
-					} else {
-					}
-				}
-			});
-		} else {
-			$(that).val(previous);
-		}    
+        if(previous != $(that).val()){
+    		var req_id = $(that).data('rid');
+    		var status = $(that).val();
+    		var c = confirm('Are you sure!');
+    		if(c){
+    			$.ajax({
+    				type: 'POST',
+    				url: baseUrl+'hod/off-day-duty-update/',
+    				data: { 
+    					'req_id' : req_id,
+    					'hod_remark' : $('#hod_remark_'+req_id).val(),
+    					'value' : status,
+    				},
+    				dataType: 'json',
+    				beforeSend: function() {},
+    				success: function(response){
+    					if(response.status == 200){
+    						location.reload(true);
+    					} else {
+    					}
+    				}
+    			});
+    		} else {
+    			$(that).val(previous);
+    		}
+        }    
     });
 	
 

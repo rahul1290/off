@@ -72,7 +72,8 @@ class Hod_model extends CI_Model {
             'hod_remark' => $data['hod_remark'],
             'hod_status' => $data['hod_status'],
             'hod_id' => $this->session->userdata('ecode'),
-            'hod_remark_date' => $data['created_at']
+            'hod_remark_date' => $data['created_at'],
+            'request_status_code' => $data['request_status_code']
         ));
         
         if ($this->db->trans_status() === FALSE){

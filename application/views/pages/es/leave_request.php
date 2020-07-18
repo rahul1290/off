@@ -67,6 +67,7 @@
 							}
 						}
 						?>
+						
 						<tr id="leave_adjust" style="display: <?php if(isset($x) || isset($y)){ echo ""; } else { echo "none"; }?>;">
 							<td><b>LEAVE ADJUSTMENT</b></td>
 							<td>
@@ -75,7 +76,7 @@
     								<ul style="list-style: none;">
         								<?php foreach($coffs as $coff){ ?>
         										<li>
-        											<input <?php if(isset($x)){if(in_array($coff['reference_id'],$x)){ echo "checked"; }} ?> type="checkbox" name="coff[]" class="leave coffs" data-value="<?php echo $coff['reference_id']; ?>" value="<?php echo $coff['reference_id']; ?>" /> <?php echo $coff['reference_id'];?> <b>[<?php echo $this->my_library->sql_datepicker($coff['date_from']); ?>]</b>
+        											<input <?php if(isset($x)){if(in_array($coff['reference_id'],$x)){ echo "checked"; }} ?> type="checkbox" name="coff[]" class="leave coffs" data-value="<?php echo $coff['reference_id']; ?>" value="<?php echo $coff['reference_id']; ?>" /> <?php echo $coff['reference_id'];?> <b>[<?php echo date('d/m/Y',strtotime($coff['date_from'])); ?>]</b>
         										</li>											        
         							    <?php } ?> 
     								</ul>

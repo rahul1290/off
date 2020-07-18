@@ -182,6 +182,11 @@ class Hod_ctrl extends CI_Controller {
 	    $data['hod_status'] = $this->input->post('hod_status');
 	    $data['created_at'] = date('Y-m-d H:i:s');
 	    $data['hod_id'] = $this->session->userdata('ecode');
+	    if($this->input->post('hod_status') == 'GRANTED'){
+	       $data['request_status_code'] = 2; 
+	    } else{
+	        $data['request_status_code'] = 4;
+	    }
 	    
 	    if($this->Hod_model->leave_request_update($data)){
 	        $data1 = array();
