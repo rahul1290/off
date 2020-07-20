@@ -188,6 +188,8 @@ $(document).ready(function(){
 		$('#form_detail').html('');
 	});
 
+	var globalData= {};
+	
 	$(document).on('click','#view',function(){
 		$.ajax({
         	type: 'POST',
@@ -202,6 +204,7 @@ $(document).ready(function(){
 			  				'<div class="card-body">';
             	console.log(response);
             	if(response.status == 200){
+            		globalData = response; 
                 	x  = x +'<form name="f2" id="f2" method="POST" action="<?php echo base_url('Hr_ctrl/leave_request_submit');?>">'+
                 			  '<input type="hidden" name="application_no" value="'+ response.data.leave_detail[0]['reference_id'] +'">' +
                         	  '<div class="form-group row" style="margin-bottom:0px;background-color: aliceblue;">'+
@@ -235,30 +238,38 @@ $(document).ready(function(){
                         					'</tr>'+
                         					'<tr>'+
                         						'<td><b>COFF:</b></td><td>';
-                                    			if(response.data.coff.length){
-                                        	  		$.each(response.data.coff,function(key,value){
-                                            	  		y = y + value.date_from +',';
-                                            	  	});
-                                        	  	}
+                                        	  	if(response.data.coff_againts_ref.length){
+													$.each(response.data.coff_againts_ref,function(key,value){
+														if(value.request_type == "OFF_DAY"){
+															y = y + value.date_from +',';
+														}
+													});						
+                                              	}
                                         		x = x + y + '</td><tr><td><b>NHFH:</b></td><td>';
-                                        		if(response.data.nhfh.length){
-                                        	  		$.each(response.data.nhfh,function(key,value){
-                                            	  		x = x + value.date_from +',';
-                                            	  	});
-                                	  			}
+                                        		if(response.data.coff_againts_ref.length){
+													$.each(response.data.coff_againts_ref,function(key,value){
+														if(value.request_type == "NH_FH"){
+															y = y + value.date_from +',';
+														}
+													});						
+                                              	}
                                         		x = x + '</td>'+
                         					'</tr>'+
                         					'<tr>'+
-                        						'<td><b>PL:</b></td>'+
-                        						'<td>'+ response.data.leave_detail[0]['pl'] +'</td>'+
-                        					'</tr>'+
+                        						'<td><b>PL:</b></td>';
+                        						if (response.data.leave_detail[0]['pl'] != null){
+                        						 x = x + '<td>'+ response.data.leave_detail[0]['pl'] +'</td>';
+                        						} else {
+                            						x = x + '<td>-</td>';
+                            					}
+                        					x = x + '</tr>'+
                         				'</table>'+
                         			'</div>'+
                       	    '</div>'+
                       	  '<div class="form-group row" style="margin-bottom:0px;background-color: bisque;">'+
                       		'<label for="inputPassword" class="col-3 col-form-label">Leave Duration:</label>'+
                       		'<div class="col-9">'+
-                      		response.data.leave_detail[0]['date_from'] +' TO '+ response.data.leave_detail[0]['date_to'] +' <b>: '+ response.data.leave_detail[0]['duration']+'</b>'+
+                      		response.data.leave_detail[0]['date_from'] +' - '+ response.data.leave_detail[0]['date_to'] +' <b>: '+ response.data.leave_detail[0]['duration']+'</b>'+
                       		'</div>'+
                     	  '</div>'+
                     	  '<div class="form-group row" style="margin-bottom:0px;background-color: aliceblue;">'+
@@ -310,7 +321,17 @@ $(document).ready(function(){
                 	  			if(response.data.nhfh.length){
                 	  				y = '<td><ul style="list-style:none;">';
                         	  		$.each(response.data.nhfh,function(key,value){
-                            	  		y = y+'<li><input type="checkbox" name="nhfh[]" data-id="'+ value.id +'" value="'+ value.reference_id +'"> '+ value.date_from +'</li>';
+                            	  		flag = true;
+                            	  		$.each(globalData.data.nhfh,function(key1,value1){
+                            	  			if(value.reference_id == value1.reference_id){
+                                	  			flag = false;
+                            	  			}
+                            	  		});
+                            	  		if(flag){
+                            	  			y = y+'<li><input type="checkbox" name="nhfh[]" class="hrnhfh" data-id="'+ value.id +'" data-text="'+ value.date_from +'" value="'+ value.reference_id +'"> '+ value.date_from +'</li>';
+                            	  		} else {
+                            	  			y = y+'<li><input type="checkbox" name="nhfh[]" class="hrnhfh" data-id="'+ value.id +'" data-text="'+ value.date_from +'" value="'+ value.reference_id +'" checked> '+ value.date_from +'</li>';
+                                	  	}
                             	  	});
                             	  	y = y + '</ul></td>';
                             	  	x = x + y;
@@ -321,7 +342,17 @@ $(document).ready(function(){
                     	  		if(response.data.coff.length){
                         	  		y = '<td><ul style="list-style:none;">';
                         	  		$.each(response.data.coff,function(key,value){
-                            	  		y = y+'<li><input type="checkbox" name="coff[]" data-id="'+ value.id +'" value="'+ value.reference_id +'"> '+ value.date_from +'</li>';
+                        	  			flag = true;
+                        	  			$.each(globalData.data.coff,function(key1,value1){
+                            	  			if(value.reference_id == value1.reference_id){
+                            	  				flag = false;
+                                	  		}
+                        	  			});
+                        	  			if(flag){	                            	  		
+                            	  			y = y+'<li><input type="checkbox" name="coff[]" class="hrcoff" data-id="'+ value.id +'" data-text="'+ value.date_from +'" value="'+ value.reference_id +'"> '+ value.date_from +'</li>';
+                        	  			} else {
+                        	  				y = y+'<li><input type="checkbox" name="coff[]" class="hrcoff" data-id="'+ value.id +'" data-text="'+ value.date_from +'" value="'+ value.reference_id +'" checked> '+ value.date_from +'</li>';
+                            	  		}
                             	  	});
                             	  	y = y + '</ul></td>';
                             	  	x = x + y;
@@ -329,22 +360,27 @@ $(document).ready(function(){
                         	  		x = x + '<td>No Remaining COFF.</td>';
                             	}
                             	
-                            	console.log(response.data.pls[0].balance);
+                            	
                 	  			x = x +'<td>PL:&nbsp;'+
-                	  					'<select id="pls" name="pls">';
+                	  					'<select id="pl_select" name="pls">';
                 	  						for(i=0;i<=parseInt(response.data.pls[0].balance);i++){
-                    	  						x = x + '<option value="'+ i +'">'+ i +'</option>';
+                	  							if (response.data.leave_detail[0]['pl'] != null){
+                    	  							if(parseInt(response.data.leave_detail[0]['pl']) == i){
+                    	  								x = x + '<option value="'+ i +'" selected>'+ i +'</option>';
+                        	  						}
+                	  							}
+                	  							x = x + '<option value="'+ i +'">'+ i +'</option>';
                     	  					}
-                	  					x = x +'</select><br/>'+
-                	  					'LOP:&nbsp;<select id="lop" name="lop">';
-                	  					for(i=0;i<=100;i++){
-                	  						x = x + '<option value="'+ i +'">'+ i +'</option>';
-                	  					}
-                	  					x = x + '</select>'+
+                	  						x = x +'</select><br/>'+
+                	  						'LOP:&nbsp;<select id="lop" name="lop">';
+                	  						for(i=0;i<=100;i++){
+                	  							x = x + '<option value="'+ i +'">'+ i +'</option>';
+                	  						}
+                	  						x = x + '</select>'+
                 	  				'</td>'+
                 	  			'</tr>'+
                 	  			'<tr>'+
-                	  				'<td>Hod Remark</td>'+
+                	  				'<td>HR Remark</td>'+
                 	  				'<td colspan="2"><textarea class="form-control" name="hr_remark" id="hr_remark"></textarea></td>'+
                 	  			'</tr>'+
                 	  		'</table>'+
@@ -356,14 +392,49 @@ $(document).ready(function(){
                        '</form>';
                        x = x + '</div></div>';
                 	$('#form_detail').html(x);
+                	hr_remark();
                 	$('#pls').html(response.data.pls[0]['balance']);
                 }
         	} 
 		});
 	});
 
+	$(document).on('click','.hrnhfh,.hrcoff',function(){
+		hr_remark();
+	});
+	$(document).on('change','#pl_select,#lop',function(){
+		hr_remark();
+	});
+	
+	function hr_remark(){
+		coff = 'COFF: ';
+		coff_flag = false;
+		$.each($("input[name='coff[]']:checked"), function(){
+			coff_flag = true;
+			coff += $(this).data('text')+',';
+		});
 
+		nhfh = 'NHFH: ';
+		nhfh_flag = false;
+		$.each($("input[name='nhfh[]']:checked"), function(){
+			nhfh_flag = true;
+			nhfh += $(this).data('text')+',';
+		});
 
+		pl = 'PL: '+ $('#pl_select').val();
+		lop = 'LOP: '+ $('#lop').val();
+
+		str = '';
+		if(coff_flag){
+			str = str + coff;
+		}
+		if(nhfh_flag){
+			str = str + '\n' + nhfh;
+		}
+		
+		str = str + '\n' + pl + ',' + lop;
+		$('#hr_remark').val(str);
+	}
 
 	$(document).on('click','#submit',function(){
 		var myForm = document.getElementById('f2');

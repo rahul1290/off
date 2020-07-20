@@ -168,6 +168,7 @@ class Off_day_duty_ctrl extends CI_Controller {
 	    $data['value'] = $this->input->post('value');
 	    $data['created_at'] = date('Y-m-d H:i:s');
 	    $data['hod_id'] = $this->session->userdata('ecode');
+	    
 	    if($data['value'] == 'GRANTED'){
 	       $data['request_status_code'] = '2';
 	    } else {

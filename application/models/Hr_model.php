@@ -64,12 +64,17 @@ class Hr_model extends CI_Model {
         $this->db->select('*');
         $data['leave_detail'] = $this->db->get_where('users_leave_requests',array('id'=>$parms['ref_id'],'status'=>1))->result_array();
         
+        
         if(count($data['leave_detail'])>0){
             $data['leave_detail'][0]['duration'] = $this->my_library->day_duration($data['leave_detail'][0]['date_from'],$data['leave_detail'][0]['date_to']);
             $this->db->select('u.*,dm.dept_name,desg.desg_name');
             $this->db->join('department_master dm','dm.id = u.department_id');
             $this->db->join('designation_master desg','desg.id = u.designation_id');
             $data['user_detail'] = $this->db->get_where('users u',array('u.ecode'=>$data['leave_detail'][0]['ecode']))->result_array();
+            
+            
+            $this->db->select('*');
+            $data['coff_againts_ref'] = $this->db->get_where('users_leave_requests',array('request_status_code'=>2,'request_id'=>$data['leave_detail'][0]['reference_id']))->result_array();
             
             $data['coff'] = $this->my_library->empCoffHr($data['leave_detail'][0]['ecode']);
             $data['nhfh'] = $this->my_library->empNhfhHr($data['leave_detail'][0]['ecode']);
@@ -88,6 +93,12 @@ class Hr_model extends CI_Model {
     function leave_request_submit($data){
         $this->db->trans_begin();
         
+        $this->db->select("*");
+        $result = $this->db->get_where('users_leave_requests',array('reference_id'=>$data['application_no'],'status'=>1))->result_array();
+        if(!count($result)>0){
+            $data['application_no'] = str_replace('/', '-', $data['application_no']);
+        }
+        
         $this->db->where('reference_id',$data['application_no']);
         $this->db->update('users_leave_requests',array(
                                 'hr_status'=>'GRANTED',
@@ -95,26 +106,46 @@ class Hr_model extends CI_Model {
                                 'hr_remark'=>$data['hr_remark'],
                                 'hr_remark_date'=>date('y-m-d H:i:s'),
                                 'pl'=>$data['pls'],
-                                'lop'=>$data['lop'])
+                                'lop'=>$data['lop'],
+                                'request_status_code' => 3
+                        )
             );
         
         if(isset($data['coff'])){
             if(count($data['coff'])>0){ 
                 $this->db->where_in('reference_id',$data['coff']);
-                $this->db->update('users_leave_requests',array('request_id'=>$data['application_no']));
+                $this->db->update('users_leave_requests',array(
+                    'request_id'=>$data['application_no'],
+                    'request_status_code' => '3',
+                    'hr_status' => 'GRANTED',
+                    'hr_id' => $this->session->userdata('ecode'),
+                    'hr_remark_date' => date('Y-m-d H:i:s')
+                ));
             }
         }
        
         if(isset($data['nhfh'])){
             if(count($data['nhfh'])>0){
                 $this->db->where_in('reference_id',$data['nhfh']);
-                $this->db->update('users_leave_requests',array('request_id'=>$data['application_no']));
+                $this->db->update('users_leave_requests',array(
+                    'request_id'=>$data['application_no'],
+                    'request_status_code' => '3',
+                    'hr_status' => 'GRANTED',
+                    'hr_id' => $this->session->userdata('ecode'),
+                    'hr_remark_date' => date('Y-m-d H:i:s')
+                ));
             }
         }
         
         if($data['pls']>0){
             $this->db->select('ecode');
             $empDetail = $this->db->get_where('users_leave_requests',array('reference_id'=>$data['application_no']))->result_array();
+            if(!count($empDetail)>0){
+                $data['application_no'] = str_replace('/', '-', $data['application_no']);
+                $this->db->select('ecode');
+                $empDetail = $this->db->get_where('users_leave_requests',array('reference_id'=>$data['application_no']))->result_array();
+            }
+            
             $pls = $this->my_library->pl_calculator($empDetail[0]['ecode']);
             
             $this->db->insert("pl_management",array(

@@ -167,9 +167,15 @@ class Hr_ctrl extends CI_Controller {
 	
 	function get_leave_ids(){
 	    $data['dept_id'] = $this->input->post('dept_id');
-	    $result = $this->Hr_model->get_leave_ids($data);
-	    if(count($result)>0){
-	        echo json_encode(array('data'=>$result,'msg'=>'','status'=>200));
+	    $results = $this->Hr_model->get_leave_ids($data);
+	    if(count($results)>0){
+	        $final_array = array();
+	        foreach($results as $result){
+	            $temp = $result;
+	            $temp['reference_id'] = $this->my_library->remove_hyphen($result['reference_id']);
+	            $final_array[] = $temp;
+	        }
+	        echo json_encode(array('data'=>$final_array,'msg'=>'','status'=>200));
 	    } else {
 	        echo json_encode(array('msg'=>'No record found.','status'=>500));
 	    }
@@ -177,9 +183,41 @@ class Hr_ctrl extends CI_Controller {
 	
 	function leave_detail(){
 	    $data['ref_id'] = $this->input->post('ref_id');
-	    $result = $this->Hr_model->leave_detail($data);
-	    if(count($result)>0){
-	        echo json_encode(array('data'=>$result,'msg'=>'','status'=>200));
+	    $results = $this->Hr_model->leave_detail($data);
+	    
+	    if(count($results)>0){
+	        $results['leave_detail'][0]['reference_id'] = $this->my_library->remove_hyphen($results['leave_detail'][0]['reference_id']);
+	        $results['leave_detail'][0]['date_from'] = date('d/m/Y',strtotime($results['leave_detail'][0]['date_from']));
+	        $results['leave_detail'][0]['date_to'] = date('d/m/Y',strtotime($results['leave_detail'][0]['date_to']));
+	       
+	        $coffarray = array();
+	        foreach($results['coff'] as $result){
+	            $temp = $result;
+	            $temp['date_from'] = date('d/m/Y',strtotime($result['date_from']));
+	            $coffarray[] = $temp;
+	        }
+	        $results['coff'] = $coffarray;
+	        
+	        $nhfharray = array();
+	        foreach($results['nhfh'] as $result){
+	            $temp = $result;
+	            $temp['date_from'] = date('d/m/Y',strtotime($result['date_from']));
+	            $nhfharray[] = $temp;
+	        }
+	        $results['nhfh'] = $nhfharray;
+	        
+	        
+	        $leaves = array();
+	        foreach($results['coff_againts_ref'] as $result){
+	            $temp = $result;
+	            $temp['date_from'] = date('d/m/Y',strtotime($result['date_from']));
+	            $leaves[] = $temp;
+	        }
+	        $results['coff_againts_ref'] = $leaves;
+	        
+	        
+	        
+	        echo json_encode(array('data'=>$results,'msg'=>'','status'=>200));
 	    } else {
 	        echo json_encode(array('msg'=>'No record found.','status'=>500));
 	    }

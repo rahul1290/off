@@ -234,21 +234,28 @@ class Emp_ctrl extends CI_Controller {
                 $coff = $this->input->post('coff');
                 $nhfh = $this->input->post('nhfh');
                 
-                $coff_ids = array();
-                $nhfh_ids = array();
-                
                 if($this->db->insert('users_leave_requests',$data)){
                     $id = $this->db->insert_id();
                     $this->db->where('id',$id);
                     $this->db->update('users_leave_requests',array('reference_id'=>$data['reference_id'].'-'.$id));
                     
                     if($coff != ''){
-                        $this->db->where_in('reference_id',$coff);
+                        $final_array = array();
+                        foreach($coff as $cf){
+                            $final_array[] = $cf;
+                            $final_array[] = str_replace('/', '-', $cf); 
+                        }
+                        $this->db->where_in('reference_id',$final_array);
                         $this->db->update('users_leave_requests',array('request_id'=>$data['reference_id'].'-'.$id));
                     }
                     
                     if($nhfh != ''){
-                        $this->db->where_in('reference_id',$nhfh);
+                        $final_array = array();
+                        foreach($nhfh as $nh){
+                            $final_array[] = $nh;
+                            $final_array[] = str_replace('/', '-', $nh);
+                        }
+                        $this->db->where_in('reference_id',$final_array);
                         $this->db->update('users_leave_requests',array('request_id'=>$data['reference_id'].'-'.$id));
                     }
                     
@@ -310,6 +317,7 @@ class Emp_ctrl extends CI_Controller {
 	    if(count($records)>0){
 	        $data['final_array'] = array();
 	        foreach($records as $record){
+	             
 	            $temp = array();
 	            $temp['id'] = $record['id'];
 	            $temp['request_type'] = $record['request_type'];
@@ -333,8 +341,26 @@ class Emp_ctrl extends CI_Controller {
                 $temp['pl'] = $record['pl'];
                 $temp['lop'] = $record['lop'];
                 $temp['status'] = $record['status'];
-                $temp['NHFH'] = ($record['NHFH'])?$record['NHFH']:'-';
-                $temp['COFF'] = ($record['COFF'])?$record['COFF']:'-';
+                ///$temp['NHFH'] = ($record['NHFH'])?$record['NHFH']:'-';
+                
+                if(isset($record['NHFH'])){
+                    $x = explode(',', $record['NHFH']);
+                    foreach($x as $y){
+                        $temp['NHFH'] = rtrim(implode('/',array_reverse(explode('-', $y))).',',',');
+                    }
+                } else {
+                    $temp['NHFH'] = '-';
+                }
+                //$temp['COFF'] = ($record['COFF'])?$record['COFF']:'-';
+                
+                if(isset($record['COFF'])){
+                    $x = explode(',', $record['COFF']);
+                    foreach($x as $y){
+                        $temp['COFF'] = rtrim(implode('/',array_reverse(explode('-', $y))).',',',');
+                    }
+                } else {
+                    $temp['COFF'] = '-';
+                }
                 
                 $data['final_array'][] = $temp;
 	        }
@@ -525,6 +551,7 @@ class Emp_ctrl extends CI_Controller {
 					$data['request_type'] = 'OFF_DAY';
 					$data['reference_id'] = 'CO-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
 					$data['created_at'] = date('Y-m-d H:i:s');
+					$data['hr_status'] = 'PENDING';
 					$data['request_status_code'] = 1;              //pending
 					
 					if($this->db->insert('users_leave_requests',$data)){ 

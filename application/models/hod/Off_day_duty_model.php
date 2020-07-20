@@ -13,7 +13,8 @@ class Off_day_duty_model extends CI_Model {
             'hod_remark' => $data['hod_remark'],
             'hod_status' => $data['value'],
             'hod_remark_date' => $data['created_at'],
-            'request_status_code' => $data['request_status_code']
+            'request_status_code' => $data['request_status_code'],
+            'hod_id' => $data['hod_id'] 
         ));
         
         if ($this->db->trans_status() === FALSE){

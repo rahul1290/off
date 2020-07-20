@@ -87,7 +87,7 @@ class My_library {
 	
 	function emp_coff($ecode) {
 	    $results = $this->CI->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$ecode."' AND date_from >= '".date('Y-m-d', strtotime("-90 days"))."' AND request_type = 'OFF_DAY' AND ((hod_status = 'PENDING' && hr_status = 'GRANTED') OR (hod_status = 'GRANTED' && hr_status = 'PENDING')) AND request_id IS NULL")->result_array();
-	    
+	    print_r($results); die;
 	    if(count($results)>0){
 	        $final_array = array();
 	        foreach($results as $result){
@@ -98,7 +98,7 @@ class My_library {
 	        }
 	        return $final_array;
 	    }
-	    return false;
+	    return $results;
 	}
 	
 	function emp_nhfh($ecode) {
@@ -109,7 +109,7 @@ class My_library {
 	function empCoffHr($ecode) {
 	    $result = $this->CI->db->query("SELECT * FROM `users_leave_requests` WHERE 
                         ecode = '".$ecode."' 
-                        AND date_from >= '".date('Y-m-d', strtotime('-3 month'))."' 
+                        AND date_from >= '".date('Y-m-d', strtotime("-90 days"))."' 
                         AND request_type = 'OFF_DAY' 
                         AND ((hod_status = 'PENDING' && hr_status = 'GRANTED') OR (hod_status = 'GRANTED' && hr_status = 'PENDING')) 
                         AND hr_status = 'PENDING'")->result_array();
@@ -120,6 +120,7 @@ class My_library {
 	    $result = $this->CI->db->query("SELECT * FROM `users_leave_requests` WHERE
                         ecode = '".$ecode."'
                         AND request_type = 'NH_FH'
+                        AND date_from >= '".date('Y-12-25',strtotime("-1 year"))."'
                         AND ((hod_status = 'PENDING' && hr_status = 'GRANTED') OR (hod_status = 'GRANTED' && hr_status = 'PENDING'))
                         AND hr_status = 'PENDING'")->result_array();
 	   return $result;
