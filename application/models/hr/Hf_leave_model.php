@@ -119,20 +119,13 @@ class Hf_leave_model extends CI_Model {
     
     function hf_leave_request_update($data){
         $this->db->trans_begin();
-        //     	    if($data['value'] == 'REJECTED'){
-        //     	        $reference_no = $this->my_library->leave_request_refno($data['req_id']);
-        
-        //     	        $this->db->where('refrence_no',$reference_no);
-        //     	        $this->db->update('pl_management',array('status'=>0));
-        //     	    }
         
         $this->db->where('id',$data['req_id']);
         $this->db->update('users_leave_requests',array(
-            $data['key'] => $data['value'],
-            'hr_id' => $data['hr_id'],
-            'hr_remark_date' => $data['created_at']
-        )
-            );
+                $data['key'] => $data['value'],
+                'hr_id' => $data['hr_id'],
+                'hr_remark_date' => $data['created_at']
+               ));
         
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();

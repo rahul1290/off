@@ -231,29 +231,31 @@ $(document).ready(function(){
                           	'<div class="form-group row" style="margin-bottom:0px;background-color: aliceblue;">'+
                         		'<label for="inputPassword" class="col-3 col-form-label">Leaves Requested:</label>'+
                         		'<div class="col-9">';
-                        			y = '<table>'+
+                        			x = x + '<table>'+
                         					'<tr>'+
                         						'<td><b>Reference No:</b></td>'+
                         						'<td>'+ response.data.leave_detail[0]['reference_id']+'</td>'+
                         					'</tr>'+
                         					'<tr>'+
                         						'<td><b>COFF:</b></td><td>';
+                        						y1='';
                                         	  	if(response.data.coff_againts_ref.length){
 													$.each(response.data.coff_againts_ref,function(key,value){
 														if(value.request_type == "OFF_DAY"){
-															y = y + value.date_from +',';
+															y1 = y1 + value.date_from +',';
 														}
 													});						
                                               	}
-                                        		x = x + y + '</td><tr><td><b>NHFH:</b></td><td>';
+                                        		x = x + y1 + '</td><tr><td><b>NHFH:</b></td><td>';
+                                        		y2='';
                                         		if(response.data.coff_againts_ref.length){
 													$.each(response.data.coff_againts_ref,function(key,value){
 														if(value.request_type == "NH_FH"){
-															y = y + value.date_from +',';
+															y2 = y2 + value.date_from +',';
 														}
 													});						
                                               	}
-                                        		x = x + '</td>'+
+                                        		x = x + y2 +'</td>'+
                         					'</tr>'+
                         					'<tr>'+
                         						'<td><b>PL:</b></td>';

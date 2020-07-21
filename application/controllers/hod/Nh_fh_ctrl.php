@@ -20,11 +20,18 @@ class Nh_fh_ctrl extends CI_Controller {
 	////////////////////////////////////////////////////////////////////////////
 	
 	function nh_fh_day_duty_request_update(){
+	    $data = array();
 	    $data['req_id'] = $this->input->post('req_id');
 	    $data['hod_status'] = $this->input->post('hod_status');
 	    $data['hod_remark'] = $this->input->post('hod_remark');
 	    $data['created_at'] = date('Y-m-d H:i:s');
+	    $data['hr_status'] = 'PENDING';
 	    $data['hod_id'] = $this->session->userdata('ecode');
+	    if($this->input->post('hod_status') == 'GRANTED'){
+	       $data['request_status_code'] = 2;
+	    } else {
+	        $data['request_status_code'] = 4;
+	    }
 	    if($this->Nh_fh_model->nh_fh_day_duty_request_update($data)){
 	        echo json_encode(array('status'=>200));
 	    }
@@ -232,7 +239,7 @@ class Nh_fh_ctrl extends CI_Controller {
 	            $temp['emp_name'] = $record['name'];
 	            $temp['created_at'] = $record['created_at'];
 	            $temp['ecode'] = $record['ecode'];
-	            $temp['date_from'] = $record['date_from'];
+	            $temp['date_from'] = $record['date'];
 	            $temp['requirment'] = $record['requirment'];
 	            $temp['hod_remark'] = ($record['hod_remark'])?$record['hod_remark']:'';
 	            $temp['hod_id'] = $record['hod_id'];

@@ -87,7 +87,7 @@ class My_library {
 	
 	function emp_coff($ecode) {
 	    $results = $this->CI->db->query("SELECT * FROM `users_leave_requests` WHERE ecode = '".$ecode."' AND date_from >= '".date('Y-m-d', strtotime("-90 days"))."' AND request_type = 'OFF_DAY' AND ((hod_status = 'PENDING' && hr_status = 'GRANTED') OR (hod_status = 'GRANTED' && hr_status = 'PENDING')) AND request_id IS NULL")->result_array();
-	    print_r($results); die;
+	    
 	    if(count($results)>0){
 	        $final_array = array();
 	        foreach($results as $result){

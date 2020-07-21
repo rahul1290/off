@@ -313,7 +313,6 @@ class Emp_ctrl extends CI_Controller {
 	    
 	    $data["links"] = $this->pagination->create_links();
 	    $records = $this->Emp_model->leave_requests_ajax($this->session->userdata('ecode'),$str,$config["per_page"],$page);
-	    
 	    if(count($records)>0){
 	        $data['final_array'] = array();
 	        foreach($records as $record){
@@ -345,19 +344,22 @@ class Emp_ctrl extends CI_Controller {
                 
                 if(isset($record['NHFH'])){
                     $x = explode(',', $record['NHFH']);
+                    $tempnhfh = '';
                     foreach($x as $y){
-                        $temp['NHFH'] = rtrim(implode('/',array_reverse(explode('-', $y))).',',',');
+                        $tempnhfh .= implode('/',array_reverse(explode('-', $y))).',';
                     }
+                    $temp['NHFH'] = rtrim($tempnhfh,',');
                 } else {
                     $temp['NHFH'] = '-';
                 }
-                //$temp['COFF'] = ($record['COFF'])?$record['COFF']:'-';
                 
                 if(isset($record['COFF'])){
                     $x = explode(',', $record['COFF']);
+                    $tempcoff = '';
                     foreach($x as $y){
-                        $temp['COFF'] = rtrim(implode('/',array_reverse(explode('-', $y))).',',',');
+                        $tempcoff .= implode('/',array_reverse(explode('-', $y))).',';
                     }
+                    $temp['COFF'] = rtrim($tempcoff,',');
                 } else {
                     $temp['COFF'] = '-';
                 }
@@ -772,8 +774,11 @@ class Emp_ctrl extends CI_Controller {
 				$date = $this->Nh_fh_model->get_nhfh($this->input->post('nhfh_date'));
 				$data['date_from'] = $date[0]['nhfh_date'];
 				$data['request_type'] = 'NH_FH';
-				$data['reference_id'] = 'NH_HF-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
+				$data['reference_id'] = 'NHHF-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
 				$data['created_at'] = date('Y-m-d H:i:s');
+				$data['hr_status'] = 'PENDING';
+				$data['hod_status'] = 'PENDING';
+				$data['request_status_code'] = 1;
 				
 				if($this->Nh_fh_model->nh_fh_day_duty_form($data)){ 
 					$id = $this->db->insert_id();

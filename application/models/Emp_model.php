@@ -146,7 +146,7 @@ class Emp_model extends CI_Model {
                 WHERE p.request_type = "LEAVE"
                 AND p.ecode = "'.$ecode.'"
                 AND (reference_id like "%'. $str .'%" OR requirment like "%'. $str .'%") 
-                AND p.status = 1 order by reference_id,id desc limit '.$limit.','.$offset.'')->result_array();
+                AND p.status = 1 order by p.created_at desc limit '.$limit.','.$offset.'')->result_array();
 	    return $result;
 	}
 	

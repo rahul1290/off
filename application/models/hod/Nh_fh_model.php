@@ -11,9 +11,10 @@ class Nh_fh_model extends CI_Model {
         $this->db->update('users_leave_requests',array(
             'hod_status' => $data['hod_status'],
             'hod_remark' => $data['hod_remark'],
-            'hod_remark_date' => $data['created_at']
+            'hod_remark_date' => $data['created_at'],
+            'hr_status' => $data['hr_status'],
+            'request_status_code' => $data['request_status_code']
         ));
-        
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
         } else {
@@ -63,7 +64,7 @@ class Nh_fh_model extends CI_Model {
     }
     
     function pending_nhfh_requests($ulist,$str,$offset,$limit){
-        $this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y %H:%i:%s") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y %H:%i:%s") as last_update');
+        $this->db->select('ulr.*,u.name,dm.dept_name,DATE_FORMAT(ulr.date_from,"%d/%m/%Y") as date,DATE_FORMAT(ulr.created_at,"%d/%m/%Y") as created_at,DATE_FORMAT(ulr.hod_remark_date,"%d/%m/%Y") as last_update');
         $this->db->where_in('ulr.ecode',$ulist,false);
         $this->db->join('users u','u.ecode = ulr.ecode');
         $this->db->join('department_master dm','dm.id = u.department_id');
