@@ -198,7 +198,9 @@ $(document).ready(function(){
             	'dept_id' : $('#department_id').val()
             },
         	dataType: 'json',
-        	beforeSend: function() {},
+        	beforeSend: function() {
+            	$('#form_detail').html('').hide();
+            },
         	success: function(response){
             	var x = '<option value="">Select Leave no.</option>';
             	if(response.status == 200){
@@ -278,7 +280,7 @@ $(document).ready(function(){
                       			'<label for="inputPassword" class="col-3 col-form-label">PL Deduction:</label>'+
                       			'<div class="col-9">'+
                       				'<input type="radio" name="pl_deduction" value="no" class="mr-1">No Dectuction'+
-                      				'<input type="radio" name="pl_deduction" value="yes" class="ml-2 mr-1">Dectucted'+ 
+                      				'<input type="radio" name="pl_deduction" value="yes" class="ml-2 mr-1" checked>Dectucted'+ 
                       			'</div>'+
                     	  	'</div>'+
                     	  	
@@ -296,7 +298,7 @@ $(document).ready(function(){
                 	  	'</div>'+
                        '</form>';
                        x = x + '</div></div>';
-                	$('#form_detail').html(x);
+                	$('#form_detail').html(x).show();
                 	$('#pls').html(response.data.pls[0]['balance']);
                 }
         	} 

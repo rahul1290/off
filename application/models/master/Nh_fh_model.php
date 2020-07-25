@@ -69,9 +69,9 @@ class Nh_fh_model extends CI_Model {
 	    $date = $this->db->get_where('nh_fh_master',array('id'=>$data['nhfh_date'],'status'=>1))->result_array();
 	    
 	    $ref['request_type'] = 'NH_FH_AVAIL';
-	    $ref['reference_id'] = 'NH_HF_AVAIL-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
+	    $ref['reference_id'] = 'NHFH-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
 	    
-	    if(count($date)>0){    //if nh/fh date axist 
+	    if(count($date)>0){    //if nh/fh date exsist 
     	    $this->db->select('*');
     	    $this->db->where('(hod_status = "GRANTED" OR hr_status = "GRANTED")');
     	    $result = $this->db->get_where('users_leave_requests',array(
@@ -90,6 +90,9 @@ class Nh_fh_model extends CI_Model {
                        'date_from'      => $date[0]['nhfh_date'],
                        'date_to'        => $date[0]['nhfh_date'],
                        'created_at'     => date('Y-m-d H:i:s'),
+                       'hod_status'     => 'PENDING',
+                       'hr_status'      => 'PENDING',
+                       'request_status_code' => 1
                    ));
                    
                    $x = $this->db->insert_id();

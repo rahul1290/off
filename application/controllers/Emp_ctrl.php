@@ -417,6 +417,9 @@ class Emp_ctrl extends CI_Controller {
 					$data['request_type'] = 'HALF';
 					$data['reference_id'] = 'HF-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
 					$data['created_at'] = date('Y-m-d H:i:s');
+					$data['hod_status'] = 'PENDING';
+					$data['hr_status'] = 'PENDING';
+					$data['request_status_code'] = 1;
 					
 					if($this->db->insert('users_leave_requests',$data)){ 
 						$id = $this->db->insert_id();

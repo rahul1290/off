@@ -79,12 +79,7 @@ class Hr_model extends CI_Model {
             $data['coff'] = $this->my_library->empCoffHr($data['leave_detail'][0]['ecode']);
             $data['nhfh'] = $this->my_library->empNhfhHr($data['leave_detail'][0]['ecode']);
             
-            
-            $this->db->select('*');
-            $this->db->limit(1);
-            $this->db->order_by('id','desc');
-            $data['pls'] = $this->db->get_where('pl_management',array('ecode'=>$data['leave_detail'][0]['ecode']))->result_array();
-            
+            $data['pls'] = $this->my_library->pl_calculator($data['leave_detail'][0]['ecode']);
         }
         return $data;
     }

@@ -34,7 +34,6 @@ class Hf_leave_ctrl extends CI_Controller {
 	    $data['top_nav'] = $this->load->view('include/top_nav','',true);
 	    $data['aside'] = $this->load->view('include/aside',$data,true);
 	    $data['notepad'] = $this->load->view('include/shift_timing','',true);
-	    //$data['pending_requests'] = $this->Hf_leave_model->hf_leave_pending_request($ulist,$ref_id);
 	    $data['pending_requests'] = $this->Hf_leave_model->total_hf_pending_request();
 	    $data['requests'] = $this->Hf_leave_model->hf_leave_request($ulist,$ref_id);
 	    $data['body'] = $this->load->view('pages/hradmin/hf_leave_requests',$data,true);
@@ -78,9 +77,16 @@ class Hf_leave_ctrl extends CI_Controller {
 	
 	function get_hf_ids(){
 	    $data['dept_id'] = $this->input->post('dept_id');
-	    $result = $this->Hf_leave_model->get_hf_ids($data);
-	    if(count($result)>0){
-	        echo json_encode(array('data'=>$result,'msg'=>'','status'=>200));
+	    $results = $this->Hf_leave_model->get_hf_ids($data);
+	    
+	    if(count($results)>0){
+	        $final_array = array();
+	        foreach($results as $result){
+	            $temp = $result;
+	            $temp['reference_id'] = $this->my_library->remove_hyphen($result['reference_id']);
+	            $final_array[] = $temp;
+	        }
+	        echo json_encode(array('data'=>$final_array,'msg'=>'','status'=>200));
 	    } else {
 	        echo json_encode(array('msg'=>'No record found.','status'=>500));
 	    }

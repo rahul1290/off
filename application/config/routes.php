@@ -98,6 +98,8 @@ $route['hr/nh-fh-day-duty-request'] = 'Hr_ctrl/nh_fh_day_duty_request/';
 $route['hr/nh-fh-day-duty-request/(:any)'] = 'Hr_ctrl/nh_fh_day_duty_request/$1';
 $route['hr/nh-fh-day-duty-update'] = 'Hr_ctrl/nh_fh_day_duty_request_update';
 
+$route['hr/pl-add-manual'] = 'Hr_ctrl/pl_add_manual';
+
 $route['hr/Policies'] = 'Hr_ctrl/policies';
 $route['hr/plreview'] = 'Hr_ctrl/pl_deduction';
 /////master//////////
