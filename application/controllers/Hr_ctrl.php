@@ -6,7 +6,7 @@ class Hr_ctrl extends CI_Controller {
 	public function __construct(){
         parent::__construct();
         $this->load->database();
-		$this->load->model(array('Auth_model','master/Department_model','Emp_model','Hr_model'));
+		$this->load->model(array('Auth_model','master/Department_model','Emp_model','Hr_model','master/Employee_model'));
 		$this->is_login();
     }
 	
@@ -466,5 +466,41 @@ class Hr_ctrl extends CI_Controller {
 	    $data['head'] = $this->load->view('common/head',$data,true);
 	    $data['footer'] = $this->load->view('common/footer',$data,true);
 	    $this->load->view('layout_master',$data);
+	}
+	
+	
+	function pl_add_manual(){
+	    $data = array();
+	    $data['departments'] = $this->Department_model->getAllDepartment();
+	    $data['footer'] = $this->load->view('include/footer','',true);
+	    $data['top_nav'] = $this->load->view('include/top_nav','',true);
+	    $data['aside'] = $this->load->view('include/aside','',true);
+	    //$data['notepad'] = $this->load->view('include/notepad','',true);
+	    $data['body'] = $this->load->view('pages/hradmin/pl_add_manual',$data,true);
+	    //===============common===============//
+	    $data['title'] = $this->config->item('project_title').' | PL-review';
+	    $data['head'] = $this->load->view('common/head',$data,true);
+	    $data['footer'] = $this->load->view('common/footer',$data,true);
+	    $this->load->view('layout_master',$data);
+	}
+	
+	function plCalculation(){
+	    $ecode = $this->input->post('ecode');
+	    $result = $this->my_library->pl_calculator($ecode);
+	    if(count($result)>0){
+	        echo json_encode(array('data'=>$result,'status'=>200));
+	    } else {
+	        echo json_encode(array('status'=>500));
+	    }
+	}
+	
+	function getAllEmployee_dept(){
+	    $dept_id = $this->input->post('dept_id');
+	    $result = $this->Department_model->department_employees((int) $dept_id);
+	    if(count($result) > 0){
+	        echo json_encode(array('data'=>$result,'status'=>200));
+	    } else {
+	        echo json_encode(array('status'=>500));
+	    }
 	}
 }

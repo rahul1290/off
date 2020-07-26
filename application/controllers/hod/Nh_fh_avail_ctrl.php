@@ -165,6 +165,12 @@ class Nh_fh_avail_ctrl extends CI_Controller {
 	    $data['hod_status'] = $this->input->post('status');
 	    $data['hod_remark'] = $this->input->post('remark');
 	    $data['created_at'] = date('Y-m-d H:i:s');
+	    if($data['hod_status'] == 'GRANTED'){
+	        $data['request_status_code'] = 2;
+	        $data['hr_status'] = 'PENDING';
+	    } else {
+	        $data['request_status_code'] = 4;
+	    }
 	    $data['hod_id'] = $this->session->userdata('ecode');
 	    if($this->nh_fh_avail_model->nh_fh_avail_request_update($data)){
 	        echo json_encode(array('status'=>200));

@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Employee_model extends CI_Model {
-	
+    
 	function employees($eid=null){
 		if($eid == null){
 			$this->db->select('u.id,u.ecode,u.name,u.gender,dept_name,desg_name,grade_name,date_format(u.jdate,"%d/%m/%Y") as jdate');

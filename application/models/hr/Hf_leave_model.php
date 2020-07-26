@@ -85,7 +85,8 @@ class Hf_leave_model extends CI_Model {
                     'hr_id' => $this->session->userdata('ecode'),
                     'hr_remark' => $data['hr_remark'],
                     'hr_status' => 'GRANTED',
-                    'hr_remark_date' => date('Y-m-d H:i:s')
+                    'hr_remark_date' => date('Y-m-d H:i:s'),
+                    'request_status_code' => 3
                 ));
         
         if($data['pl_deduction'] == 'yes'){
@@ -95,7 +96,7 @@ class Hf_leave_model extends CI_Model {
             
             $this->db->insert("pl_management",array(
                     'type' => 'PL',
-                    'refrence_no' => $data['application_no'],
+                    'refrence_no' => $this->my_library->remove_hyphen($data['application_no']),
                     'ecode' => $empDetail[0]['ecode'],
                     'credit' => NULL,
                     'debit' => '0.5',
@@ -105,7 +106,6 @@ class Hf_leave_model extends CI_Model {
                     'created_by' => $this->session->userdata('ecode'),
                     'status' => 1
             ));
-
         }
         
         if ($this->db->trans_status() === FALSE){

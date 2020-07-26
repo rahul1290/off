@@ -107,7 +107,7 @@
         			<div class="card-header m-0 p-0 pl-2" style="border-radius: 0px;">Full Day Leaves Taken</div>
         			  <div class="card-body">
         				<div class="table-responsive">
-        					<table class="table-bordered table-striped" id="example">
+        					<table class="table-bordered table-striped table-condensed" id="example">
         						<thead>	
         							<tr class="bg-dark">
         								<th>S.No.</th>
@@ -170,7 +170,7 @@
         			<div class="card-header m-0 p-0 pl-2" style="border-radius: 0px;">Half Day Leaves Taken</div>
         			  <div class="card-body">
         				<div class="table-responsive">
-        					<table class="table table-bordered table-striped" id="example_2">
+        					<table class="table table-bordered table-striped table-condensed" id="example_2">
         						<thead>	
         							<tr class="bg-dark">
         								<th>S.No.</th>
@@ -227,7 +227,7 @@
         			<div class="card-header m-0 p-0 pl-2" style="border-radius: 0px;">Off Day Duty Detail</div>
         			  <div class="card-body">
         				<div class="table-responsive">
-        					<table class="table table-bordered table-striped" id="example_3">
+        					<table class="table table-bordered table-striped table-condensed" id="example_3">
         						<thead>	
         							<tr class="bg-dark">
         								<th>S.No.</th>
@@ -286,7 +286,7 @@
         			<div class="card-header m-0 pl-2 p-0" style="border-radius: 0px;">NH/FH Day Duty Detail</div>
         			  <div class="card-body">
         				<div class="table-responsive">
-        					<table class="table table-bordered table-striped" id="example_4">
+        					<table class="table table-bordered table-striped table-condensed" id="example_4">
         						<thead>	
         							<tr class="bg-dark">
         								<th>S.No.</th>
@@ -341,7 +341,7 @@
         			<div class="card-header m-0 p-0 pl-2" style="border-radius: 0px;">Tour</div>
         			  <div class="card-body">
         				<div class="table-responsive">
-        					<table class="table table-bordered table-striped" id="example_5">
+        					<table class="table table-bordered table-striped table-condensed" id="example_5">
         						<thead>	
         							<tr class="bg-dark">
         								<th>S.No.</th>
@@ -404,7 +404,7 @@
         			<div class="card-header m-0 p-0 pl-2" style="border-radius: 0px;">NH FH Avail Deatil</div>
         			  <div class="card-body">
         				<div class="table-responsive">
-        					<table class="table table-bordered table-striped" id="example_6">
+        					<table class="table table-bordered table-striped table-condensed" id="example_6">
         						<thead>	
         							<tr class="bg-dark">
         								<th>S.No.</th>

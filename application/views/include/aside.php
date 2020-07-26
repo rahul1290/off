@@ -1,9 +1,17 @@
-<?php $display = array();
+<?php 
+$display = array();
+$menus = array();
 
 if(isset($links)){
-foreach($links as $link){
-	array_push($display,$link['link_name']);
-}}
+    foreach($links as $link){
+    	array_push($display,$link['link_name']);
+    }
+
+    foreach($links as $link){
+        array_push($menus,$link['id']);
+    }
+}
+
 ?>
 
 <aside class="main-sidebar sidebar-dark-warning elevation-4">
@@ -210,6 +218,16 @@ foreach($links as $link){
                   <p>NH/FH DAY DUTY REQUESTS</p>
                 </a>
               </li>
+              
+              <li class="nav-item" style="display: <?php if(isset($menus)){ if(in_array('66',$menus)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+                <a href="<?php echo base_url('hr/pl-add-manual'); ?>" class="nav-link ml-3
+					<?php if($this->uri->segment('2') == 'pl-add-manual'){ echo "active"; } ?>
+				">
+				  <i class="fas fa-user"></i>
+                  <p>PL Add Manual</p>
+                </a>
+              </li>
+              
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('EMPLOYEE INFORMATION',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('emp/hr/Emp-Info'); ?>" class="nav-link ml-3
 					<?php if($this->uri->segment('3') == 'Emp-Info'){ echo "active"; } ?>

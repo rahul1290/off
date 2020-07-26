@@ -165,6 +165,12 @@ class Hf_leave_ctrl extends CI_Controller {
 	    $data['hod_status'] = $this->input->post('hod_status');
 	    $data['hod_remark'] = $this->input->post('hod_remark');
 	    $data['created_at'] = date('Y-m-d H:i:s');
+	    if($data['hod_status'] == 'GRANTED'){
+	        $data['hr_status'] = 'PENDING';
+	        $data['request_status_code'] = 2;
+	    } else {
+	        $data['request_status_code'] = 4;
+	    }
 	    $data['hod_id'] = $this->session->userdata('ecode');
 	    if($this->Hf_leave_model->hf_leave_request_update($data)){
 	        echo json_encode(array('status'=>200));

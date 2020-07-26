@@ -67,7 +67,9 @@ class Hf_leave_model extends CI_Model {
             'hod_status' => $data['hod_status'],
             'hod_remark' => $data['hod_remark'],
             'hod_id' => $data['hod_id'],
-            'hod_remark_date' => $data['created_at']
+            'hod_remark_date' => $data['created_at'],
+            'hr_status' => $data['hr_status'],
+            'request_status_code' => $data['request_status_code']
         ));
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();

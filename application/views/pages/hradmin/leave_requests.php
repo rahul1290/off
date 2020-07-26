@@ -251,6 +251,7 @@ $(document).ready(function(){
                                         		if(response.data.coff_againts_ref.length){
 													$.each(response.data.coff_againts_ref,function(key,value){
 														if(value.request_type == "NH_FH"){
+															console.log(value);
 															y2 = y2 + value.date_from +',';
 														}
 													});						
@@ -324,7 +325,7 @@ $(document).ready(function(){
                 	  				y = '<td><ul style="list-style:none;">';
                         	  		$.each(response.data.nhfh,function(key,value){
                             	  		flag = true;
-                            	  		$.each(globalData.data.nhfh,function(key1,value1){
+                            	  		$.each(globalData.data.coff_againts_ref,function(key1,value1){
                             	  			if(value.reference_id == value1.reference_id){
                                 	  			flag = false;
                             	  			}
@@ -345,7 +346,7 @@ $(document).ready(function(){
                         	  		y = '<td><ul style="list-style:none;">';
                         	  		$.each(response.data.coff,function(key,value){
                         	  			flag = true;
-                        	  			$.each(globalData.data.coff,function(key1,value1){
+                        	  			$.each(globalData.data.coff_againts_ref,function(key1,value1){
                             	  			if(value.reference_id == value1.reference_id){
                             	  				flag = false;
                                 	  		}

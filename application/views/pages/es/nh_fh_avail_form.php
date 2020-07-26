@@ -88,10 +88,7 @@
 									<th>REQUEST SUBMIT DATE</th>
 									<th>NH/FH DATE</th>
 									<th>REASON</th>
-									<th>HOD REMARK</th>
 									<th>HOD STATUS</th>
-									<th>HR REMARK</th>
-									<th>HR STATUS</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -102,7 +99,6 @@
     									<td><?php echo $request['created_at']; ?></td>
     									<td><?php echo $request['date']; ?></td>
     									<td><?php echo strlen($request['requirment']) > 50 ? substr($request['requirment'],0,50)."...<a href='#'>read more</a>" : $request['requirment']; ?></td>
-    									<td><?php echo $request['hod_remark']; ?></td>
     									<td class="
     											<?php if($request['hod_status'] == 'REJECTED'){ 
     													echo "bg-danger"; 
@@ -114,19 +110,6 @@
     											    
     											}?>"
     										><?php echo $request['hod_status']; ?>
-    									</td>
-    									<td><?php echo $request['hr_remark']; ?></td>
-    									<td class="
-    											<?php if($request['hr_status'] == 'REJECTED'){ 
-    													echo "bg-danger"; 
-    											} else if($request['hr_status'] == 'PENDING'){
-    													echo "bg-warning";
-    											} else if($request['hr_status'] == 'GRANTED'){
-    												echo "bg-success";
-    											} else {
-    											    
-    											}?>"
-    										><?php echo $request['hr_status']; ?>
     									</td>
 									</tr>
 								<?php } ?>

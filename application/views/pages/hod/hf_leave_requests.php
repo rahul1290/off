@@ -125,16 +125,16 @@ $(document).ready(function(){
 	var previous;
 	var that;
 	$(document).on('focus','.hod_status',function(){
-	//$(".hod_status").on('focus', function () {
         previous = this.value;
         that = this;
     }).change(function() { 
 		var req_id = $(that).data('rid');
 		var status = $(that).val();
+		
 		if(previous != status){
     		var c = confirm('Are you sure!');
     		if(c){
-    			remark = $('hod_remark_'+req_id).val();
+    			remark = $('#hod_remark_'+req_id).val();
     			$.ajax({
     				type: 'POST',
     				url: baseUrl+'hod/hf-leave-request-update/',
