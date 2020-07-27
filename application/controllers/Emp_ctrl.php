@@ -16,7 +16,7 @@ class Emp_ctrl extends CI_Controller {
 		}
 	}
 
-	function index(){
+	function index(){ 
 		$this->db2 = $this->load->database('sqlsrv', TRUE);
 		$data = array();
 		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
