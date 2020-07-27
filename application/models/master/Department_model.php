@@ -51,7 +51,7 @@ class Department_model extends CI_Model {
 	}
 	
 	function department_employees($dept_id){
-	    $this->db->select('id,ecode,name');
+	    $this->db->select('id,ecode,name,paycode');
 	    $this->db->order_by('name','ASC');
 	    return $result = $this->db->get_where('users',array('department_id'=>$dept_id,'is_active'=>'YES','status'=>1))->result_array();
 	}

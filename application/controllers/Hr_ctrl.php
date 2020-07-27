@@ -461,7 +461,7 @@ class Hr_ctrl extends CI_Controller {
 	    $data['aside'] = $this->load->view('include/aside','',true);
 	    //$data['notepad'] = $this->load->view('include/notepad','',true);
 	    $data['body'] = $this->load->view('pages/hradmin/roaster',$data,true);
-	    //===============common===============//
+	    //===============common=====================//
 	    $data['title'] = $this->config->item('project_title').' | PL-review';
 	    $data['head'] = $this->load->view('common/head',$data,true);
 	    $data['footer'] = $this->load->view('common/footer',$data,true);
@@ -471,11 +471,11 @@ class Hr_ctrl extends CI_Controller {
 	
 	function pl_add_manual(){
 	    $data = array();
+	    $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 	    $data['departments'] = $this->Department_model->getAllDepartment();
 	    $data['footer'] = $this->load->view('include/footer','',true);
 	    $data['top_nav'] = $this->load->view('include/top_nav','',true);
-	    $data['aside'] = $this->load->view('include/aside','',true);
-	    //$data['notepad'] = $this->load->view('include/notepad','',true);
+	    $data['aside'] = $this->load->view('include/aside',$data,true);
 	    $data['body'] = $this->load->view('pages/hradmin/pl_add_manual',$data,true);
 	    //===============common===============//
 	    $data['title'] = $this->config->item('project_title').' | PL-review';
@@ -485,13 +485,46 @@ class Hr_ctrl extends CI_Controller {
 	}
 	
 	function plCalculation(){
-	    $ecode = $this->input->post('ecode');
-	    $result = $this->my_library->pl_calculator($ecode);
-	    if(count($result)>0){
-	        echo json_encode(array('data'=>$result,'status'=>200));
+	    $param['department'] = $this->input->post('department');
+	    $param['paycode'] = $this->input->post('employee');
+	    
+	    $data1['report'] = $this->Emp_model->pl_summary_report($param);
+	    
+	    $ecode = $this->input->post('employee');
+	    $data1['balance'] = $this->my_library->pl_calculator($ecode);
+	    if(count($data1['balance'])>0){
+	        echo json_encode(array('data'=>$data1,'status'=>200));
 	    } else {
 	        echo json_encode(array('status'=>500));
 	    }
+	}
+	
+	function plupdate(){
+	    if($this->input->post('action') == 'add'){ 
+    	    $this->db->insert('pl_management',array(
+    	        'refrence_no' => trim($this->input->post('remark')),
+    	        'ecode' => $this->input->post('employee'),
+    	        'credit' => $this->input->post('nopl'),
+    	        'balance' => $this->input->post('statuspl'),
+    	        'date' => date('Y-m-d H:i:s'),
+    	        'created_at' => date('Y-m-d H:i:s'),
+    	        'created_by' => $this->session->userdata('ecode'),
+    	        'status'=>1
+    	    ));
+	    } else {
+	        $this->db->insert('pl_management',array(
+	            'refrence_no' => trim($this->input->post('remark')),
+	            'ecode' => $this->input->post('employee'),
+	            'debit' => $this->input->post('nopl'),
+	            'balance' => $this->input->post('statuspl'),
+	            'date' => date('Y-m-d H:i:s'),
+	            'created_at' => date('Y-m-d H:i:s'),
+	            'created_by' => $this->session->userdata('ecode'),
+	            'status'=>1
+	        ));
+	    }
+	    
+	    echo json_encode(array('status'=>200));
 	}
 	
 	function getAllEmployee_dept(){
@@ -502,5 +535,22 @@ class Hr_ctrl extends CI_Controller {
 	    } else {
 	        echo json_encode(array('status'=>500));
 	    }
+	}
+	
+	
+	
+	function adjustment_cancel(){
+	    $data = array();
+	    $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+	    $data['requests'] = $this->Hr_model->adjustment_cancel_request();
+	    $data['footer'] = $this->load->view('include/footer','',true);
+	    $data['top_nav'] = $this->load->view('include/top_nav','',true);
+	    $data['aside'] = $this->load->view('include/aside',$data,true);
+	    $data['body'] = $this->load->view('pages/hradmin/adjustment_cancel',$data,true);
+	    //===============common===============//
+	    $data['title'] = $this->config->item('project_title').' | PL-review';
+	    $data['head'] = $this->load->view('common/head',$data,true);
+	    $data['footer'] = $this->load->view('common/footer',$data,true);
+	    $this->load->view('layout_master',$data);
 	}
 }

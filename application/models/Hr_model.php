@@ -216,4 +216,21 @@ class Hr_model extends CI_Model {
 	    return $result;
 	}
 	
+	function adjustment_cancel_request(){
+	    $this->db->select('dm.id,dm.dept_name,count(*) as requests,ulr.*');
+	    $this->db->where('u.is_active','YES');
+	    $this->db->join('users u','u.ecode = ulr.ecode');
+	    $this->db->join('department_master dm','dm.id = u.department_id');
+	    $this->db->group_by('dm.id');
+	    $result = $this->db->get_where('users_leave_requests ulr',array(
+	        'request_type'=>'LEAVE',
+	        'ulr.hod_status'=>'GRANTED',
+	        'ulr.hr_status'=>'GRANTED',
+	        'ulr.status'=> 1,
+	        'ulr.date_from >=' => date('Y-m-d', strtotime("-2 months")),
+	    ))->result_array();
+	    print_r($this->db->last_query()); die;
+	    return $result;
+	}
+	
 }

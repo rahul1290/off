@@ -228,6 +228,15 @@ if(isset($links)){
                 </a>
               </li>
               
+              <li class="nav-item" style="display: <?php if(isset($menus)){ if(in_array('67',$menus)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
+                <a href="<?php echo base_url('hr/adjustment-cancel'); ?>" class="nav-link ml-3
+					<?php if($this->uri->segment('2') == 'adjustment-cancel'){ echo "active"; } ?>
+				">
+				  <i class="fas fa-user"></i>
+                  <p>Adjustment Cancel</p>
+                </a>
+              </li>
+              
 			  <li class="nav-item" style="display: <?php if(isset($links)){ if(in_array('EMPLOYEE INFORMATION',$display)) { echo 'block';} else { echo 'none'; } } else { echo 'block';}?>">
                 <a href="<?php echo base_url('emp/hr/Emp-Info'); ?>" class="nav-link ml-3
 					<?php if($this->uri->segment('3') == 'Emp-Info'){ echo "active"; } ?>
