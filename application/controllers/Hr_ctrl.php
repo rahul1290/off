@@ -6,7 +6,7 @@ class Hr_ctrl extends CI_Controller {
 	public function __construct(){
         parent::__construct();
         $this->load->database();
-		$this->load->model(array('Auth_model','master/Department_model','Emp_model','Hr_model','master/Employee_model'));
+		$this->load->model(array('Auth_model','master/Department_model','Emp_model','Hr_model','hr/Hf_leave_model','master/Employee_model'));
 		$this->is_login();
     }
 	
@@ -542,7 +542,10 @@ class Hr_ctrl extends CI_Controller {
 	function adjustment_cancel(){
 	    $data = array();
 	    $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
+	    
 	    $data['requests'] = $this->Hr_model->adjustment_cancel_request();
+	    $data['hf_requests'] = $this->Hf_leave_model->adjustment_hf_cancel_request();
+	    
 	    $data['footer'] = $this->load->view('include/footer','',true);
 	    $data['top_nav'] = $this->load->view('include/top_nav','',true);
 	    $data['aside'] = $this->load->view('include/aside',$data,true);
@@ -552,5 +555,15 @@ class Hr_ctrl extends CI_Controller {
 	    $data['head'] = $this->load->view('common/head',$data,true);
 	    $data['footer'] = $this->load->view('common/footer',$data,true);
 	    $this->load->view('layout_master',$data);
+	}
+	
+	
+	function cancel_adjustment(){
+	    $ref_id = $this->input->post('ref_id');
+	    if($this->Hr_model->cancel_adjustment($ref_id)){
+	        echo json_encode(array('msg'=>'Request canceled successfully.','status'=>200));
+	    } else {
+	        echo json_encode(array('msg'=>'Request not canceled.','status'=>500));
+	    }
 	}
 }

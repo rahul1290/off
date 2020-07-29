@@ -89,7 +89,6 @@
 								<th>OFF DAY DUTY DATE</th>
 								<th>REASON</th>	
 								<th>HOD STATUS</th>
-								<th>HR STATUS</th>
 							</tr>
 						</thead>
 						<tbody id="off_requests_body"></tbody>
@@ -198,19 +197,8 @@ $(document).ready(function(){
                     				}else if(value.hod_status == 'PENDING'){
                 						bgcolor = 'bg-warning';
                     				}
-            						x = x+'<td class="'+ bgcolor +'">'+ value.hod_status +'</td>';
-            						var bgcolor = '';
-            						if(value.hr_status == 'REJECTED'){
-            							bgcolor = 'bg-danger';
-                					} else if(value.hr_status == 'GRANTED'){
-                						bgcolor = 'bg-success';
-                    				}else if(value.hr_status == 'PENDING'){
-                						bgcolor = 'bg-warning';
-                    				} else {
-                        				bgcolor = '';
-                        			}
-                    				x = x + '<td class="'+ bgcolor +'">'+ value.hr_status +'</td>'+
-            					'</tr>';
+            						x = x + '<td class="'+ bgcolor +'">'+ value.hod_status +'</td>'+
+            					 '</tr>';
             		});         	
             		$('#off_requests_body').html(x);
             		$('#off_requests_links').html(response.data.links);

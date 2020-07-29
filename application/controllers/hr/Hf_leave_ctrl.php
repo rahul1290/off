@@ -91,4 +91,14 @@ class Hf_leave_ctrl extends CI_Controller {
 	        echo json_encode(array('msg'=>'No record found.','status'=>500));
 	    }
 	}
+	
+	
+	function cancel_adjustment(){
+	    $ref_id = $this->input->post('ref_id');
+	    if($this->Hf_leave_model->cancel_adjustment($ref_id)){
+	        echo json_encode(array('msg'=>'Request cancelled successfully.','status'=>200));
+	    } else {
+	        echo json_encode(array('status'=>500));
+	    }
+	}
 }

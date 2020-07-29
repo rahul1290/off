@@ -61,9 +61,10 @@ class Hr_model extends CI_Model {
     
     
     function leave_detail($parms){
+        $data = array();
+        
         $this->db->select('*');
         $data['leave_detail'] = $this->db->get_where('users_leave_requests',array('id'=>$parms['ref_id'],'status'=>1))->result_array();
-        
         
         if(count($data['leave_detail'])>0){
             $data['leave_detail'][0]['duration'] = $this->my_library->day_duration($data['leave_detail'][0]['date_from'],$data['leave_detail'][0]['date_to']);
@@ -74,7 +75,8 @@ class Hr_model extends CI_Model {
             
             
             $this->db->select('*');
-            $data['coff_againts_ref'] = $this->db->get_where('users_leave_requests',array('request_status_code'=>2,'request_id'=>$data['leave_detail'][0]['reference_id']))->result_array();
+            $this->db->where("(request_status_code= 2 OR request_status_code =3)");
+            $data['coff_againts_ref'] = $this->db->get_where('users_leave_requests',array('request_id'=>$data['leave_detail'][0]['reference_id']))->result_array();
             
             $data['coff'] = $this->my_library->empCoffHr($data['leave_detail'][0]['ecode']);
             $data['nhfh'] = $this->my_library->empNhfhHr($data['leave_detail'][0]['ecode']);
@@ -145,7 +147,7 @@ class Hr_model extends CI_Model {
             
             $this->db->insert("pl_management",array(
                 'type' => 'PL',
-                'refrence_no' => $data['application_no'],
+                'refrence_no' => str_replace('-', '/', $data['application_no']),
                 'ecode' => $empDetail[0]['ecode'],
                 'credit' => NULL,
                 'debit' => $data['pls'],
@@ -217,20 +219,36 @@ class Hr_model extends CI_Model {
 	}
 	
 	function adjustment_cancel_request(){
-	    $this->db->select('dm.id,dm.dept_name,count(*) as requests,ulr.*');
-	    $this->db->where('u.is_active','YES');
-	    $this->db->join('users u','u.ecode = ulr.ecode');
-	    $this->db->join('department_master dm','dm.id = u.department_id');
-	    $this->db->group_by('dm.id');
-	    $result = $this->db->get_where('users_leave_requests ulr',array(
-	        'request_type'=>'LEAVE',
-	        'ulr.hod_status'=>'GRANTED',
-	        'ulr.hr_status'=>'GRANTED',
-	        'ulr.status'=> 1,
-	        'ulr.date_from >=' => date('Y-m-d', strtotime("-2 months")),
-	    ))->result_array();
-	    print_r($this->db->last_query()); die;
+	    $result = $this->db->query("SELECT `dm`.`id`, `dm`.`dept_name`, `ulr`.*
+                            FROM `users_leave_requests` `ulr`
+                                JOIN `users` `u` ON `u`.`ecode` = `ulr`.`ecode`
+                                JOIN `department_master` `dm` ON `dm`.`id` = `u`.`department_id`
+                                WHERE `u`.`is_active` = 'YES'
+                                    AND `request_type` = 'LEAVE'
+                                    AND ((`ulr`.`hod_status` = 'GRANTED'
+                                        AND `ulr`.`hr_status` = 'GRANTED'
+                                        AND `ulr`.`status` = 1
+                                        AND `ulr`.`request_status_code` <> 5) OR  (`ulr`.`request_status_code` = 3))
+                                        AND `ulr`.`created_at` >= '".date('Y-m-d', strtotime("-2 months"))."'
+                                    order by ulr.reference_id desc")->result_array();
 	    return $result;
 	}
 	
+	function cancel_adjustment($ref_id){
+	    $this->db->trans_begin();
+	    
+	       $this->db->where('reference_id',$ref_id);
+	       $this->db->update('users_leave_requests',array('request_status_code'=>5));
+	       
+	       $this->db->where('request_id',$ref_id);
+	       $this->db->update('users_leave_requests',array('request_id'=>null,'request_status_code'=>3));
+	       
+	    if ($this->db->trans_status() === FALSE){
+	        $this->db->trans_rollback();
+	        return false;
+	    } else {
+	        $this->db->trans_commit();
+	        return true;
+	    }
+	}
 }

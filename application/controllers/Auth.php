@@ -8,6 +8,30 @@ class Auth extends CI_Controller {
         $this->load->database();
 		$this->load->model(array('Auth_model','Emp_model'));
     }
+    
+    
+    function cronjob(){
+        $this->db->insert('cabs',array(
+            'v_no' => date('Y-m-d H:i:s')    
+        ));
+    }
+    
+    function filedel(){
+        $this->load->helper('directory');
+        $maps = directory_map('L:\aajtak');
+        
+        $c = 0;
+        foreach($maps as $map){
+            if($c < 2000){
+                unlink('L:/aajtak/'.$map);
+            } else {
+                break;
+            }
+            $c++;
+        }
+        
+        $this->cronjob();
+    }
 	
 	function is_login(){
 		if($this->session->userdata('ecode')){

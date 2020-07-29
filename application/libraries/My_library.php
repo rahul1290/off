@@ -127,9 +127,9 @@ class My_library {
 	}
 	
 	
-	function leave_requester_ecode($ref_id) {
+	function leave_requester_ecode($id) {
 	    $this->CI->db->select('ecode');
-	    $result = $this->CI->db->get_where('users_leave_requests',array('id'=>$ref_id))->result_array();
+	    $result = $this->CI->db->get_where('users_leave_requests',array('id'=>$id))->result_array();
 	    return $result[0]['ecode'];
 	}
 	
@@ -137,6 +137,17 @@ class My_library {
 	    $this->CI->db->select('reference_id');
 	    $result = $this->CI->db->get_where('users_leave_requests',array('id'=>$ref_id))->result_array();
 	    return $result[0]['reference_id'];
+	}
+	
+	
+	function getEcode_refId($ref_id){
+	    $this->CI->db->select('ecode');
+	    $result = $this->CI->db->get_where('users_leave_requests',array('reference_id'=>$ref_id))->result_array();
+	    if(count($result)>0){
+	       return $result[0]['ecode'];
+	    } else {
+	        return false;
+	    }
 	}
 	
 	function get_current_session(){

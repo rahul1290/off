@@ -461,7 +461,7 @@ class Etl_ctrl extends CI_Controller {
     		foreach($results as $result){
     			$temp = array();
     			$temp['request_type'] = 'OFF_DAY';
-    			$temp['reference_id'] = $result['ID'];
+    			$temp['reference_id'] = str_replace('--', '-', str_replace('/', '-', $result['ID']));
     			$temp['ecode'] = $result['EmpCode'];
     			$temp['requirment'] = $result['Requirement'];
     			$temp['date_from'] = $result['Date1'];
@@ -548,7 +548,7 @@ class Etl_ctrl extends CI_Controller {
     		foreach($results as $result){
     			$temp = array();
     			$temp['request_type'] = 'LEAVE';
-    			$temp['reference_id'] = $result['Emp_Req_No'];
+    			$temp['reference_id'] = str_replace('--', '-', str_replace('/', '-', $result['Emp_Req_No']));
     			$temp['ecode'] = $result['Emp_Code'];
     			$temp['requirment'] = $result['LReason'];
     			$temp['date_from'] = $result['Leave_From'];
@@ -574,7 +574,7 @@ class Etl_ctrl extends CI_Controller {
     					$var = $nhfh;
     					$date = str_replace('/', '-', $var);
     					$this->db->where(array('ecode'=>$ecode,'request_type'=>'NH_FH','date_from'=>date('Y-m-d', strtotime($date)),'status'=>1));
-    					$this->db->update('users_leave_requests',array('request_id'=>$result['Emp_Req_No']));
+    					$this->db->update('users_leave_requests',array('request_id'=>$temp['reference_id']));
     				}
     			}
     			
@@ -593,7 +593,7 @@ class Etl_ctrl extends CI_Controller {
     				foreach($coffs as $coff){
     				    $coff = str_replace('/', '-', $coff);
     				    $this->db->where(array('ecode'=>$ecode,'request_type'=>'OFF_DAY','date_from'=>date('Y-m-d',strtotime($coff)),'status'=>1));
-    					$this->db->update('users_leave_requests',array('request_id'=>$result['Emp_Req_No']));
+    				    $this->db->update('users_leave_requests',array('request_id'=>$temp['reference_id']));
     				}
     			}
     			///string check end
@@ -616,7 +616,7 @@ class Etl_ctrl extends CI_Controller {
         			        $var = $nhfh;
         			        $date = str_replace('/', '-', $var);
         			        $this->db->where(array('ecode'=>$ecode,'request_type'=>'NH_FH','date_from'=>date('Y-m-d', strtotime($date)),'status'=>1));
-        			        $this->db->update('users_leave_requests',array('request_id'=>$result['Emp_Req_No']));
+        			        $this->db->update('users_leave_requests',array('request_id'=>$temp['reference_id']));
         			    }
         			}
         			
@@ -635,7 +635,7 @@ class Etl_ctrl extends CI_Controller {
         			    foreach($coffs as $coff){
         			        $coff = str_replace('/', '-', $coff);
         			        $this->db->where(array('ecode'=>$ecode,'request_type'=>'OFF_DAY','date_from'=>date('Y-m-d',strtotime($coff)),'status'=>1));
-        			        $this->db->update('users_leave_requests',array('request_id'=>$result['Emp_Req_No']));
+        			        $this->db->update('users_leave_requests',array('request_id'=>$temp['reference_id']));
         			    }
         			}
     			}
@@ -652,7 +652,7 @@ class Etl_ctrl extends CI_Controller {
         			        $coff = trim($date[1]).'-'.trim($date[0]).'-'.trim($date[2]);
         			        
         			        $this->db->where(array('ecode'=>$ecode,'request_type'=>'OFF_DAY','date_from'=>date('Y-m-d',strtotime($coff)),'status'=>1));
-        			        $this->db->update('users_leave_requests',array('request_id'=>$result['Emp_Req_No']));
+        			        $this->db->update('users_leave_requests',array('request_id'=>$temp['reference_id']));
     			        }
     			    }
     			}
@@ -744,7 +744,7 @@ class Etl_ctrl extends CI_Controller {
         	$insert_record = array();
     		foreach($results as $result){
     			$temp['request_type'] = 'HALF';
-    			$temp['reference_id'] = $result['ID'];
+    			$temp['reference_id'] = str_replace('--', '-', str_replace('/', '-', $result['ID']));
     			$temp['ecode'] = $result['EmpCode'];
     			$temp['requirment'] = $result['Reason'];
     			$temp['date_from'] = $result['RDate'];
@@ -826,7 +826,7 @@ class Etl_ctrl extends CI_Controller {
     		$insert_record = array();
     		foreach($results as $result){
     			$temp['request_type'] = 'NH_FH';
-    			$temp['reference_id'] = $result['ID'];
+    			$temp['reference_id'] = str_replace('--', '-', str_replace('/', '-', $result['ID']));
     			$temp['ecode'] = $result['EmpCode'];
     			$temp['requirment'] = $result['Requirement'];
     			$temp['date_from'] = $result['Date1'];
@@ -879,7 +879,7 @@ class Etl_ctrl extends CI_Controller {
     			    $temp['hr_id'] = '';
     			    $temp['hr_remark_date'] = NULL;
     			    $temp['created_at'] = $result['AppDate'];
-    			    $temp['request_status_code'] = 6;                         //  HOD rejected
+    			    $temp['request_status_code'] = 3;                         //  APPROVE
     			    
     			}
     			else {
@@ -892,7 +892,7 @@ class Etl_ctrl extends CI_Controller {
     			    $temp['hr_id'] = '';
     			    $temp['hr_remark_date'] = NULL;
     			    $temp['created_at'] = $result['AppDate'];
-    			    $temp['status'] = 0;
+    			    $temp['status'] = 1;
     			}
     			
     			
@@ -920,7 +920,7 @@ class Etl_ctrl extends CI_Controller {
 	        foreach($results as $result){
 	            $temp = array();
 	            $temp['request_type'] = 'NH_FH_AVAIL';
-	            $temp['reference_id'] = $result['ID'];
+	            $temp['reference_id'] = str_replace('--', '-', str_replace('/', '-', $result['ID']));
 	            $temp['ecode'] = $result['EmpCode'];
 	            $temp['requirment'] = $result['Requirement'];
 	            $temp['date_from'] = $this->my_library->mydate(substr($result['workoffday'], 0,10));

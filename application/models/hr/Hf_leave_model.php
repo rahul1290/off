@@ -135,4 +135,61 @@ class Hf_leave_model extends CI_Model {
             return true;
         }
     }
+    
+    ////////HF cancelletion Adjustment/////////////////
+    function adjustment_hf_cancel_request(){
+        $this->db->select('dm.id,dm.dept_name,ulr.*');
+        $this->db->where('u.is_active','YES');
+        $this->db->join('users u','u.ecode = ulr.ecode');
+        $this->db->join('department_master dm','dm.id = u.department_id');
+        $this->db->order_by('ulr.id','DESC');
+        $result = $this->db->get_where('users_leave_requests ulr',array(
+            'request_type'=>'HALF',
+            'ulr.hod_status'=>'GRANTED',
+            'ulr.hr_status'=>'GRANTED',
+            'ulr.status'=> 1,
+            'ulr.request_status_code <>' => 5,
+            'ulr.date_from >=' => date('Y-m-d', strtotime("-2 months")),
+        ))->result_array();
+        return $result;
+    }
+    
+    function cancel_adjustment($ref_id){
+        $ecode = '';
+        $ecode = $this->my_library->getEcode_refId($ref_id);
+        if(isset($ecode)){
+            $ref_id = str_replace('/','-',$ref_id);
+            $ecode = $this->my_library->getEcode_refId($ref_id);
+        }
+        
+        $pls = $this->my_library->pl_calculator($ecode);
+        $balance = $pls[0]['balance'];
+        
+        $this->db->trans_begin();
+        
+        $this->db->insert('pl_management',array(
+            'type' => 'PL',
+            'refrence_no' => $ref_id,
+            'ecode' => $ecode,
+            'debit' => '0.5',
+            'balance' => $balance - '0.5',
+            'created_at' => date('Y-m-d H:i:s'),
+            'created_by' => $this->session->userdata('ecode'),
+            'date' => date('Y-m-d H:i:s'),
+            'status' => 1
+        ));
+        
+        $this->db->where('reference_id',$ref_id);
+        $this->db->update('users_leave_requests',array(
+            'request_status_code' => 5
+        ));
+        
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
 }
