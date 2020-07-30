@@ -1,5 +1,4 @@
-  
-  <div class="content-wrapper">	
+<div class="content-wrapper">	
 	<div class="content-header bg-light mb-3">
 		<div class="container-fluid">
 			<div class="row mb-2">
@@ -20,124 +19,32 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-		
-			  <div class="col-md-12">
-				<div class="card card-info">
-				  <div class="card-header" style="border-radius:0px;">
-					<h3 class="card-title">NEW REQUESTS</h3>
-				  </div>
-				  <div class="card-body">
-					<?php if(count($pending_requests)>0){ ?>
-					<div class="table-responsive">
-						<table class="table table-bordered text-center" id="example">
-							<thead>	
-								<tr class="bg-dark">
-									<th>S.No.</th>
-									<th>REFERENCE No.</th>
-									<th>DEPARTMENT</th>
-									<th>EMPLOYEE NAME</th>
-									<th>REQUEST SUBMIT DATE</th>
-									<th>HALF TAKEN DATE</th>
-									<th>REASON</th>
-									<th>HOD REMARK</th>
-									<th>HOD STATUS</th>
-									<th>HR REMARK</th>
-									<th>HR STATUS</th>
-								</tr>
-							</thead>
-							<tbody>
-									<?php $c=1; foreach($pending_requests as $request){?>
-										<tr>	
-											<td><?php echo $c++; ?>.</td>
-											<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
-											<td><?php echo $request['dept_name']; ?></td>
-											<td><?php echo $request['name']; ?></td>
-											<td><?php echo $request['created_at']; ?></td>
-											<td><?php echo $request['date']; ?></td>
-											<td><?php echo strlen($request['requirment']) > 50 ? ucfirst(substr($request['requirment'],0,50))."...<a href='#'>read more</a>" : ucfirst($request['requirment']); ?></td>
-											<td>
-												<label><?php echo $request['hod_remark']; ?><br/><?php //echo $request['hod_remark_date']; ?></label>
-											</td>
-											<td>
-												<label><?php echo $request['hod_status']; ?><br/><?php //echo $request['hod_remark_date']; ?></label>
-											</td>
-											<td>
-												<textarea class="form-control hr_remark" data-rid="<?php echo $request['id']; ?>"><?php if(isset($request['hr_remark'])){ echo $request['hr_remark']; }?></textarea>
-											</td>	
-											<td>
-												<select class="hr_status" name="hr_status" data-rid="<?php echo $request['id']; ?>">
-													<option value="PENDING" <?php if($request['hr_status'] == 'PENDING'){ echo 'selected'; }?>>PENDING</option>
-													<option  value="REJECTED" <?php if($request['hr_status'] == 'REJECTED'){ echo 'selected'; }?>>REJECTED</option>
-													<option  value="GRANTED" <?php if($request['hr_status'] == 'GRANTED'){ echo 'selected'; }?>>GRANTED</option>
-												</select>
-											</td>
-										</tr>
-									<?php } ?>
-							</tbody>
-						</table>
-					</div>
-					<?php } else {
-						echo "<p class='text-center'>No new record found.</p>";
-					}?>
-				  </div>
-				</div>
-			  </div>
-		
-		
-		
-			  <div class="col-md-12">
-				<div class="card card-info">
-				  <div class="card-header" style="border-radius:0px;">
-					<h3 class="card-title">PREVIOUS OFF DAY REQUESTS</h3>
-				  </div>
-				  <div class="card-body">
-					<?php if(count($requests)>0){?>
-					<div class="table-responsive">
-						<table class="table table-bordered text-center" id="example2">
-							<thead>	
-								<tr class="bg-dark">
-									<th>S.No.</th>
-									<th>REFERENCE No.</th>
-									<th>DEPARTMENT</th>
-									<th>EMPLOYEE NAME</th>
-									<th>REQUEST SUBMIT DATE</th>
-									<th>HALF TAKEN DATE</th>
-									<th>REASON</th>
-									<th>HOD REMARK</th>
-									<th>HOD STATUS</th>
-									<th>HR REMARK</th>
-									<th>HR STATUS</th>
-									<th>LAST UPDATE</th>
-								</tr>
-							</thead>
-							<tbody>
-									<?php $c=1; foreach($requests as $request){ ?>
-										<tr>	
-											<td><?php echo $c++; ?>.</td>
-											<td><?php echo $request['refrence_id']; ?></td>
-											<td><?php echo $request['dept_name']; ?></td>
-											<td><?php echo $request['name']; ?></td>
-											<td><?php echo $request['created_at']; ?></td>
-											<td><?php echo $request['date']; ?></td>
-											<td><?php echo strlen($request['requirment']) > 50 ? ucfirst(substr($request['requirment'],0,50))."...<a href='#'>read more</a>" : ucfirst($request['requirment']); ?></td>
-											<td><label><?php echo $request['hod_remark']; ?></label></td>
-											<td><?php echo $request['hod_status']; ?><hr/><?php //echo $request['hod_remark_date']; ?></td>
-											<td><label><?php echo $request['hr_remark']; ?></label></td>
-											<td><?php echo $request['hr_status']; ?><hr/><?php //echo $request['hr_remark_date']; ?></td>
-											<td><?php echo $request['hr_name']; ?></td>
-										</tr>
-									<?php } ?>
-							</tbody>
-						</table>
-					</div>
-					<?php } ?>
-				  </div>
-				</div>
-			  </div>
-		
-		  
-		  
-		
+       		
+      		<div class="offset-2 col-8">
+				<table class="table table-bordered table-striped">
+					<thead>
+					<tr class="bg-dark text-center">
+						<th>Department</th>
+						<th>Total</th>
+						<th>View</th>
+					</tr>
+					</thead>
+					<tbody class="text-center">
+					<?php
+					if(isset($pending_requests) && count($pending_requests)>0){ 
+					    foreach($pending_requests as $pending_request){?>
+						<tr>
+							<td><?php echo $pending_request['dept_name']; ?></td>
+							<td><?php echo $pending_request['requests']; ?></td>
+							<td><a href="javascript:void(0);" class="view" data-dept_id="<?php echo $pending_request['id']; ?>">View</a></td>
+						<tr>
+					<?php } 
+					} else { ?>
+					    <td colspan="3">No record found.</td>
+					<?php }?>
+					</tbody>
+				</table>
+			</div> 
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content -->
@@ -158,64 +65,76 @@
   ?>
 </div>
 
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Request Detail</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="request_body" style="max-height:500px;overflow-y:scroll;">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+   </div>
+
+
 <script>
 var baseUrl = $('#baseUrl').val();
 
 $(document).ready(function(){
-	$('#example').DataTable();
-	$('#example2').DataTable();
-	
-	var previous;
-
-    $(".hr_status").on('focus', function () {
-        previous = this.value;
-    }).change(function() {
-		var req_id = $(this).data('rid');
-		var status = $(this).val();
-		var that = this;
-		var c = confirm('Are you sure!');
-		if(c){
-			$.ajax({
-				type: 'POST',
-				url: baseUrl+'hr/hf-leave-request-update/',
-				data: { 
-					'req_id' : req_id,
-					'key' : 'hr_status',
-					'value' : status,
-				},
-				dataType: 'json',
-				beforeSend: function() {},
-				success: function(response){
-					if(response.status == 200){
-						location.reload(true);
-					} else {
-					}
-				}
-			});
-		} else {
-			$(that).val(previous);
-		}
-        
-    });
-	
-	$(document).on('blur','.hr_remark',function(){
-		var req_id = $(this).data('rid');
-		var status = $(this).val();		
+	$(document).on('click','.view',function(){
+		var dept_id = $(this).data('dept_id');
 		$.ajax({
-			type: 'POST',
-			url: baseUrl+'hr/hf-leave-request-update/',
-			data: { 
-				'req_id' : req_id,
-				'key' : 'hr_remark',
-				'value' : status,
-			},
-			dataType: 'json',
-			beforeSend: function() {},
-			success: function(response){
-				if(response.status == 200){
-				} else {
-				}
-			}
+        	type: 'POST',
+        	url: baseUrl+'hr/off_day_duty_ctrl/request_list/',
+        	data: {
+            	'dept_id' : dept_id
+            },
+        	dataType: 'json',
+        	beforeSend: function() {
+            	$('#request_body').html('').hide();
+            },
+        	success: function(response){
+            	if(response.status == 200){
+                	var x = '<table class="table table-bordered table-striped"><thead class="bg-dark text-center">'+
+								'<tr>'+
+									'<th>S.No.</th>'+
+									'<th>Request Id</th>'+
+									'<th>Department</th>'+
+									'<th>Name</th>'+
+									'<th>EmpCode</th>'+
+									'<th>Date</th>'+
+									'<th>HOD Remark</th>'+
+								'</tr>'+
+							'</thead>'+
+							'<tbody>';
+                	$.each(response.data,function(key,value){
+                    	x = x + '<tr>'+
+                    				'<td>'+ parseInt(key+1) +'.</td>'+
+                    				'<td>'+ value.reference_id +'</td>'+
+                    				'<td>'+ value.dept_name +'</td>'+
+                    				'<td>'+ value.name +'</td>'+
+                    				'<td>'+ value.ecode +'</td>'+
+        							'<td>'+ value.date_from +'</td>'+
+        							'<td>'+ value.hod_remark +'</td>'+
+                    			'</tr>';
+                    });
+                	x = x + '</tbody></table>';
+                	$('#request_body').html(x).show();
+        			$('#exampleModal').modal({
+        				'show':true
+        			});
+                }
+        	} 
 		});
 	});
 	

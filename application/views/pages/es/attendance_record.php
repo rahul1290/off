@@ -1,3 +1,7 @@
+<?php if(!isset($pls[0]['balance'])){ 
+	$pls[0]['balance'] = 0;
+}?>
+
   <div class="content-wrapper">	
 	<div class="content-header bg-light mb-3">
 		<div class="container-fluid">
@@ -8,6 +12,7 @@
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
 						<li class="breadcrumb-item"><a href="<?php echo base_url();?>">Home</a></li>
+						<li class="breadcrumb-item active">Employee section</li>
 						<li class="breadcrumb-item active">Attendance</li>
 					</ol>
 				</div><!-- /.col -->
@@ -22,7 +27,8 @@
             <!-- general form elements disabled -->
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
-                <h3 class="card-title">ATTENDANCE REGISTER</h3>
+                <span class="card-title">ATTENDANCE REGISTER</span>
+                <span class="float-right">Current Remaining Pl's : <?php echo $pls[0]['balance']; ?></span>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -209,14 +215,22 @@ $(document).ready(function(){
 				'dept_id' : dept_id
 			},
 			dataType: 'json',
-			beforeSend: function() {},
+			beforeSend: function() {
+// 				$('#exampleModalCenter').modal({
+// 					show:true,
+// 					backdrop:'static'
+// 					});
+			},
 			success: function(response){
+				//$('#exampleModalCenter').modal('hide');
 				if(response.status == 200){
 					var x = '<option value="0">Select Employee</option>';
 					$.each(response.data,function(key,value){
 						x = x + '<option value="'+ value.ecode +'">'+ value.name +'</option>';
 					});
 					$('#employee').html(x);
+				} else {
+					$('#employee').html('');
 				}
 			}
 		});

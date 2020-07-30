@@ -5,11 +5,44 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $active_group = 'production';
 $query_builder = TRUE;
 
+
+$db['essl'] = array(
+    'dsn'	=> '',
+    'hostname' => '192.168.25.2,4050',
+    'username' => 'essl',
+    'password' => 'essl',
+    
+    
+//     'hostname' => '192.168.25.13',
+//     'username' => 'sa',
+//     'password' => 'ibc24@123',
+    'database' => 'etimetracklite1',
+    'dbdriver' => 'sqlsrv',
+    'dbprefix' => '',
+    'pconnect' => FALSE,
+    'db_debug' => (ENVIRONMENT !== 'production'),
+    'cache_on' => FALSE,
+    'cachedir' => '',
+    'char_set' => 'utf8',
+    'dbcollat' => 'utf8_general_ci',
+    'swap_pre' => '',
+    'encrypt' => FALSE,
+    'compress' => FALSE,
+    'stricton' => FALSE,
+    'failover' => array(),
+    'save_queries' => TRUE
+);
+
 $db['sqlsrv'] = array(
 	'dsn'	=> '',
 	'hostname' => '192.168.25.2,4050',
-	'username' => 'ibcportal',
-	'password' => 'portal@ibc24',
+    'username' => 'ibcportal',
+    'password' => 'portal@ibc24',
+	
+    
+//     'hostname' => '192.168.25.13',
+//     'username' => 'sa',
+//     'password' => 'ibc24@123',
 	'database' => 'NEWZ36',
 	'dbdriver' => 'sqlsrv',
 	'dbprefix' => '',
@@ -55,6 +88,12 @@ $db['staging'] = array(
 	'username' => 'root',
 	'password' => '#SBmmpl123$',
 	'database' => 'emp_portal_stag',
+	
+	// 'hostname' => 'localhost',
+    // 'username' => 'root',
+    // 'password' => '',
+	// 'database' => 'ibc24',
+	
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Employee_model extends CI_Model {
-	
+    
 	function employees($eid=null){
 		if($eid == null){
 			$this->db->select('u.id,u.ecode,u.name,u.gender,dept_name,desg_name,grade_name,date_format(u.jdate,"%d/%m/%Y") as jdate');
@@ -87,12 +87,6 @@ class Employee_model extends CI_Model {
 	}
 	
 	function links(){
-		// $result = $this->db->query("select root.link_name as root_name, child1.link_name as child1_name, child2.link_name as child2_name
-		// from `system-links` as root
-		// left outer join `system-links` as child1 on child1.parent_id = root.id
-		// left outer join `system-links` as child2 on child2.parent_id = child1.id
-		// where root.parent_id = 0
-		// order by root_name, child1_name, child2_name")->result_array();
 		$this->db->select('*');
 		$this->db->order_by('id','asc');
 		$result = $this->db->get_where('system-links',array('status'=>1))->result_array();

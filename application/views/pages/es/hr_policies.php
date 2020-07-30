@@ -30,11 +30,11 @@
 						if($c == 1){
 							echo '<div class="row">';
 						}
-						echo '<div class="info-box col-4 col-xs-12" style="margin-left: 0px;">'.
-								'<span class="info-box-icon bg-success"><i class="fas fa-pdf"></i></span>'.
-								'<div class="info-box-content">'.
-									'<span class="info-box-text">'.$policy['title'].'</span>'.
-									'<a target="_blank" href="'.base_url().'policies/'.$policy['file_name'].'"><i class="fas fa-download"></i></a>'.
+						echo '<div class="info-box col" style="padding:50px; max-width: 450px;">'.
+								'<span class="info-box-icon bg-warning"><i class="far fa-file-pdf"></i></span>'.
+								'<div class="info-box-content ml-4">'.
+									'<a target="_blank" href="'.base_url().'policies/'.$policy['file_name'].'"><span class="info-box-text">'.$policy['title'].'</span>'.
+									'<i class="fas fa-download"></i></a>'.
 								'</div>'.
 							'</div>';
 						if($c%3 == 0){

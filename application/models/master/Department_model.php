@@ -2,6 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Department_model extends CI_Model {
+    
+    function getAllDepartment(){
+        $this->db->select('id,dept_name');
+        $this->db->order_by('dept_name','ASC');
+        $result = $this->db->get_where('department_master',array('status'=>1))->result_array();
+        return $result;
+    }
 	
 	function get_department($dep_id = null){
 		if($dep_id == null){ 
@@ -43,10 +50,10 @@ class Department_model extends CI_Model {
 		return true;
 	}
 	
-	function department_employees($dept){
-		$this->db->select('id,ecode,name');
-		$result = $this->db->get_where('users',array('department_id'=>$dept,'status'=>1))->result_array();
-		return $result;
+	function department_employees($dept_id){
+	    $this->db->select('id,ecode,name,paycode');
+	    $this->db->order_by('name','ASC');
+	    return $result = $this->db->get_where('users',array('department_id'=>$dept_id,'is_active'=>'YES','status'=>1))->result_array();
 	}
 	
 	
@@ -54,7 +61,6 @@ class Department_model extends CI_Model {
 		$this->db->select('dm.*');
 		$this->db->join('department_master dm','dm.id = ud.dep_id');
 		$result = $this->db->get_where('user_department ud',array('ud.ecode'=>$ecode,'ud.status'=>1))->result_array();
-		
 		return $result;
 	}
 }

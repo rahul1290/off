@@ -21,7 +21,7 @@
       <div class="container-fluid">
 		<div class="offset-md-1 col-md-10">
 			<?php echo $this->session->flashdata('msg');?>
-            <form name="f1" method="POST" action="<?php echo base_url('master/employee/update/'.$employee_detail[0]['Ecode']); ?>">
+            <form name="f1" method="POST" action="<?php echo base_url('master/employee/update/'.$employee_detail[0]['Ecode']); ?>" enctype="multipart/form-data">
 				<div class="form-row mb-3" style="border: solid 1px #123456;">
 					<legend class="the-legend bg-dark pl-2">Official Details</legend>
 					<div class="form-group col-md-2">
@@ -44,7 +44,7 @@
 						<select class="form-control" name="department" id="department">
 							<option value="0">Select Department</option>
 							<?php foreach($departments as $department){ ?>
-								<?php if(set_value(department)){ ?>
+								<?php if(set_value('department')){ ?>
 									<option value="<?php echo $department['id']; ?>" <?php if($department['id'] == set_value('department')){ echo "selected"; } ?>><?php echo $department['dept_name']; ?>( <?php echo $department['dept_code']; ?> )</option>
 								<?php } else { ?>
 									<option value="<?php echo $department['id']; ?>" <?php if($department['id'] == $employee_detail[0]['department_id']){ echo "selected"; } ?>><?php echo $department['dept_name']; ?>( <?php echo $department['dept_code']; ?> )</option>
@@ -99,9 +99,10 @@
 						<label for="empcode"><span class="text-danger pr-1">*</span>Code</label>
 						<select name="empcode" class="form-control" id="empcode">
 							<option value="0">Select Code</option>
+							
 							<?php foreach($empcodes as $empcode){ ?>
 								<?php if(set_value('empcode')){ ?>
-									<option value="<?php echo $empcode['id']; ?>" <?php if($empcode['id'] == set_value('empcode')){ echo "selected"; } ?>><?php echo $empcode['ecode_name']; ?></option>
+									<option value="<?php echo $empcode['id']; ?>" <?php if($empcode['ecode_name'] == set_value('empcode')){ echo "selected"; } ?>><?php echo $empcode['ecode_name']; ?></option>
 								<?php } else { ?>
 									<option value="<?php echo $empcode['id']; ?>" <?php if($empcode['id'] == $employee_detail[0]['code_id']){ echo "selected"; } ?>><?php echo $empcode['ecode_name']; ?></option>
 								<?php } ?>
@@ -109,6 +110,7 @@
 						</select>
 						<?php echo form_error('empcode'); ?>
 					</div>
+					
 					<div class="form-group col-md-2">
 						<label for="employee_code"><span class="text-danger pr-1">*</span>Grade</label>
 						<select name="grade" class="form-control" id="grade">
@@ -128,7 +130,7 @@
 						<select name="repto_department" class="form-control" id="repto_department">
 							<option value="0">Select Department</option>
 							<?php foreach($departments as $department){ ?>
-								<?php if(set_value(department)){ ?>
+								<?php if(set_value('department')){ ?>
 									<option value="<?php echo $department['id']; ?>" <?php if($department['id'] == set_value('repto_department')){ echo "selected"; } ?>><?php echo $department['dept_name']; ?>( <?php echo $department['dept_code']; ?> )</option>
 								<?php } else { ?>
 									<option value="<?php echo $department['id']; ?>" <?php if($department['id'] == $employee_detail[0]['report_to_dept']){ echo "selected"; } ?>><?php echo $department['dept_name']; ?>( <?php echo $department['dept_code']; ?> )</option>
@@ -181,9 +183,12 @@
 						<textarea class="form-control" name="address" id="address"><?php if(set_value('address') != '') { echo set_value('address'); } else { echo $employee_detail[0]['address']; } ?></textarea>
 					</div>
 					
-					<div class="custom-file mb-2 ml-2 mr-2">
-					  <input type="file" class="custom-file-input" id="customFile">
-					  <label class="custom-file-label" for="customFile">Choose file</label>
+					<div class="text-center mb-2 ml-2" style="width: 200px; height:200px; border:solid black 2px;">
+						<img src="<?php echo base_url().$this->config->item('img_url').$employee_detail[0]['image'];?>" width="200px;" height="200px;" />
+					</div>
+					
+					<div class="customFile mb-2 ml-2 mr-2">
+					  <input type="file" class="" name="customFile" id="customFile">
 					</div>
 				</div>
 				

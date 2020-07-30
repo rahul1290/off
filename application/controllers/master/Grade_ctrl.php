@@ -12,10 +12,10 @@ class Grade_ctrl extends CI_Controller {
 	function index(){
 		$data = array();
 		$data['results'] = $this->Grade_model->get_grade();
-		
+		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
 		$data['footer'] = $this->load->view('include/footer','',true);
 		$data['top_nav'] = $this->load->view('include/top_nav','',true);
-		$data['aside'] = $this->load->view('include/aside','',true);
+		$data['aside'] = $this->load->view('include/aside',$data,true);
 		//$data['notepad'] = $this->load->view('include/shift_timing','',true);
 		$data['body'] = $this->load->view('pages/master/grade',$data,true);
 		//===============common===============//

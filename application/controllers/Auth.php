@@ -7,7 +7,58 @@ class Auth extends CI_Controller {
         parent::__construct();
         $this->load->database();
 		$this->load->model(array('Auth_model','Emp_model'));
+// 		$this->load->helper('directory');
+//         $maps = directory_map('L:',1);
+//         print_r($maps);
+//         die;
     }
+    
+    
+    function cronjob(){
+        $this->db->insert('cabs',array(
+            'v_no' => date('Y-m-d H:i:s')    
+        ));
+    }
+    
+    function cronjob2(){
+        $this->db->insert('cabs',array(
+            'v_no' => date('Y-m-d H:i:s')
+        ));
+    }
+    
+//     function filedel(){
+//         $this->load->helper('directory');
+//         $maps = directory_map('L:\aajtak');
+        
+//         $c = 0;
+//         foreach($maps as $map){
+//             if($c < 3000){
+//                 unlink('L:/aajtak/'.$map);
+//             } else {
+//                 break;
+//             }
+//             $c++;
+//         }
+        
+//         $this->cronjob();
+//     }
+    
+//     function filedel2(){
+//         $this->load->helper('directory');
+//         $maps = directory_map('L:\abpnews');
+        
+//         $c = 0;
+//         foreach($maps as $map){
+//             if($c < 3000){
+//                 unlink('L:/abpnews/'.$map);
+//             } else {
+//                 break;
+//             }
+//             $c++;
+//         }
+        
+//         $this->cronjob();
+//     }
 	
 	function is_login(){
 		if($this->session->userdata('ecode')){
@@ -24,8 +75,8 @@ class Auth extends CI_Controller {
 	
 	function index(){
 		if($this->is_login()){
-			//redirect('dashboard');
-		    redirect('es/Attendance-Record','refresh');
+		    //redirect('es/Attendance-Record','refresh');
+		    redirect('dashboard','refresh');
 		} else {
 			redirect('Auth/login');
 		}
@@ -74,6 +125,7 @@ class Auth extends CI_Controller {
 							'username'  => $login_result[0]['name'],
 							'ecode'     => $login_result[0]['ecode'],
 							'department_id' => $login_result[0]['department_id'],
+						    'image' => $login_result[0]['image'],
 							'logged_in' => TRUE
 						);
 						$this->session->set_userdata($portaldata);

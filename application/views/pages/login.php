@@ -24,7 +24,7 @@
 	  <?php echo $this->session->flashdata('msg');	?>
       <form action="<?php echo base_url('Auth/login');?>" method="POST" class="mb-2">
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Identity" name="identity" value="SBMMPL-0">
+          <input type="text" class="form-control" placeholder="Identity" name="identity" value="<?php if(set_value('identity') != ''){ echo set_value('identity'); } else { echo 'SBMMPL-0';} ?>">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>

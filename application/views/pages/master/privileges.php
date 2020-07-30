@@ -13,6 +13,7 @@ $ulink = array();
 foreach($user_links as $user_link){
 	array_push($ulink,$user_link['link_id']);
 }
+
 ?>
 <div class="content-wrapper">	
 	<div class="content-header bg-light mb-3">
@@ -39,17 +40,34 @@ foreach($user_links as $user_link){
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
                 <span class="card-title"></span>
-				<span class="float-right">
-					<input type="button" id="add_more" value="Add More" class="btn btn-success">
-				</span>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
 				<form name="f1" id="f1" method="POST" action="<?php echo base_url('master/employee/privileges/').$this->uri->segment(4);?>">
 				<table class="table table-bordered">
+					
+					<?php if(isset($ulink)){if(count($ulink)){ ?>
+					    <tr>
+							<td>Default Permission</td>
+    						<td>
+    							<input type="checkbox" id="default_permission" data-uid="<?php echo $user_detail[0]['ecode']; ?>" checked disabled/>
+    							<a href="javasript:void(0);" id="reset_privileges" data-uid="<?php echo $user_detail[0]['ecode']; ?>">Reset Privileges</a>
+    						</td>
+    					</tr>
+					<?php } else { ?>
+					    <tr>
+					    	<td>Default Permission</td>
+					    	<td>
+					    		<input type="checkbox" id="default_permission" data-uid="<?php echo $user_detail[0]['ecode']; ?>"/>
+					    	</td>
+					    </tr>
+					<?php }} ?> 
+					    
+					
+					
 					<tr>
 						<td>Name</td>
-						<td>Rahul Sinha</td>
+						<td><?php echo $user_detail[0]['name']; ?></td>
 					</tr>
 					<tr>
 						<td>Department</td>
@@ -162,34 +180,69 @@ var baseUrl = $('#baseUrl').val();
 
 
 $(document).ready(function(){
-	$(document).on('change','#departments',function(){
-		var dept_id = $(this).val();
-		$.ajax({
-			type: 'POST',
-			url: baseUrl+'master/Employee_ctrl/department_wise_users/',
-			data: { 
-				'dept_id' : dept_id
-			},
-			dataType: 'json',
-			beforeSend: function() {},
-			success: function(response){
-				console.log(response);
-			}
-		});
-	});
+// 	$(document).on('change','#departments',function(){
+// 		var dept_id = $(this).val();
+// 		$.ajax({
+// 			type: 'POST',
+// 			url: baseUrl+'master/Employee_ctrl/department_wise_users/',
+// 			data: { 
+// 				'dept_id' : dept_id
+// 			},
+// 			dataType: 'json',
+// 			beforeSend: function() {},
+// 			success: function(response){
+// 				console.log(response);
+// 			}
+// 		});
+// 	});
 	
-	$(document).on('click','.ulist',function(){
-		$uid = $(this).data('uid');
+// 	$(document).on('click','.ulist',function(){
+// 		$uid = $(this).data('uid');
+// 		$.ajax({
+// 			type: 'POST',
+// 			url: baseUrl+'master/pu/',
+// 			data: { 
+// 				'dept_id' : dept_id
+// 			},
+// 			dataType: 'json',
+// 			beforeSend: function() {},
+// 			success: function(response){
+// 				console.log(response);
+// 			}
+// 		});
+// 	});
+
+
+	$(document).on('click','#default_permission',function(){
+		if($(this).prop("checked") == true){
+			var ecode = $(this).data('uid');
+			$.ajax({
+				type:'GET',
+				url: baseUrl + 'master/Employee_ctrl/default_permission_grant/'+ecode,
+				dataType : 'json',
+				success : function(response){
+					if(response.status == 200){
+						location.reload();
+					} else {
+						alert(response.msg);
+					}
+				}
+			});
+		}
+	});
+
+	$(document).on('click','#reset_privileges',function(){
+		var ecode = $(this).data('uid');
 		$.ajax({
-			type: 'POST',
-			url: baseUrl+'master/Employee_ctrl/department_wise_users/',
-			data: { 
-				'dept_id' : dept_id
-			},
-			dataType: 'json',
-			beforeSend: function() {},
-			success: function(response){
-				console.log(response);
+			type:'GET',
+			url: baseUrl + 'master/Employee_ctrl/default_permission_revoke/'+ecode,
+			dataType : 'json',
+			success : function(response){
+				if(response.status == 200){
+					location.reload();
+				} else {
+					alert(response.msg);
+				}
 			}
 		});
 	});

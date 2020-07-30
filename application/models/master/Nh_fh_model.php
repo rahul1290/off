@@ -49,7 +49,8 @@ class Nh_fh_model extends CI_Model {
 	}
 	
 	function user_nhfh_requests($ecode){
-		$this->db->select('*,date_format(created_at,"%d/%m/%Y %H:%i") as created_at,date_format(date_from,"%d/%m/%Y") as date');
+		$this->db->select('*,date_format(created_at,"%d/%m/%Y") as created_at,date_format(date_from,"%d/%m/%Y") as date');
+		$this->db->order_by('id','desc');
 		$result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'request_type'=>'NH_FH','status'=>1))->result_array();
 		return $result;
 	}
@@ -60,6 +61,81 @@ class Nh_fh_model extends CI_Model {
 		} else {
 			return false;
 		}
+	}
+	
+	
+	function nh_fh_avail($data){
+	    $this->db->select('*');
+	    $date = $this->db->get_where('nh_fh_master',array('id'=>$data['nhfh_date'],'status'=>1))->result_array();
+	    
+	    $ref['request_type'] = 'NH_FH_AVAIL';
+	    $ref['reference_id'] = 'NHFH-'.date('Y').'-'.$this->my_library->department_code($this->session->userdata('ecode'));
+	    
+	    if(count($date)>0){    //if nh/fh date exsist 
+    	    $this->db->select('*');
+    	    $this->db->where('(hod_status = "GRANTED" OR hr_status = "GRANTED")');
+    	    $result = $this->db->get_where('users_leave_requests',array(
+                                           'request_type'=>'NH_FH_AVAIL',
+    	                                   'hr_status <>' => 'REJECTED',
+                                           'date_from' => $date[0]['nhfh_date'],
+    	                                   'ecode' => $this->session->userdata('ecode'),
+                                           'status'=>1
+                               ))->result_array();
+               if(!count($result)>0){  // if user already applied
+                   $this->db->insert('users_leave_requests',array(
+                       'request_type'   => 'NH_FH_AVAIL',
+                       'reference_id'    => $ref['reference_id'],
+                       'ecode'          => $this->session->userdata('ecode'),
+                       'requirment'     => $data['requirment'],
+                       'date_from'      => $date[0]['nhfh_date'],
+                       'date_to'        => $date[0]['nhfh_date'],
+                       'created_at'     => date('Y-m-d H:i:s'),
+                       'hod_status'     => 'PENDING',
+                       'hr_status'      => 'PENDING',
+                       'request_status_code' => 1
+                   ));
+                   
+                   $x = $this->db->insert_id();
+                   $this->db->where('id',$x);
+                   $this->db->update('users_leave_requests',array('reference_id'=>$ref['reference_id'].'-'.$x));
+                   return true; 
+               } else {
+                   return false;
+               }
+	    } else { // if nh/fh date not axist
+	        return false;
+	    }
+	}
+	
+	function user_nhfh_avail_requests($ecode){
+	    $this->db->select('*,date_format(created_at,"%d/%m/%Y") as created_at,date_format(date_from,"%d/%m/%Y") as date');
+	    $this->db->order_by('id','desc');
+	    $result = $this->db->get_where('users_leave_requests',array('ecode'=>$ecode,'request_type'=>'NH_FH_AVAIL','status'=>1))->result_array();
+	    return $result;
+	}
+	
+	function nh_fh_avail_ajax($data){
+	    $this->db->select('*');
+	    $date = $this->db->get_where('nh_fh_master',array('id'=>$data['nhfh_date'],'status'=>1))->result_array();
+	    
+	    if(count($date)>0){
+	        $this->db->select('*');
+	        $this->db->where('(hod_status = "GRANTED" OR hr_status = "GRANTED")');
+	        $result = $this->db->get_where('users_leave_requests',array(
+	            'hr_status <>' => 'REJECTED',
+	            'request_type'=>'NH_FH_AVAIL',
+	            'date_from' => $date[0]['nhfh_date'],
+	            'ecode' => $data['ecode'],
+	            'status'=>1
+	        ))->result_array();
+	        if(count($result)>0){
+	            return '501';  //already applied 
+	        } else {
+	            return '200';
+	        }
+	    } else {
+	       return '401'; //nhfh date not found   
+	    }
 	}
 	
 }

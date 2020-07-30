@@ -1,3 +1,6 @@
+<?php if(!isset($pls[0]['balance'])){ 
+	$pls[0]['balance'] = 0;
+}?>
   
   <div class="content-wrapper">	
 	<div class="content-header bg-light mb-3">
@@ -8,7 +11,7 @@
 				</div><!-- /.col -->
 				<div class="col-sm-6">
 					<ol class="breadcrumb float-sm-right">
-						<li class="breadcrumb-item"><a href="<?php echo base_url('dashboard');?>">Home</a></li>
+						<li class="breadcrumb-item"><a href="<?php echo base_url();?>">Home</a></li>
 						<li class="breadcrumb-item active">Employee Section</li>
 						<li class="breadcrumb-item active">NH/FH day duty form</li>
 					</ol>
@@ -27,6 +30,7 @@
             <div class="card card-info">
               <div class="card-header" style="border-radius:0px;">
                 <h3 class="card-title">NH/FH DAY DUTY FORM</h3>
+                <span class="float-right">Current Remaining Pl's : <?php echo $pls[0]['balance']; ?></span>
               </div>
               <div class="card-body">
 					<table class="table table-bordered">
@@ -82,7 +86,7 @@
 				  </div>
 				  <div class="card-body">
 					<div class="table-responsive">
-						<table class="table table-bordered" id="example">
+						<table class="table table-bordered table-striped text-center" id="example">
 							<thead>	
 								<tr class="bg-dark">
 									<th>S.No.</th>
@@ -90,38 +94,39 @@
 									<th>REQUEST SUBMIT DATE</th>
 									<th>NH/FH DUTY DATE</th>
 									<th>REASON</th>
-									<th>HOD REMARK</th>
 									<th>HOD STATUS</th>
-									<!--th>HR REMARKS</th>
-									<th>HR STATUS</th-->
+									<!-- th>HR STATUS</th-->
 								</tr>
 							</thead>
 							<tbody>
 								<?php $c=1; foreach($nh_fh_requests as $request){ ?>
 									<tr>
 									<td><?php echo $c++; ?></td>
-									<td><?php echo $this->my_library->remove_hyphen($request['refrence_id']); ?></td>
+									<td><?php echo $this->my_library->remove_hyphen($request['reference_id']); ?></td>
 									<td><?php echo $request['created_at']; ?></td>
 									<td><?php echo $request['date']; ?></td>
 									<td><?php echo strlen($request['requirment']) > 50 ? substr($request['requirment'],0,50)."...<a href='#'>read more</a>" : $request['requirment']; ?></td>
-									<td><?php echo $request['hod_remark']; ?></td>
 									<td class="
 											<?php if($request['hod_status'] == 'REJECTED'){ 
 													echo "bg-danger"; 
 											} else if($request['hod_status'] == 'PENDING'){
 													echo "bg-warning";
-											} else {
+											} else if($request['hod_status'] == 'GRANTED'){
 												echo "bg-success";
+											} else {
+											    
 											}?>"
 										><?php echo $request['hod_status']; ?></td>
-									<?php /*<td><?php echo $request['hr_remark']; ?></td>
+									<?php /*	
 									<td class="
 											<?php if($request['hr_status'] == 'REJECTED'){ 
 													echo "bg-danger"; 
 											} else if($request['hr_status'] == 'PENDING'){
 													echo "bg-warning";
-											} else {
+											} else if($request['hr_status'] == 'GRANTED'){
 												echo "bg-success";
+											} else {
+											    
 											}?>"
 										><?php echo $request['hr_status']; ?></td>
 									*/ ?>
@@ -161,8 +166,6 @@ var baseUrl = $('#baseUrl').val();
 
 $(document).ready(function(){
 	$('#example').DataTable();	
-
-	get_detail();
 	
 	$(document).on('change','#nhfh_date',function(){
 		get_detail();

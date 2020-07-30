@@ -157,6 +157,7 @@ class Employee_ctrl extends CI_Controller {
 	
 	function update($employee_id=null){
 		if($_SERVER['REQUEST_METHOD'] === 'POST'){
+		    
 			$this->form_validation->set_rules('ecode', 'Employeecode', 'required|trim');
 			$this->form_validation->set_rules('pay_code', 'Paycode', 'required|trim');
 			$this->form_validation->set_rules('employee_name', 'Employee Name', 'required|trim|alpha_numeric_spaces|min_length[3]');
@@ -185,7 +186,7 @@ class Employee_ctrl extends CI_Controller {
 				$data['aside'] = $this->load->view('include/aside','',true);
 				$data['body'] = $this->load->view('pages/master/employee_update',$data,true);
 				//===============common===============//
-				$data['title'] = 'IBC24 | Employee Update';
+				$data['title'] = $this->config->item('project_title').' | Employee Update';
 				$data['head'] = $this->load->view('common/head',$data,true);
 				$data['footer'] = $this->load->view('common/footer',$data,true);
 				$this->load->view('layout_master',$data);
@@ -246,9 +247,27 @@ class Employee_ctrl extends CI_Controller {
 				$info['updated_by'] = $this->session->userdata('ecode');
 				
 				if($this->Employee_model->employee_update($data,$info)){
+				    
+				    //$config['upload_path'] = $this->config->item('img_url');
+				    $config['upload_path'] = './assets/employee_images/';
+				    //print_r($config['upload_path']); die;
+				    $config['allowed_types'] = 'jpg|png|PNG|JPG';
+				    $config['file_name'] = $data['ecode'].'.jpg';
+				    //$config['max_size'] = 2000;
+				    //$config['max_width'] = 1500;
+				    //$config['max_height'] = 1500;
+				    $this->load->library('upload', $config);
+				    
+			        if (!$this->upload->do_upload('customFile')) {
+			            $error = array('error' => $this->upload->display_errors());
+			            print_r($error); die;
+			        } 
+				    $this->db->where('ecode',$data['ecode']);
+				    $this->db->update('user_info',array('image'=>$data['ecode'].'.jpg'));
+				    
 					$this->session->set_flashdata('msg', '<h3 class="bg-success text-center">Employee update successfully.</h3>');
 					$path = 'master/employee/update/'.$data['ecode']; 
-					redirect($path);
+					//redirect($path);
 				}
 			}
 			
@@ -261,7 +280,7 @@ class Employee_ctrl extends CI_Controller {
 			$data['employees'] = $this->Employee_model->employees();
 			$data['locations'] = $this->Location_model->get_location();
 			$data['employee_detail'] = $this->Employee_model->employees($employee_id);
-			
+			//print_r($data['employee_detail']); die;
 			$data['footer'] = $this->load->view('include/footer','',true);
 			$data['top_nav'] = $this->load->view('include/top_nav','',true);
 			$data['aside'] = $this->load->view('include/aside','',true);
@@ -329,9 +348,9 @@ class Employee_ctrl extends CI_Controller {
 			$path = base_url('master/employee/privileges/').$ecode;
 			redirect($path);
 			
-		} else{ 
+		} else{
 			$data = array();
-			$data['results'] = $this->Department_model->get_department();
+			$data['user_detail'] = $this->Employee_model->employees($ecode);
 			$data['departments'] = $this->Department_model->get_department();
 			$data['user_departments'] = $this->Department_model->get_employee_department($ecode);
 			$data['users'] = $this->Employee_model->departments_users($ecode);
@@ -353,12 +372,91 @@ class Employee_ctrl extends CI_Controller {
 			//$data['notepad'] = $this->load->view('include/shift_timing','',true);
 			$data['body'] = $this->load->view('pages/master/privileges',$data,true);
 			//===============common===============//
-			$data['title'] = 'IBC24 | Department Master';
+			$data['title'] = $this->config->item('project_title').' | Employee privileges';
 			$data['head'] = $this->load->view('common/head',$data,true);
 			$data['footer'] = $this->load->view('common/footer',$data,true);
 			$this->load->view('layout_master',$data);
 		}
 	}
+	
+	
+	function default_permission_grant($ecode){
+	    
+	    $this->db->trans_begin();
+	    
+	    $dep_id = $this->my_library->get_employee_department($ecode);
+	    ///delete previous entry and insert new on user department table
+	    $this->db->where('ecode',$ecode);
+	    $this->db->delete('user_department');
+	    
+	    $this->db->insert('user_department',array(
+	          'ecode' => $ecode,
+	          'dep_id' => $dep_id,
+	        'created_at' => date('Y-m-d H:i:s'),
+	        'created_by' => $this->session->userdata('ecode')
+	    ));
+	    ///delete previous entry and insert new on user rules table
+	    $this->db->where('ecode',$ecode);
+	    $this->db->delete('user_rules');
+	    
+	    $this->db->insert('user_rules',array('ecode'=>$ecode,'r_ecode'=>$ecode));
+	    
+	    $this->db->where('ecode',$ecode);
+	    $this->db->delete('user_links');
+	    
+	    ///set default permission
+	    $permission = array(
+	        array('link_id'=>1,'ecode'=>$ecode),
+    	    array('link_id'=>2,'ecode'=>$ecode),
+    	    array('link_id'=>3,'ecode'=>$ecode),
+    	    array('link_id'=>4,'ecode'=>$ecode),
+    	    array('link_id'=>5,'ecode'=>$ecode),
+    	    array('link_id'=>6,'ecode'=>$ecode),
+    	    array('link_id'=>7,'ecode'=>$ecode),
+    	    array('link_id'=>8,'ecode'=>$ecode),
+    	    array('link_id'=>9,'ecode'=>$ecode),
+    	    array('link_id'=>10,'ecode'=>$ecode),
+    	    array('link_id'=>28,'ecode'=>$ecode)
+	    );
+	    
+	    $this->db->insert_batch('user_links',$permission);
+	    
+	    if ($this->db->trans_status() === FALSE){
+	        $this->db->trans_rollback();
+	        echo json_encode(array('msg'=>'Something went wrong.','status'=>'500'));
+	    } else {
+	        $this->db->trans_commit();
+	        echo json_encode(array('msg'=>'Default permission set.','status'=>'200'));
+	    }
+	}
+	
+	
+	function default_permission_revoke($ecode){
+	    
+	    $this->db->trans_begin();
+	    
+	    $dep_id = $this->my_library->get_employee_department($ecode);
+	    ///delete previous entry and insert new on user department table
+	    $this->db->where('ecode',$ecode);
+	    $this->db->delete('user_department');
+	  
+	    ///delete previous entry and insert new on user rules table
+	    $this->db->where('ecode',$ecode);
+	    $this->db->delete('user_rules');
+	    
+	    $this->db->where('ecode',$ecode);
+	    $this->db->delete('user_links');
+	    
+	    if ($this->db->trans_status() === FALSE){
+	        $this->db->trans_rollback();
+	        echo json_encode(array('msg'=>'Something went wrong.','status'=>'500'));
+	    } else {
+	        $this->db->trans_commit();
+	        echo json_encode(array('msg'=>'Default permission revoked.','status'=>'200'));
+	    }
+	    
+	}
+	
 	
 	function is_unique_ecode(){
 		$ecode = $this->input->post('ecode');
