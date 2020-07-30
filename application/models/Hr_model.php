@@ -241,7 +241,10 @@ class Hr_model extends CI_Model {
 	       $this->db->update('users_leave_requests',array('request_status_code'=>5));
 	       
 	       $this->db->where('request_id',$ref_id);
-	       $this->db->update('users_leave_requests',array('request_id'=>null,'request_status_code'=>3));
+	       $this->db->update('users_leave_requests',array(
+	           'request_id'=>null,
+	           'request_status_code'=>2
+	       ));
 	       
 	    if ($this->db->trans_status() === FALSE){
 	        $this->db->trans_rollback();
