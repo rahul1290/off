@@ -34,7 +34,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td>Time</td>
+							<td>Time </td>
 							<td>
 								<select class="form-control" name="" id="sloat">
 									<option value="0">Choose Time Slot</option>
