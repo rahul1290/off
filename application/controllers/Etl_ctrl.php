@@ -127,7 +127,7 @@ class Etl_ctrl extends CI_Controller {
 	}
 	
 	function fetch_emp_detail(){
-		$this->db2 = $this->load->database('sqlsrv',TRUE);	
+		$this->db2 = $this->load->database('sqlsrv',TRUE);
 		$result = $this->db2->query("SELECT  Name,
 									EmpCode,
 									PAYCODE,
@@ -364,7 +364,6 @@ class Etl_ctrl extends CI_Controller {
                                     NoOfKids as children,
                                     SpouseName as spouse_name
 									FROM ".$this->config->item('NEWZ36')."LoginKRA where Code <> 'NA' AND EmpCode like 'SB%' ")->result_array();
-
 		return $result;
 	}
 	

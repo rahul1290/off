@@ -30,78 +30,78 @@ class Emp_model extends CI_Model {
 	}
 	
 	
-	function attendance($data){
-	    $db2 = $this->load->database('essl', TRUE);
-	    $db2->select('*,CONVERT(VARCHAR(10), CreatedDate, 105) as date,CONVERT(VARCHAR(5), CreatedDate, 108) as time');
-	    $db2->where(array('CreatedDate >='=>$data['from_date'],'CreatedDate <='=>$data['to_date']));
-	    $db2->order_by('CreatedDate','asc');
-	    $db2->limit(1);
-	    $inpunchs = $db2->get_where('DeviceLogs_6_2020',array('UserId'=>$data['paycode']))->result_array();
-	    
-	    $db2 = $this->load->database('essl', TRUE);
-	    $db2->select('*,CONVERT(VARCHAR(10), CreatedDate, 105) as date,CONVERT(VARCHAR(5), CreatedDate, 108) as time');
-	    $db2->where(array('CreatedDate >='=>$data['from_date'],'CreatedDate <='=>$data['to_date']));
-	    $db2->order_by('CreatedDate','desc');
-	    $db2->limit(1);
-	    $outpunchs = $db2->get_where('DeviceLogs_6_2020',array('UserId'=>$data['paycode']))->result_array();
-	    
-	    $finalarray = array();
-	    foreach($inpunchs as $inpunch){
-	        $temp = $inpunch;
-	        foreach($outpunchs as $outpunch){
-	            if($inpunch['date'] == $outpunch['date']){
-	                $temp['DateOFFICE'] = $inpunch['date'];
-	                $temp['SHIFT'] = 'F';
-	                $temp['IN1'] = $inpunch['time'];
-	                $temp['OUT2'] = $outpunch['time'];
-	                $temp['LATEARRIVAL'] = '';
-	                $temp['HOURSWORKED'] = '';
-	            }
-	        }
-	        $finalarray[] = $temp;
-	    }
-	    return $finalarray;
-	}
-	
 // 	function attendance($data){
-// 		$db2 = $this->load->database('sqlsrv', TRUE);
-// 		$db2->select("tblr.*,convert(varchar, tblr.DateOFFICE, 103) as DateOFFICE,
-// 							ISNULL(substring(CONVERT(VARCHAR,tblr.IN1, 108), 0, 6),'') AS IN1, 
-// 							ISNULL(substring(CONVERT(VARCHAR,tblr.OUT2, 108), 0, 6),'') AS OUT2,
-// 							(CASE WHEN LATEARRIVAL >= 60 THEN
-// 								(SELECT CAST((LATEARRIVAL / 60) AS VARCHAR(2)) + ' HOURS ' +  
-// 										CASE WHEN (LATEARRIVAL % 60) > 0 THEN
-// 											CAST((LATEARRIVAL % 60) AS VARCHAR(2)) + ' MINUTES'
-// 										ELSE
-// 											'0 MINUTES'
-// 										END)
-// 							ELSE 
-// 								CASE WHEN LATEARRIVAL = 0 THEN
-// 									' '
-// 								ELSE	
-// 									CAST((LATEARRIVAL % 60) AS VARCHAR(2)) + ' MINUTES'
-// 								END
-// 							END) as LATEARRIVAL,
-// 							(CASE WHEN HOURSWORKED >= 60 THEN
-// 								(SELECT CAST((HOURSWORKED / 60) AS VARCHAR(2)) + ' HOURS ' +  
-// 										CASE WHEN (HOURSWORKED % 60) > 0 THEN
-// 											CAST((HOURSWORKED % 60) AS VARCHAR(2)) + ' MINUTES'
-// 										ELSE
-// 											'0 MINUTES'
-// 										END)
-// 							ELSE 
-// 								CASE WHEN HOURSWORKED = 0 THEN
-// 									' '
-// 								ELSE	
-// 									CAST((HOURSWORKED % 60) AS VARCHAR(2)) + ' MINUTES'
-// 								END
-// 							END) as HOURSWORKED");
-// 		//$this->db->join($this->config->item('NEWZ36').'LoginKRA l','l.PAYCODE = tblr.PAYCODE');
-// 		$db2->where(array('tblr.DateOFFICE >='=>$data['from_date'],'tblr.DateOFFICE <='=>$data['to_date']));
-// 		$result = $db2->get_where($this->config->item('Savior').'tblTimeRegister tblr',array('tblr.PAYCODE'=>$data['paycode']))->result_array();
-		
-// 		return $result;
+// 	    $db2 = $this->load->database('essl', TRUE);
+// 	    $db2->select('*,CONVERT(VARCHAR(10), CreatedDate, 105) as date,CONVERT(VARCHAR(5), CreatedDate, 108) as time');
+// 	    $db2->where(array('CreatedDate >='=>$data['from_date'],'CreatedDate <='=>$data['to_date']));
+// 	    $db2->order_by('CreatedDate','asc');
+// 	    $db2->limit(1);
+// 	    $inpunchs = $db2->get_where('DeviceLogs_6_2020',array('UserId'=>$data['paycode']))->result_array();
+	    
+// 	    $db2 = $this->load->database('essl', TRUE);
+// 	    $db2->select('*,CONVERT(VARCHAR(10), CreatedDate, 105) as date,CONVERT(VARCHAR(5), CreatedDate, 108) as time');
+// 	    $db2->where(array('CreatedDate >='=>$data['from_date'],'CreatedDate <='=>$data['to_date']));
+// 	    $db2->order_by('CreatedDate','desc');
+// 	    $db2->limit(1);
+// 	    $outpunchs = $db2->get_where('DeviceLogs_6_2020',array('UserId'=>$data['paycode']))->result_array();
+	    
+// 	    $finalarray = array();
+// 	    foreach($inpunchs as $inpunch){
+// 	        $temp = $inpunch;
+// 	        foreach($outpunchs as $outpunch){
+// 	            if($inpunch['date'] == $outpunch['date']){
+// 	                $temp['DateOFFICE'] = $inpunch['date'];
+// 	                $temp['SHIFT'] = 'F';
+// 	                $temp['IN1'] = $inpunch['time'];
+// 	                $temp['OUT2'] = $outpunch['time'];
+// 	                $temp['LATEARRIVAL'] = '';
+// 	                $temp['HOURSWORKED'] = '';
+// 	            }
+// 	        }
+// 	        $finalarray[] = $temp;
+// 	    }
+// 	    return $finalarray;
 // 	}
+	
+	function attendance($data){
+		$db2 = $this->load->database('sqlsrv', TRUE);
+		$db2->select("tblr.*,convert(varchar, tblr.DateOFFICE, 103) as DateOFFICE,
+							ISNULL(substring(CONVERT(VARCHAR,tblr.IN1, 108), 0, 6),'') AS IN1, 
+							ISNULL(substring(CONVERT(VARCHAR,tblr.OUT2, 108), 0, 6),'') AS OUT2,
+							(CASE WHEN LATEARRIVAL >= 60 THEN
+								(SELECT CAST((LATEARRIVAL / 60) AS VARCHAR(2)) + ' HOURS ' +  
+										CASE WHEN (LATEARRIVAL % 60) > 0 THEN
+											CAST((LATEARRIVAL % 60) AS VARCHAR(2)) + ' MINUTES'
+										ELSE
+											'0 MINUTES'
+										END)
+							ELSE 
+								CASE WHEN LATEARRIVAL = 0 THEN
+									' '
+								ELSE	
+									CAST((LATEARRIVAL % 60) AS VARCHAR(2)) + ' MINUTES'
+								END
+							END) as LATEARRIVAL,
+							(CASE WHEN HOURSWORKED >= 60 THEN
+								(SELECT CAST((HOURSWORKED / 60) AS VARCHAR(2)) + ' HOURS ' +  
+										CASE WHEN (HOURSWORKED % 60) > 0 THEN
+											CAST((HOURSWORKED % 60) AS VARCHAR(2)) + ' MINUTES'
+										ELSE
+											'0 MINUTES'
+										END)
+							ELSE 
+								CASE WHEN HOURSWORKED = 0 THEN
+									' '
+								ELSE	
+									CAST((HOURSWORKED % 60) AS VARCHAR(2)) + ' MINUTES'
+								END
+							END) as HOURSWORKED");
+		//$this->db->join($this->config->item('NEWZ36').'LoginKRA l','l.PAYCODE = tblr.PAYCODE');
+		$db2->where(array('tblr.DateOFFICE >='=>$data['from_date'],'tblr.DateOFFICE <='=>$data['to_date']));
+		$result = $db2->get_where($this->config->item('Savior').'tblTimeRegister tblr',array('tblr.PAYCODE'=>$data['paycode']))->result_array();
+		
+		return $result;
+	}
 	
 	function day_attendance($nhfhdate,$emp_paycode){
 		$db2 = $this->load->database('sqlsrv', TRUE);

@@ -7,58 +7,104 @@ class Auth extends CI_Controller {
         parent::__construct();
         $this->load->database();
 		$this->load->model(array('Auth_model','Emp_model'));
-// 		$this->load->helper('directory');
-//         $maps = directory_map('L:',1);
-//         print_r($maps);
-//         die;
     }
     
     
-    function cronjob(){
+    
+    
+    function getfile(){
+        $this->load->helper('directory');
+        $maps = directory_map('L:');
+        foreach($maps as $file){
+            echo $file.''.date("d-m-Y H:i:s",filemtime('L:/ndtv/'.$file));
+            //here we can write our business logic *if *else
+            
+            ///Datebase code here before file moved
+            //rename($source,$destination); this function remove file from source as well
+            //rename('L:/abpnews/'.$file,'L:/abpnews/temp/'.$file);
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    function database_entry(){
         $this->db->insert('cabs',array(
             'v_no' => date('Y-m-d H:i:s')    
         ));
     }
     
-    function cronjob2(){
-        $this->db->insert('cabs',array(
-            'v_no' => date('Y-m-d H:i:s')
-        ));
+    
+    function cronjob(){
+        $this->load->helper('directory');
+        $maps = directory_map('L:\zeenews');
+        
+        $c = 0;
+        foreach($maps as $map){
+            if($c < 3500){
+                unlink('L:/zeenews/'.$map);
+            } else {
+                break;
+            }
+            $c++;
+        }
+        
+        $this->database_entry();
     }
     
-//     function filedel(){
-//         $this->load->helper('directory');
-//         $maps = directory_map('L:\aajtak');
+    function cronjob2(){
+        $this->load->helper('directory');
+        $maps = directory_map('L:\zeenews');
         
-//         $c = 0;
-//         foreach($maps as $map){
-//             if($c < 3000){
-//                 unlink('L:/aajtak/'.$map);
-//             } else {
-//                 break;
-//             }
-//             $c++;
-//         }
+        $c = 0;
+        foreach($maps as $map){
+            if($c < 3500){
+                unlink('L:/zeenews/'.$map);
+            } else {
+                break;
+            }
+            $c++;
+        }
         
-//         $this->cronjob();
-//     }
+        $this->database_entry();
+    }
     
-//     function filedel2(){
-//         $this->load->helper('directory');
-//         $maps = directory_map('L:\abpnews');
+    function cronjob3(){
+        $this->load->helper('directory');
+        $maps = directory_map('L:\zeenews');
         
-//         $c = 0;
-//         foreach($maps as $map){
-//             if($c < 3000){
-//                 unlink('L:/abpnews/'.$map);
-//             } else {
-//                 break;
-//             }
-//             $c++;
-//         }
+        $c = 0;
+        foreach($maps as $map){
+            if($c < 3500){
+                unlink('L:/zeenews/'.$map);
+            } else {
+                break;
+            }
+            $c++;
+        }
         
-//         $this->cronjob();
-//     }
+        $this->database_entry();
+    }
+    
+    function cronjob4(){
+        $this->load->helper('directory');
+        $maps = directory_map('L:\zeenews');
+        
+        $c = 0;
+        foreach($maps as $map){
+            if($c < 3500){
+                unlink('L:/zeenews/'.$map);
+            } else {
+                break;
+            }
+            $c++;
+        }
+        
+        $this->database_entry();
+    }
 	
 	function is_login(){
 		if($this->session->userdata('ecode')){
