@@ -12,7 +12,7 @@ class Auth_model extends CI_Model {
 	}
 	
 	function userDetail($data){
-	    $this->db->select('u.name,ui.company_mailid');
+	    $this->db->select('u.name,ui.company_mailid,ui.image');
 	    $this->db->join('user_info ui','ui.ecode = u.ecode');
 	    $result = $this->db->get_where('users u',array('u.is_active'=>'YES','u.ecode'=>$data['ecode'],'u.status'=>1))->result_array();
 	    return $result;
