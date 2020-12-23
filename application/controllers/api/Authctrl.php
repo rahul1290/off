@@ -31,6 +31,13 @@ class Authctrl extends REST_Controller {
 	}
 	
 	
+	function getMonthYear_get(){
+	    $data[0]['month'] = date('m');
+	    $data[0]['year'] = date('Y');
+	    $this->response($data, 200);
+	}
+	
+	
 	function userDetail_post(){
 	    $is_valid_token = $this->authorization_token->validateToken();
 	    if(!empty($is_valid_token) && $is_valid_token['status'] === true){
