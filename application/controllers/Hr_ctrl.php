@@ -396,7 +396,7 @@ class Hr_ctrl extends CI_Controller {
 					$config['allowed_types']        = 'pdf|PDF';
 					$config['overwrite'] = true;
 					$data['title'] = $this->input->post('title');
-					$data['file_name'] = str_replace(' ','_',$data['title']);
+					$data['file_name'] = str_replace('/','_',str_replace(' ','_',$data['title']));
 					$config['file_name'] = $data['file_name'];
 					$data['file_name'] = $data['file_name'].'.pdf';
 					$this->load->library('upload', $config);

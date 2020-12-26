@@ -138,6 +138,7 @@ class Authctrl extends REST_Controller {
 		}
 	}
 	
+	
 	function user_department_get(){
 		$is_valid_token = $this->authorization_token->validateToken();
 		if(!empty($is_valid_token) && $is_valid_token['status'] === true){

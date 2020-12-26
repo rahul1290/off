@@ -82,7 +82,7 @@ $route['hr/pl-add-manual'] = 'Hr_ctrl/pl_add_manual';
 $route['hr/adjustment-cancel'] = 'Hr_ctrl/adjustment_cancel'; 
 
 ////HR////////////////
-$route['hr/hr_policies'] = 'Hr_ctrl/hr_policies/';
+$route['hr/hr_policies'] = 'Hr_ctrl/policies/';
 $route['hr/roster'] = 'Hr_ctrl/roster/';
 $route['hr/Emp-Info'] = 'Hr_ctrl/emp_info/';
 $route['emp/hr/Salary-Slip'] = 'Hr_ctrl/salary_slip/';
