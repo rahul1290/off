@@ -362,12 +362,12 @@ class Hr_ctrl extends CI_Controller {
 					$data['footer'] = $this->load->view('common/footer',$data,true);
 					$this->load->view('layout_master',$data);
 					
-				} else { 				
+				} else { 	
 					$config['upload_path']          = './policies/';
 					$config['allowed_types']        = 'pdf|PDF';
 					
 					$data['title'] = $this->input->post('title');
-					$data['file_name'] = str_replace(' ','_',$data['title']);
+					$data['file_name'] = str_replace('/','_',str_replace(' ','_',$data['title']));
 					$config['file_name'] = $data['file_name'];
 					$config['overwrite'] = true;
 					
