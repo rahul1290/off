@@ -78,9 +78,9 @@ class Authctrl extends REST_Controller {
 	            foreach($pl_result as $plr){
 	                $temp = array();
 	                $temp['Date'] = date('d/m/Y',strtotime($plr['date']));
-	                $temp['ADD'] = $plr['Credit'];
-	                $temp['DEDUCT'] = $plr['debit'];
-	                $temp['BALANCE'] = $plr['balance'];
+	                $temp['ADD'] = number_format($plr['Credit'],2);
+	                $temp['DEDUCT'] = number_format($plr['debit'],2);
+	                $temp['BALANCE'] = number_format($plr['balance'],2);
 	                $plrecord[] = $temp;
 	            }
 	            $this->response($plrecord,200);

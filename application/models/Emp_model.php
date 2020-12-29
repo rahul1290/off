@@ -217,7 +217,8 @@ class Emp_model extends CI_Model {
 
 	    //===Sql code===//
 		$db2 = $this->load->database('sqlsrv', TRUE);
-		$db2->select('CONVERT(varchar(50),Date,103) as Date1,date,reference,Credit,debit,balance');
+		$db2->select("CONVERT(varchar(50), Date, 103) as Date1, date, reference, isnull(Credit,'0') as Credit, isnull(debit,'0') as debit, isnull(balance,'0') as balance");
+		$db2->order_by('Date','desc');
 		$result = $db2->get_where('PLManagement',array('EmpCode'=>$data['paycode']))->result_array();
 		return  $result;
 		
