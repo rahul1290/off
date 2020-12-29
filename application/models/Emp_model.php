@@ -210,10 +210,20 @@ class Emp_model extends CI_Model {
 	
 	
 	function pl_summary_report($data){
-		$this->db->select('*,IFNULL(credit," ") as credit,IFNULL(debit," ") as debit,IFNULL(balance," ") as balance');
-		$this->db->order_by('date','desc');
-		$result = $this->db->get_where('pl_management',array('ecode'=>$data['paycode'],'status'=>1))->result_array();
+	    //===mysql code===//
+// 		$this->db->select('*,IFNULL(credit," ") as credit,IFNULL(debit," ") as debit,IFNULL(balance," ") as balance');
+// 		$this->db->order_by('date','desc');
+// 		$result = $this->db->get_where('pl_management',array('ecode'=>$data['paycode'],'status'=>1))->result_array();
+
+	    //===Sql code===//
+		$db2 = $this->load->database('sqlsrv', TRUE);
+		$db2->select('CONVERT(varchar(50),Date,103) as Date1,date,reference,Credit,debit,balance');
+		$result = $db2->get_where('PLManagement',array('EmpCode'=>$data['paycode']))->result_array();
 		return  $result;
+		
+		
+// 		 from PLManagement where EmpCode = '" & ddlEmp.Text & "' order by sno desc
+		
 	} 
 	
 	
