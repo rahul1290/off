@@ -2,85 +2,85 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 ini_set('memory_limit', '1G');
 class Output_ctrl extends CI_Controller {
-	
-	public function __construct(){
-		parent::__construct();
-		$this->load->database();
-		$this->load->helper('download');
-		$this->load->model(array('Auth_model','output/Output_model'));
-	}
-
-	function index($ecode){
-		$data = array();
-		$data['title'] =  $this->config->item('project_title').'| Broadcast Output';
-		$data['head'] = $this->load->view('common/head',$data,true);
-		$data['footer'] = $this->load->view('common/footer',$data,true);
-		$this->load->view('pages/output/broadcast',$data);
-		//$this->load->view('layout_master',$data);
-	}
-	
-	function get_files(){
-		$data['date'] = $this->my_library->mydate($this->input->post('date'));
-		$data['sloat'] = $this->input->post('sloat');
-		
-		$sloat = '';
-		$time = '';
-		switch($data['sloat']){
-		    case "1": {
-				$sloat = '00:00';
-				$time = '002800';
-				break;
-		    }
-		    case "2": {
-				$sloat = '00:30';
-				$time = '005800';
-				break;
-		    }
-		    case "3": {
-				$sloat = '01:00';
-				$time = '012800';
-				break;
-		    }
-		    case "4":{
-				$sloat = '01:30';
-				$time = '015800';
-				break;
-		    }
-		    case "5": {
-				$sloat = '02:00';
-				$time = '022800';
-				break;
-		    }
-		    case "6": {
-				$sloat = '02:30';
-				$time = '025800';
-				break;
-		    }
-		    case "7":{ 
-				$sloat = '03:00';
-				$time = '032800';
-				break;
-		    }
-		    case "8":{
-				$sloat = '03:30';
-				$time = '035800';
-				break;
-		    }
-		    case "9": {
-				$sloat = '04:00';
-				$time = '042800';
-				break;
-		    }
-		    case "10": {
-				$sloat = '04:30';
-				$time = '045800';
-				break;
-		    }
-		    case "11": {
-				$sloat = '05:00';
-				$time = '052800';
-				break;
-		    }
+    
+    public function __construct(){
+        parent::__construct();
+        $this->load->database();
+        $this->load->helper('download');
+        $this->load->model(array('Auth_model','output/Output_model'));
+    }
+    
+    function index($ecode){
+        $data = array();
+        $data['title'] =  $this->config->item('project_title').'| Broadcast Output';
+        $data['head'] = $this->load->view('common/head',$data,true);
+        $data['footer'] = $this->load->view('common/footer',$data,true);
+        $this->load->view('pages/output/broadcast',$data);
+        //$this->load->view('layout_master',$data);
+    }
+    
+    function get_files(){
+        $data['date'] = $this->my_library->mydate($this->input->post('date'));
+        $data['sloat'] = $this->input->post('sloat');
+        
+        $sloat = '';
+        $time = '';
+        switch($data['sloat']){
+            case "1": {
+                $sloat = '00:00';
+                $time = '002800';
+                break;
+            }
+            case "2": {
+                $sloat = '00:30';
+                $time = '005800';
+                break;
+            }
+            case "3": {
+                $sloat = '01:00';
+                $time = '012800';
+                break;
+            }
+            case "4":{
+                $sloat = '01:30';
+                $time = '015800';
+                break;
+            }
+            case "5": {
+                $sloat = '02:00';
+                $time = '022800';
+                break;
+            }
+            case "6": {
+                $sloat = '02:30';
+                $time = '025800';
+                break;
+            }
+            case "7":{
+                $sloat = '03:00';
+                $time = '032800';
+                break;
+            }
+            case "8":{
+                $sloat = '03:30';
+                $time = '035800';
+                break;
+            }
+            case "9": {
+                $sloat = '04:00';
+                $time = '042800';
+                break;
+            }
+            case "10": {
+                $sloat = '04:30';
+                $time = '045800';
+                break;
+            }
+            case "11": {
+                $sloat = '05:00';
+                $time = '052800';
+                break;
+            }
             case "12": {
                 $sloat = '05:30';
                 $time = '055800';
@@ -303,7 +303,8 @@ class Output_ctrl extends CI_Controller {
                 'created_at' => date('Y-m-d H:i:s')
             ));
             
-            $remoteURL = "http://vod.ibc24.in/mp4/".$videoDetail[0]['file_data'];
+            //$remoteURL = "http://vod.ibc24.in/mp4/".$videoDetail[0]['file_data'];
+            $remoteURL = "http://192.168.25.231/mp4/".$videoDetail[0]['file_data'];
             ob_start();
             header("Content-type: application/x-file-to-save");
             header("Content-Disposition: attachment; filename=".basename($remoteURL));
