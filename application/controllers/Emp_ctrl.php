@@ -1,6 +1,5 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
 class Emp_ctrl extends CI_Controller {
 	
 	public function __construct(){
@@ -16,7 +15,7 @@ class Emp_ctrl extends CI_Controller {
 		}
 	}
 
-	function index(){ 
+	function index(){
 		$this->db2 = $this->load->database('sqlsrv', TRUE);
 		$data = array();
 		$data['links'] = $this->my_library->links($this->session->userdata('ecode'));
@@ -35,9 +34,7 @@ class Emp_ctrl extends CI_Controller {
 	
 	function dotnet_dashboard(){
 	    $data = array();
-	    //$data['links'] = $this->Employee_model->links();
 	    $data['links'] = $this->my_library->links($this->session->userdata('ecode'));
-	    //print_r($data['links']); die;
 	    $data['footer'] = $this->load->view('include/footer','',true);
 	    $data['top_nav'] = $this->load->view('include/top_nav','',true);
 	    $data['aside'] = $this->load->view('include/aside',$data,true);

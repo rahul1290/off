@@ -8,7 +8,7 @@ class Authctrl extends REST_Controller {
         parent::__construct();
         $this->load->database();
         $this->load->model(array('Auth_model','Emp_model','master/Department_model'));
-		$this->load->library('Authorization_Token');
+		$this->load->library(array('Authorization_Token','my_library'));
     }
 	
 	function login_post(){
@@ -20,7 +20,8 @@ class Authctrl extends REST_Controller {
 			$jwt['id'] = $login_result[0]['id'];
 			$jwt['ecode'] = $login_result[0]['ecode'];
 			$jwt['time'] = time();
-			$login_result[0]['key'] = $this->authorization_token->generateToken($jwt);			
+			$login_result[0]['key'] = $this->authorization_token->generateToken($jwt);
+			$login_result[0]['links'] = $this->my_library->links($login_result[0]['ecode']);
 		    $this->response($login_result, 200);
 		} else {
 		    $this->response( [
