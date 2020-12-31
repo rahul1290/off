@@ -2,13 +2,20 @@
 $sdate = $user_detail[0]['jdate'];
 $edate = date('Y-m-d');
 
-$date_diff = abs(strtotime($edate) - strtotime($sdate));
+// $date_diff = abs(strtotime($edate) - strtotime($sdate));
 
-$years = floor($date_diff / (365*60*60*24));
-$months = floor(($date_diff - $years * 365*60*60*24) / (30*60*60*24));
-$days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+// $years = floor($date_diff / (365*60*60*24));
+// $months = floor(($date_diff - $years * 365*60*60*24) / (30*60*60*24));
+// $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
 
-//printf("%d years, %d months, %d days", $years, $months, $days); die;
+
+$origin = new DateTime($user_detail[0]['jdate']);
+$target = new DateTime(date('Y-m-d'));
+$interval = $origin->diff($target);
+
+$years = $interval->format('%y');
+$months = $interval->format('%m');
+$days = $interval->format('%d');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,12 +84,12 @@ $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60
                       <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
 						<?php if($this->my_library->reporting_to($user_detail[0]['ecode']) > 0){ ?>		
-                          <li class="nav-item float-right" style="background-color: red; border-radius: 11px; display:inline;">
+                          <li class="nav-item float-right mr-2" style="background-color: red; border-radius: 11px; display:inline;">
                           	<a class="nav-link text-light" href="<?php echo base_url();?>HOD/<?php echo base64_encode($user_detail[0]['ecode']); ?>/KRA">Superior Rating</a>
                           </li>
 						<?php } ?>
 						<?php if(in_array($user_detail[0]['ecode'], $this->config->item('hr_list'))){ ?>
-                                <li class="nov-item float-right" style="background-color: red; border-radius: 11px; display:inline;">
+                                <li class="nov-item float-right mr-2" style="background-color: red; border-radius: 11px; display:inline;">
                                 	<a class="nav-link text-light" href="<?php echo base_url();?>HR/KRA/<?php echo base64_encode($user_detail[0]['ecode']); ?>/<?php
                                 	if($this->uri->segment('4') == ''){
                                 	    echo base64_encode($this->my_library->get_current_session());
