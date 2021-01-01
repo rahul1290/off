@@ -168,12 +168,12 @@
 					success: function(response){
 						if(response.status == 200){
 							console.log(response);
-							$('#broadcast_preview').attr('src','http://vod.ibc24.in/mp4/'+response.data[0].file_name);
+							$('#broadcast_preview').attr('src','https://vod.ibc24.in/mp4/'+response.data[0].file_name);
 							$('#program_name').html(response.data[0].program);
 							$('#broadcast_download').attr('href','http://emp2.ibc24.in/kra/output/broadcast/video/download/'+ eCode +'/'+ response.data[0]['id']);
 						} else {
-							$('#broadcast_preview').attr('src','http://vod.ibc24.in/mp4/');
-							$('#broadcast_download').attr('href','http://vod.ibc24.in/mp4/');
+							$('#broadcast_preview').attr('src','https://vod.ibc24.in/mp4/');
+							$('#broadcast_download').attr('href','https://vod.ibc24.in/mp4/');
 							$('#program_name').html('');
 							alert('No record found');
 						}
