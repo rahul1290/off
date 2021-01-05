@@ -159,4 +159,12 @@ $route['master/employee/(:any)'] = 'master/Employee_ctrl/employee_detail/$1';
 
 $route['master/Cab-zone'] = 'master/Cab_ctrl/index';
 
+
+
+////////////////////////////////////APIS/////////////////////////////////////
+$route['api/user/leave-requests'] = 'api/Emp_ctrl/LeaveRequest';
+$route['api/user/half_day-requests'] = 'api/Emp_ctrl/halfDayRequest';
+$route['api/user/attendance'] = 'api/Emp_ctrl/Attendance';
+$route['api/user/off_day_duty-request'] = 'api/Emp_ctrl/offDaydutyRequest';
+
 $route['translate_uri_dashes'] = FALSE;

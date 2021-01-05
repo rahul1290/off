@@ -33,11 +33,21 @@ class Authctrl extends REST_Controller {
 	
 	
 	function getMonthYear_get(){
-	    $data[0]['month'] = date('m');
+	    
+	    $data[0]['month'] = date('n');
 	    $data[0]['year'] = date('Y');
 	    $this->response($data, 200);
 	}
 	
+	function currentAppVersion_post(){
+	    $version = $this->post('version');
+	    if($version == '0.1'){
+	        $this->response(array('msg'=>'valid.'), 200);
+	    } else {
+	        $data[] = array('msg'=>'New version lauched.','androidAppId'=>'com.ibc24.newsflow','iOSAppId'=>'585027354');
+	        $this->response($data, 500);
+	    }
+	}
 	
 	function userDetail_post(){
 	    $is_valid_token = $this->authorization_token->validateToken();
